@@ -1,0 +1,64 @@
+.internships-page {
+    padding-top: 8rem;
+    /* Increased to ensure clear Navbar separation */
+    min-height: 100vh;
+    background: var(--background);
+}
+
+.internships-header {
+    padding: 4rem 0;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+    /* Lower than Navbar but higher than grid */
+    margin-bottom: 2rem;
+}
+
+.internships-header::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    max-width: 800px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+    z-index: -1;
+}
+
+.internships-title {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 900;
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+}
+
+.internships-subtitle {
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.7;
+}
+
+.internships-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2.5rem;
+    padding-bottom: 6rem;
+    justify-content: center;
+    /* Center cards if they don't fill the row */
+}
+
+@media (max-width: 768px) {
+    .internships-page {
+        padding-top: 6rem;
+    }
+
+    .internships-grid {
+        grid-template-columns: 1fr;
+        max-width: 450px;
+        margin: 0 auto;
+    }
+}

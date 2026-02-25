@@ -1,0 +1,214 @@
+.services-info-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(3, 7, 18, 0.85);
+    backdrop-filter: blur(12px);
+    padding: 2rem;
+}
+
+.services-info-container {
+    width: 100%;
+    max-width: 1200px;
+    max-height: 90vh;
+    background: var(--background);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.info-scroll-view {
+    padding: 4rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.close-info-btn {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background: var(--surface-light);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 100;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-info-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.info-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.info-header h2 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+}
+
+/* Sub-Services Grid */
+.info-features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-bottom: 6rem;
+}
+
+.info-feature-card {
+    background: var(--surface);
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    display: flex;
+    gap: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+[data-theme='light'] .info-feature-card {
+    background: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.info-feature-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.feature-icon-box {
+    width: 52px;
+    height: 52px;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.feature-details h4 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.feature-details p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.feature-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.feature-cat {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--primary-light);
+    margin-top: 0.5rem;
+}
+
+.trend-badge {
+    align-self: flex-start;
+    font-size: 0.7rem;
+    font-weight: 700;
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    margin-top: 0.25rem;
+}
+
+/* Why Choose Us Section */
+.why-choose-us-section {
+    padding-top: 4rem;
+    border-top: 1px solid var(--border);
+}
+
+.why-choose-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.why-item-card {
+    display: flex;
+    gap: 1.5rem;
+    padding: 2rem;
+    background: var(--surface-1);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    transition: all 0.3s ease;
+}
+
+[data-theme='light'] .why-item-card {
+    background: white;
+    border-color: #eee;
+}
+
+.why-item-card:hover {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
+}
+
+.why-icon {
+    color: var(--primary);
+}
+
+.why-text h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.why-text p {
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .services-info-overlay {
+        padding: 1rem;
+    }
+
+    .info-scroll-view {
+        padding: 2.5rem 1.5rem;
+    }
+
+    .info-header h2 {
+        font-size: 2rem;
+    }
+
+    .info-features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .close-info-btn {
+        top: 1rem;
+        right: 1rem;
+        padding: 0.35rem;
+    }
+}

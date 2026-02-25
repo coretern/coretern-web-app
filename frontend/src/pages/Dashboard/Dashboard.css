@@ -1,0 +1,247 @@
+.dashboard-page {
+    padding-top: 6rem;
+    min-height: 100vh;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 3rem 0;
+}
+
+.dashboard-header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 3rem;
+    padding-bottom: var(--space-xl);
+}
+
+.stats-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.stat-card {
+    padding: 2rem;
+    border-radius: var(--radius-xl);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.stat-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-icon.primary {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary);
+}
+
+.stat-icon.secondary {
+    background: rgba(6, 182, 212, 0.1);
+    color: var(--secondary);
+}
+
+.stat-info h3 {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.stat-info p {
+    font-size: 2rem;
+    font-weight: 900;
+    font-family: 'Outfit', sans-serif;
+}
+
+.internships-list h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+
+.enrollment-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-radius: var(--radius-lg);
+    margin-bottom: 1.5rem;
+    transition: all var(--transition-med);
+}
+
+.enrollment-card:hover {
+    transform: translateX(10px);
+    border-color: var(--primary);
+}
+
+.enroll-info {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.enroll-img {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-md);
+    object-fit: cover;
+}
+
+.enroll-text h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.status-badge.paid {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status-badge.unpaid {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Modal */
+.cert-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(3, 7, 18, 0.98);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    padding-bottom: 5rem;
+}
+
+.modal-actions {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    z-index: 2100;
+    padding: 1.5rem 0;
+    background: linear-gradient(to bottom, rgba(3, 7, 18, 1) 70%, transparent);
+}
+
+.modal-actions .btn {
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.modal-actions .btn-secondary {
+    background: #ffffff;
+    color: #0f172a;
+    border-color: #ffffff;
+}
+
+.modal-actions .btn-secondary:hover {
+    background: #f1f5f9;
+}
+
+/* Certificate Preview Wrapper */
+.cert-preview-wrapper {
+    transform-origin: top center;
+    box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.5);
+    width: 1000px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 1100px) {
+    .cert-preview-wrapper {
+        transform: scale(0.85);
+        margin-bottom: -150px;
+    }
+}
+
+@media (max-width: 900px) {
+    .cert-preview-wrapper {
+        transform: scale(0.7);
+        margin-bottom: -300px;
+    }
+}
+
+@media (max-width: 700px) {
+    .cert-preview-wrapper {
+        transform: scale(0.55);
+        margin-bottom: -450px;
+    }
+}
+
+@media (max-width: 550px) {
+    .cert-preview-wrapper {
+        transform: scale(0.38);
+        margin-bottom: -550px;
+    }
+
+    .modal-actions {
+        padding: 1rem;
+        gap: 0.5rem;
+    }
+
+    .modal-actions .btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .cert-preview-wrapper {
+        transform: scale(0.32);
+        margin-bottom: -600px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .enrollment-card {
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: flex-start;
+        padding: 1.5rem;
+    }
+
+    .enroll-actions {
+        width: 100%;
+    }
+
+    .enroll-actions .btn {
+        width: 100%;
+    }
+}
