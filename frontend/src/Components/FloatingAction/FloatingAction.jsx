@@ -1,9 +1,17 @@
 import React from 'react';
 import { MessageSquare } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 import './FloatingAction.css';
 
 const FloatingAction = () => {
+    const location = useLocation();
+
+    // Hide floating action button on ticket conversation page to avoid overlap
+    if (location.pathname.includes('/tickets/')) {
+        return null;
+    }
+
     return (
         <motion.div
             className="floating-action"

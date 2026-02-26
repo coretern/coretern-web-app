@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Send, MessageSquare, Loader2 } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Loader2, Instagram, Linkedin, Twitter, Facebook } from 'lucide-react';
 import axios from 'axios';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
@@ -90,13 +90,33 @@ const ContactUs = () => {
                                     </div>
                                 </div>
 
-                                <div className="social-connect mt-12">
+                                <div className="social-connect">
                                     <h4 className="outfit mb-4">Connect with us</h4>
                                     <div className="flex gap-4">
-                                        {/* Social Icons Placeholder */}
-                                        <div className="social-circle"></div>
-                                        <div className="social-circle"></div>
-                                        <div className="social-circle"></div>
+                                        <motion.a
+                                            whileHover={{ y: -5 }}
+                                            href="#" className="social-link instagram"
+                                        >
+                                            <Instagram size={20} />
+                                        </motion.a>
+                                        <motion.a
+                                            whileHover={{ y: -5 }}
+                                            href="#" className="social-link linkedin"
+                                        >
+                                            <Linkedin size={20} />
+                                        </motion.a>
+                                        <motion.a
+                                            whileHover={{ y: -5 }}
+                                            href="#" className="social-link twitter"
+                                        >
+                                            <Twitter size={20} />
+                                        </motion.a>
+                                        <motion.a
+                                            whileHover={{ y: -5 }}
+                                            href="#" className="social-link facebook"
+                                        >
+                                            <Facebook size={20} />
+                                        </motion.a>
                                     </div>
                                 </div>
                             </div>
@@ -107,7 +127,7 @@ const ContactUs = () => {
                             animate={{ opacity: 1, x: 0 }}
                             className="contact-form-wrapper"
                         >
-                            <div className="card glass p-8">
+                            <div className="card glass">
                                 <form onSubmit={handleSubmit} className="contact-form">
                                     <div className="form-row">
                                         <div className="form-group">
@@ -145,7 +165,7 @@ const ContactUs = () => {
                                         <label>Subject</label>
                                         <input
                                             type="text"
-                                            placeholder="Case: Account Issue"
+                                            placeholder="e.g., Website, App Development"
                                             required
                                             value={formData.subject}
                                             onChange={e => setFormData({ ...formData, subject: e.target.value })}

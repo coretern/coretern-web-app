@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Send, Loader2, LifeBuoy, Clock, CheckCircle, MessageSquare } from 'lucide-react';
+import {
+    Send,
+    Loader2,
+    LifeBuoy,
+    Clock,
+    MessageSquare,
+    ChevronRight,
+    HelpCircle
+} from 'lucide-react';
 import toast from 'react-hot-toast';
 import './TicketsForRegistered.css';
 
@@ -55,92 +63,88 @@ const TicketsForRegistered = () => {
 
     return (
         <div className="registered-tickets-container">
-            <div className="grid lg:grid-cols-2 gap-8">
-                {/* Raise Ticket Form */}
-                <div className="card glass p-8 h-fit">
-                    <header className="mb-8">
-                        <div className="flex items-center gap-3 mb-2">
-                            <div className="icon-box-small">
+            <div className="support-layout-grid">
+                {/* Left Side: Raise Ticket */}
+                <div className="form-column">
+                    <div className="ticket-form-card glass">
+                        <header className="form-header">
+                            <div className="icon-badge">
                                 <LifeBuoy size={20} className="text-primary" />
                             </div>
-                            <h2 className="outfit h3">Raise Support Ticket</h2>
-                        </div>
-                        <p className="text-text-muted">Describe your issue below and our technical team will assist you shortly.</p>
-                    </header>
+                            <div className="header-text">
+                                <h3 className="outfit">New Support Case</h3>
+                                <p className="text-text-muted text-xs">Need technical help? Open a case.</p>
+                            </div>
+                        </header>
 
-                    <form onSubmit={handleSubmit} className="ticket-form">
-                        <div className="form-group mb-6">
-                            <label className="form-label">Issue Subject</label>
-                            <input
-                                type="text"
-                                placeholder="e.g., Unable to download certificate"
-                                required
-                                className="auth-input"
-                                value={formData.subject}
-                                onChange={e => setFormData({ ...formData, subject: e.target.value })}
-                            />
-                        </div>
-                        <div className="form-group mb-8">
-                            <label className="form-label">Detailed Description</label>
-                            <textarea
-                                rows="5"
-                                placeholder="Please provide as much detail as possible..."
-                                required
-                                className="auth-input"
-                                value={formData.message}
-                                onChange={e => setFormData({ ...formData, message: e.target.value })}
-                            ></textarea>
-                        </div>
-                        <button disabled={loading} className="btn btn-primary w-full py-4 flex items-center justify-center gap-2">
-                            {loading ? <Loader2 className="animate-spin" /> : <><Send size={18} /> Submit Ticket</>}
-                        </button>
-                    </form>
+                        <form onSubmit={handleSubmit} className="support-form">
+                            <div className="input-group">
+                                <label>Subject</label>
+                                <input
+                                    type="text"
+                                    placeholder="e.g., Cannot download cert"
+                                    required
+                                    className="support-input"
+                                    value={formData.subject}
+                                    onChange={e => setFormData({ ...formData, subject: e.target.value })}
+                                />
+                            </div>
+                            <div className="input-group">
+                                <label>Message</label>
+                                <textarea
+                                    rows="6"
+                                    placeholder="Briefly describe your issue..."
+                                    required
+                                    className="support-input"
+                                    value={formData.message}
+                                    onChange={e => setFormData({ ...formData, message: e.target.value })}
+                                ></textarea>
+                            </div>
+                            <button disabled={loading} className="btn-submit">
+                                {loading ? <Loader2 className="animate-spin" size={18} /> : <><Send size={18} /> Open Ticket</>}
+                            </button>
+                        </form>
+                    </div>
                 </div>
 
-                {/* Tickets History */}
-                <div className="ticket-history h-fit">
-                    <div className="flex items-center gap-3 mb-6">
-                        <MessageSquare className="text-secondary" size={24} />
-                        <h2 className="outfit h3">My Support History</h2>
+                {/* Right Side: History */}
+                <div className="history-column">
+                    <div className="section-head">
+                        <MessageSquare className="text-primary" size={20} />
+                        <h4 className="outfit">Your Recent Cases</h4>
                     </div>
 
                     {fetching ? (
-                        <div className="flex p-12 justify-center"><Loader2 className="animate-spin text-primary" /></div>
+                        <div className="flex p-12 justify-center"><Loader2 className="animate-spin text-primary" size={32} /></div>
                     ) : tickets.length === 0 ? (
-                        <div className="glass p-8 rounded-2xl text-center text-text-muted">
-                            No tickets raised yet.
+                        <div className="glass p-12 rounded-[30px] text-center">
+                            <HelpCircle size={48} className="mx-auto mb-4 text-text-muted opacity-20" />
+                            <p className="text-text-muted font-bold text-lg">No tickets raised yet.</p>
+                            <p className="text-text-muted text-sm mt-1">Your raised tickets will appear here.</p>
                         </div>
                     ) : (
-                        <div className="tickets-list flex flex-col gap-4">
+                        <div className="tickets-history-list">
                             {tickets.map(ticket => (
-                                <div key={ticket._id} className="ticket-item glass p-5 rounded-2xl border-l-4 border-l-primary">
-                                    <div className="flex justify-between items-start mb-3">
-                                        <div>
-                                            <span className="text-xs font-mono font-bold text-primary block">{ticket.ticketId}</span>
-                                            <h4 className="font-bold text-sm mt-1">{ticket.subject}</h4>
-                                        </div>
-                                        <div className="flex flex-col items-end gap-2">
-                                            <span className={`status-tag text-[10px] px-2 py-1 rounded-full font-bold uppercase ${ticket.status}`}>
+                                <div key={ticket._id} className="compact-ticket-item">
+                                    <div className="ticket-meta">
+                                        <div className="ticket-top">
+                                            <span className="ticket-id-badge">#{ticket.ticketId}</span>
+                                            <span className={`ticket-status-pill ${ticket.status}`}>
                                                 {ticket.status}
                                             </span>
-                                            <button
-                                                onClick={() => navigate(`/dashboard/tickets/${ticket._id}`)}
-                                                className="link-btn text-[10px] text-primary font-bold hover:underline"
-                                            >
-                                                View & Reply &rarr;
-                                            </button>
+                                            <span className="ticket-date">
+                                                {new Date(ticket.createdAt).toLocaleDateString()}
+                                            </span>
                                         </div>
+                                        <h4 className="ticket-title">{ticket.subject}</h4>
                                     </div>
-                                    <p className="text-xs text-text-muted line-clamp-2 mb-3">
-                                        {ticket.conversation && ticket.conversation[0]?.message}
-                                    </p>
 
-                                    <div className="flex items-center gap-2 mt-3 pt-3 border-t border-glass-border">
-                                        <Clock size={12} className="text-text-muted" />
-                                        <span className="text-[10px] text-text-muted">
-                                            {new Date(ticket.createdAt).toLocaleDateString()}
-                                        </span>
-                                    </div>
+                                    <button
+                                        onClick={() => navigate(`/dashboard/tickets/${ticket._id}`)}
+                                        className="view-btn"
+                                    >
+                                        View Case
+                                    </button>
                                 </div>
                             ))}
                         </div>
