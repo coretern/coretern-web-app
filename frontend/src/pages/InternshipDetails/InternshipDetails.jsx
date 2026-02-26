@@ -6,6 +6,7 @@ import { Check, Calendar, Award, ShieldCheck, Loader2, ArrowLeft } from 'lucide-
 import toast from 'react-hot-toast';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
+import PageTransition from '../../Components/PageTransition';
 import './InternshipDetails.css';
 
 const InternshipDetails = () => {
@@ -83,91 +84,104 @@ const InternshipDetails = () => {
     if (loading) return <div className="loader-container"><Loader2 className="animate-spin text-primary" size={60} /></div>;
 
     return (
-        <div className="details-page">
-            <Navbar />
+        <PageTransition>
+            <div className="details-page">
+                <Navbar />
 
-            <div className="container">
-                <button onClick={() => navigate(-1)} className="back-btn outfit">
-                    <ArrowLeft size={18} /> Back to Courses
-                </button>
+                <div className="container">
+                    <button onClick={() => navigate(-1)} className="back-btn outfit">
+                        <ArrowLeft size={18} /> Back to Courses
+                    </button>
 
-                <div className="details-grid">
-                    <main className="details-main">
-                        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-                            <div className="details-image-wrapper glass">
-                                <img src={internship?.image} alt={internship?.title} />
-                            </div>
+                    <div className="details-grid">
+                        <main className="details-main">
+                            <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
+                                <div className="details-image-wrapper glass">
+                                    <img src={internship?.image} alt={internship?.title} />
+                                </div>
 
-                            <div className="details-content">
-                                <h1 className="outfit">{internship?.title}</h1>
-                                <p className="details-description">{internship?.description}</p>
+                                <div className="details-content">
+                                    <span className="details-domain">{internship?.domain}</span>
+                                    <h1 className="outfit">{internship?.title}</h1>
+                                    {internship?.description && internship.description !== 'na' && (
+                                        <p className="details-description">{internship.description}</p>
+                                    )}
 
-                                {internship?.details && (
-                                    <div className="details-rich-content" dangerouslySetInnerHTML={{ __html: internship.details }} />
-                                )}
+                                    {internship?.details && (
+                                        <div className="details-rich-content ql-editor" dangerouslySetInnerHTML={{ __html: internship.details }} />
+                                    )}
 
-                                <div className="curriculum-section">
-                                    <h2 className="outfit">What You'll Learn</h2>
-                                    <div className="curriculum-grid">
-                                        {internship?.curriculum?.map((item, i) => (
-                                            <div key={i} className="curriculum-item glass">
-                                                <Check className="text-primary flex-shrink-0" size={20} />
-                                                <span>{item}</span>
+                                    {internship?.curriculum && internship.curriculum.length > 0 && (
+                                        <div className="curriculum-section">
+                                            <h2 className="outfit">What You'll Learn</h2>
+                                            <div className="curriculum-grid">
+                                                {internship.curriculum.map((item, i) => (
+                                                    <div key={i} className="curriculum-item">
+                                                        <Check className="text-primary" size={18} />
+                                                        <span>{item}</span>
+                                                    </div>
+                                                ))}
                                             </div>
-                                        ))}
-                                    </div>
+                                        </div>
+                                    )}
                                 </div>
-                            </div>
-                        </motion.div>
-                    </main>
+                            </motion.div>
+                        </main>
 
-                    <aside className="sticky-sidebar">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="enroll-card glass"
-                        >
-                            <div className="price-tag outfit">₹ {internship?.fee}</div>
-                            <p className="text-text-muted text-sm">One-time payment for full program access</p>
-
-                            <button
-                                onClick={handleEnroll}
-                                disabled={enrolling}
-                                className="btn btn-primary enroll-btn"
+                        <aside className="sticky-sidebar">
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="enroll-card glass"
                             >
-                                {enrolling ? <Loader2 className="animate-spin" /> : 'Enroll Now'}
-                            </button>
+                                <div className="price-tag outfit">₹ {internship?.fee}</div>
+                                <p className="text-text-muted text-sm">One-time payment for full program access</p>
 
-                            <div className="perks-list">
-                                <div className="perk-item">
-                                    <Calendar className="perk-icon" size={22} />
-                                    <div className="perk-info">
-                                        <p>Duration</p>
-                                        <p>{internship?.duration}</p>
+                                <button
+                                    onClick={handleEnroll}
+                                    disabled={enrolling}
+                                    className="btn btn-primary enroll-btn"
+                                >
+                                    {enrolling ? <Loader2 className="animate-spin" /> : 'Enroll Now'}
+                                </button>
+
+                                <div className="perks-list">
+                                    <div className="perk-item">
+                                        <div className="perk-icon">
+                                            <Calendar size={22} />
+                                        </div>
+                                        <div className="perk-info">
+                                            <p>Duration</p>
+                                            <p>{internship?.duration}</p>
+                                        </div>
+                                    </div>
+                                    <div className="perk-item">
+                                        <div className="perk-icon">
+                                            <Award size={22} />
+                                        </div>
+                                        <div className="perk-info">
+                                            <p>Certification</p>
+                                            <p>Industry Recognized</p>
+                                        </div>
+                                    </div>
+                                    <div className="perk-item">
+                                        <div className="perk-icon">
+                                            <ShieldCheck size={22} />
+                                        </div>
+                                        <div className="perk-info">
+                                            <p>Verification</p>
+                                            <p>QR Authenticated</p>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="perk-item">
-                                    <Award className="perk-icon" size={22} />
-                                    <div className="perk-info">
-                                        <p>Certification</p>
-                                        <p>Industry Recognized</p>
-                                    </div>
-                                </div>
-                                <div className="perk-item">
-                                    <ShieldCheck className="perk-icon" size={22} />
-                                    <div className="perk-info">
-                                        <p>Verification</p>
-                                        <p>QR Authenticated</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </aside>
+                            </motion.div>
+                        </aside>
+                    </div>
                 </div>
-            </div>
 
-            <Footer />
-        </div>
+                <Footer />
+            </div>
+        </PageTransition>
     );
 };
 

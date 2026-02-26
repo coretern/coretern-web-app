@@ -102,7 +102,7 @@ exports.updateInternship = asyncHandler(async (req, res, next) => {
     }
 
     internship = await Internship.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
+        returnDocument: 'after',
         runValidators: true
     });
 

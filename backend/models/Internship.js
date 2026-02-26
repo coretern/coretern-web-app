@@ -7,8 +7,7 @@ const internshipSchema = new mongoose.Schema({
         trim: true
     },
     description: {
-        type: String,
-        required: [true, 'Please add a description']
+        type: String
     },
     domain: {
         type: String,

@@ -222,8 +222,8 @@ const ManageInternships = () => {
                                 </div>
 
                                 <div>
-                                    <label className="admin-label">Detailed Description</label>
-                                    <textarea className="admin-textarea" value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} required />
+                                    <label className="admin-label">Short Summary (optional)</label>
+                                    <textarea className="admin-textarea" value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} />
                                 </div>
 
                                 <div>

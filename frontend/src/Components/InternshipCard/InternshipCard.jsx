@@ -24,10 +24,14 @@ const InternshipCard = ({ item, index }) => {
             </div>
 
             <div className="intern-card-body">
-                <h3 className="intern-card-title outfit">{item.title}</h3>
-                <p className="intern-card-desc">
-                    {item.description}
-                </p>
+                <div className="intern-card-content">
+                    <h3 className="intern-card-title outfit">{item.title}</h3>
+                    {item.description && item.description !== 'na' && (
+                        <p className="intern-card-desc">
+                            {item.description}
+                        </p>
+                    )}
+                </div>
 
                 <div className="intern-card-footer">
                     <div className="intern-stat-item">
