@@ -2,6 +2,7 @@ const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('express-async-handler');
 const Enrollment = require('../models/Enrollment');
 const Internship = require('../models/Internship');
+const Certificate = require('../models/Certificate');
 
 // @desc    Enroll in an internship
 // @route   POST /api/enrollments
@@ -159,10 +160,20 @@ exports.enroll = asyncHandler(async (req, res, next) => {
 exports.getMyEnrollments = asyncHandler(async (req, res, next) => {
     const enrollments = await Enrollment.find({ user: req.user.id }).populate('internship');
 
+    // For each enrollment, check if certificate exists
+    const updatedEnrollments = await Promise.all(enrollments.map(async (enrol) => {
+        const enrolObj = enrol.toObject();
+        if (enrolObj.status === 'completed') {
+            const certExists = await Certificate.exists({ user: enrolObj.user, internship: enrolObj.internship._id });
+            if (!certExists) enrolObj.status = 'enrolled';
+        }
+        return enrolObj;
+    }));
+
     res.status(200).json({
         success: true,
-        count: enrollments.length,
-        data: enrollments
+        count: updatedEnrollments.length,
+        data: updatedEnrollments
     });
 });
 
@@ -300,9 +311,19 @@ exports.cashfreeWebhook = asyncHandler(async (req, res, next) => {
 exports.getAllEnrollments = asyncHandler(async (req, res, next) => {
     const enrollments = await Enrollment.find().populate('user').populate('internship');
 
+    // For each enrollment, check if certificate exists
+    const updatedEnrollments = await Promise.all(enrollments.map(async (enrol) => {
+        const enrolObj = enrol.toObject();
+        if (enrolObj.status === 'completed') {
+            const certExists = await Certificate.exists({ user: enrolObj.user?._id, internship: enrolObj.internship?._id });
+            if (!certExists) enrolObj.status = 'enrolled';
+        }
+        return enrolObj;
+    }));
+
     res.status(200).json({
         success: true,
-        count: enrollments.length,
-        data: enrollments
+        count: updatedEnrollments.length,
+        data: updatedEnrollments
     });
 });
