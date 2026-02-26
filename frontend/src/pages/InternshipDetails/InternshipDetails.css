@@ -154,6 +154,65 @@
     font-size: 1rem;
 }
 
+/* Rich Text Content Styling */
+.details-rich-content {
+    margin: 3rem 0;
+    color: var(--text);
+    line-height: 1.8;
+}
+
+.details-rich-content h1,
+.details-rich-content h2,
+.details-rich-content h3 {
+    margin: 2.5rem 0 1.25rem;
+    font-family: 'Outfit', sans-serif;
+    color: var(--primary-light);
+    letter-spacing: -0.01em;
+}
+
+.details-rich-content p {
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+}
+
+.details-rich-content ul,
+.details-rich-content ol {
+    margin-left: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.details-rich-content li {
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.details-rich-content a {
+    color: var(--primary-light);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transition: opacity 0.2s;
+}
+
+.details-rich-content a:hover {
+    opacity: 0.8;
+}
+
+.details-rich-content blockquote {
+    border-left: 4px solid var(--primary);
+    padding: 1.5rem 2rem;
+    margin: 2.5rem 0;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    font-style: italic;
+    color: var(--text-muted);
+}
+
+.details-rich-content img {
+    max-width: 100%;
+    border-radius: var(--radius-lg);
+    margin: 2rem 0;
+}
+
 @media (max-width: 1024px) {
     .details-grid {
         grid-template-columns: 1fr;

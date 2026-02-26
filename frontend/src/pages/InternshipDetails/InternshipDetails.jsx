@@ -102,6 +102,10 @@ const InternshipDetails = () => {
                                 <h1 className="outfit">{internship?.title}</h1>
                                 <p className="details-description">{internship?.description}</p>
 
+                                {internship?.details && (
+                                    <div className="details-rich-content" dangerouslySetInnerHTML={{ __html: internship.details }} />
+                                )}
+
                                 <div className="curriculum-section">
                                     <h2 className="outfit">What You'll Learn</h2>
                                     <div className="curriculum-grid">

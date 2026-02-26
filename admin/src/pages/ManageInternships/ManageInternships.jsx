@@ -3,7 +3,23 @@ import axios from 'axios';
 import { Plus, Edit2, Trash2, X, Upload, Loader2, Save } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
 import './ManageInternships.css';
+
+const quillModules = {
+    toolbar: [
+        [{ 'font': [] }, { 'size': [] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ 'color': [] }, { 'background': [] }],
+        [{ 'script': 'sub' }, { 'script': 'super' }],
+        [{ 'header': '1' }, { 'header': '2' }, 'blockquote', 'code-block'],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
+        [{ 'direction': 'rtl' }, { 'align': [] }],
+        ['link', 'image', 'video'],
+        ['clean']
+    ],
+};
 
 const ManageInternships = () => {
     const [internships, setInternships] = useState([]);
@@ -16,7 +32,8 @@ const ManageInternships = () => {
         fee: '',
         duration: '',
         description: '',
-        curriculum: ''
+        curriculum: '',
+        details: ''
     });
     const [image, setImage] = useState(null);
     const [submitting, setSubmitting] = useState(false);
@@ -45,7 +62,8 @@ const ManageInternships = () => {
                 fee: intern.fee,
                 duration: intern.duration,
                 description: intern.description,
-                curriculum: intern.curriculum?.join(', ') || ''
+                curriculum: intern.curriculum?.join(', ') || '',
+                details: intern.details || ''
             });
         } else {
             setEditingId(null);
@@ -55,7 +73,8 @@ const ManageInternships = () => {
                 fee: '',
                 duration: '',
                 description: '',
-                curriculum: ''
+                curriculum: '',
+                details: ''
             });
         }
         setShowModal(true);
@@ -210,6 +229,19 @@ const ManageInternships = () => {
                                 <div>
                                     <label className="admin-label">Curriculum (Tags separated by comma)</label>
                                     <textarea className="admin-textarea" style={{ height: '60px' }} value={formData.curriculum} onChange={e => setFormData({ ...formData, curriculum: e.target.value })} placeholder="React, Node.js, MongoDB..." />
+                                </div>
+
+                                <div className="mb-8">
+                                    <label className="admin-label">Detailed Internship Content</label>
+                                    <div className="quill-wrapper">
+                                        <ReactQuill
+                                            theme="snow"
+                                            value={formData.details}
+                                            onChange={val => setFormData({ ...formData, details: val })}
+                                            modules={quillModules}
+                                            placeholder="Write detailed information about the internship..."
+                                        />
+                                    </div>
                                 </div>
 
                                 <div className="mb-8">
