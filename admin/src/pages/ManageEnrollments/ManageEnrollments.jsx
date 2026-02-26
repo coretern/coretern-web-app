@@ -159,11 +159,15 @@ const ManageEnrollments = () => {
                                 <p>{selectedEnrol.collegeName || 'N/A'}</p>
                             </div>
                             <div className="info-item">
+                                <label>Course / Degree</label>
+                                <p>{selectedEnrol.course || 'N/A'}</p>
+                            </div>
+                            <div className="info-item">
                                 <label>College Reg No.</label>
                                 <p>{selectedEnrol.collegeRegNumber || 'N/A'}</p>
                             </div>
                             <div className="info-item">
-                                <label>Duration</label>
+                                <label>Duration (For Certificate)</label>
                                 <p>
                                     {selectedEnrol.startDate ? new Date(selectedEnrol.startDate).toLocaleDateString() : 'N/A'} -
                                     {selectedEnrol.endDate ? new Date(selectedEnrol.endDate).toLocaleDateString() : 'N/A'}

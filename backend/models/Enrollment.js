@@ -30,6 +30,7 @@ const enrollmentSchema = new mongoose.Schema({
     },
     collegeRegNumber: String,
     collegeName: String,
+    course: String,
     startDate: {
         type: Date,
         required: true

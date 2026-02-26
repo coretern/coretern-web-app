@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Upload, Send, Loader2, Calendar, User, BookOpen, Hash, Mail, Phone } from 'lucide-react';
+import { X, Upload, Send, Loader2, Calendar, User, BookOpen, Hash, Mail, Phone, GraduationCap } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import './InternshipForm.css';
@@ -11,6 +11,7 @@ const InternshipForm = ({ internship, onClose, onEnrollSuccess }) => {
         fullName: '',
         collegeRegNumber: '',
         collegeName: '',
+        course: '',
         startDate: '',
         endDate: '',
         whatsappNumber: '',
@@ -44,6 +45,7 @@ const InternshipForm = ({ internship, onClose, onEnrollSuccess }) => {
         data.append('fullName', formData.fullName);
         data.append('collegeRegNumber', formData.collegeRegNumber);
         data.append('collegeName', formData.collegeName);
+        data.append('course', formData.course);
         data.append('startDate', formData.startDate);
         data.append('endDate', formData.endDate);
         data.append('whatsappNumber', formData.whatsappNumber);
@@ -136,6 +138,27 @@ const InternshipForm = ({ internship, onClose, onEnrollSuccess }) => {
                         <div className="form-section">
                             <h3 className="section-title">Academic Details</h3>
                             <div className="input-group">
+                                <label><GraduationCap size={16} /> Course / Degree *</label>
+                                <select
+                                    name="course"
+                                    value={formData.course}
+                                    onChange={handleChange}
+                                    required
+                                    className="form-select"
+                                >
+                                    <option value="">Select your course</option>
+                                    <option value="B.Tech">B.Tech / B.E</option>
+                                    <option value="BCA">BCA</option>
+                                    <option value="MCA">MCA</option>
+                                    <option value="M.Tech">M.Tech / M.E</option>
+                                    <option value="BSC">B.Sc</option>
+                                    <option value="MSC">M.Sc</option>
+                                    <option value="B.Com">B.Com</option>
+                                    <option value="MBA">MBA</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div className="input-group">
                                 <label><BookOpen size={16} /> College Name (Optional)</label>
                                 <input
                                     type="text"
@@ -158,7 +181,7 @@ const InternshipForm = ({ internship, onClose, onEnrollSuccess }) => {
                         </div>
 
                         <div className="form-section">
-                            <h3 className="section-title">Internship Duration</h3>
+                            <h3 className="section-title">Internship Duration (For Certificate)</h3>
                             <div className="input-row">
                                 <div className="input-group">
                                     <label><Calendar size={16} /> Start Date *</label>
@@ -188,7 +211,7 @@ const InternshipForm = ({ internship, onClose, onEnrollSuccess }) => {
                             <div className="file-input-group">
                                 <label className="file-label">
                                     <Upload size={20} />
-                                    <span>{formData.resume ? formData.resume.name : 'Upload Resume (PDF/DOCX)'}</span>
+                                    <span>{formData.resume ? formData.resume.name : 'Upload NOC or Resume (Optional)'}</span>
                                     <input
                                         type="file"
                                         accept=".pdf,.doc,.docx"
