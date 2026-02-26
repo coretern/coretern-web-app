@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Upload, Send, Loader2, Calendar, User, BookOpen, Hash, Mail, Phone, GraduationCap } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 import './InternshipForm.css';
 
 const InternshipForm = ({ internship, onClose, onEnrollSuccess }) => {
@@ -12,6 +14,7 @@ const InternshipForm = ({ internship, onClose, onEnrollSuccess }) => {
         collegeRegNumber: '',
         collegeName: '',
         course: '',
+        otherCourse: '',
         startDate: '',
         endDate: '',
         whatsappNumber: '',
@@ -45,7 +48,7 @@ const InternshipForm = ({ internship, onClose, onEnrollSuccess }) => {
         data.append('fullName', formData.fullName);
         data.append('collegeRegNumber', formData.collegeRegNumber);
         data.append('collegeName', formData.collegeName);
-        data.append('course', formData.course);
+        data.append('course', formData.course === 'Other' ? (formData.otherCourse || 'Other') : formData.course);
         data.append('startDate', formData.startDate);
         data.append('endDate', formData.endDate);
         data.append('whatsappNumber', formData.whatsappNumber);
@@ -123,13 +126,19 @@ const InternshipForm = ({ internship, onClose, onEnrollSuccess }) => {
                                 </div>
                                 <div className="input-group">
                                     <label><Phone size={16} /> WhatsApp Number *</label>
-                                    <input
-                                        type="text"
-                                        name="whatsappNumber"
-                                        placeholder="+91 00000 00000"
+                                    <PhoneInput
+                                        country={'in'}
                                         value={formData.whatsappNumber}
-                                        onChange={handleChange}
-                                        required
+                                        onChange={(phone) => setFormData(prev => ({ ...prev, whatsappNumber: phone }))}
+                                        disableFormatting={true}
+                                        inputProps={{
+                                            required: true,
+                                            name: 'whatsappNumber',
+                                            className: 'phone-input-field ql-editor'
+                                        }}
+                                        containerClass="phone-input-container"
+                                        buttonClass="phone-input-button"
+                                        dropdownClass="phone-input-dropdown"
                                     />
                                 </div>
                             </div>
@@ -158,6 +167,24 @@ const InternshipForm = ({ internship, onClose, onEnrollSuccess }) => {
                                     <option value="Other">Other</option>
                                 </select>
                             </div>
+
+                            {formData.course === 'Other' && (
+                                <motion.div
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: 'auto' }}
+                                    className="input-group"
+                                >
+                                    <label>Specify Course (Optional)</label>
+                                    <input
+                                        type="text"
+                                        name="otherCourse"
+                                        placeholder="e.g. B.Sc Agriculture, Diploma, etc."
+                                        value={formData.otherCourse}
+                                        onChange={handleChange}
+                                    />
+                                </motion.div>
+                            )}
+
                             <div className="input-group">
                                 <label><BookOpen size={16} /> College Name (Optional)</label>
                                 <input
