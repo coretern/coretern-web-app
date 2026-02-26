@@ -1,5 +1,6 @@
 .manage-tickets-page {
     animation: fadeIn 0.5s ease-out;
+    padding: 2rem;
 }
 
 .ticket-id {
@@ -10,11 +11,13 @@
 .status-pill {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.7rem;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 99px;
+    font-size: 0.75rem;
     font-weight: 800;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .status-pill.open {
@@ -27,50 +30,64 @@
     color: #f59e0b;
 }
 
-.status-pill.closed {
+.status-pill.resolved {
     background: rgba(16, 185, 129, 0.1);
     color: #10b981;
 }
 
+.status-pill.closed {
+    background: rgba(107, 114, 128, 0.1);
+    color: #6b7280;
+}
+
 .type-badge {
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 0.65rem;
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 0.7rem;
     font-weight: 800;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .type-badge.registered {
     background: rgba(var(--primary-rgb), 0.1);
     color: var(--primary);
-    border: 1px solid rgba(var(--primary-rgb), 0.2);
 }
 
 .type-badge.guest {
     background: rgba(236, 72, 153, 0.1);
     color: #ec4899;
-    border: 1px solid rgba(236, 72, 153, 0.2);
 }
 
 .status-select {
-    padding: 4px 8px;
-    border-radius: 6px;
+    padding: 6px 12px;
+    border-radius: 8px;
     border: 1px solid var(--glass-border);
     background: var(--glass-bg);
     color: var(--text-main);
-    font-size: 0.8rem;
-    outline: none;
+    font-size: 0.85rem;
     cursor: pointer;
+    outline: none;
+    transition: all 0.2s;
 }
 
-.status-select:focus {
+.status-select:hover {
     border-color: var(--primary);
+}
+
+.replied-indicator {
+    font-size: 0.6rem;
+    padding: 2px 8px;
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border-radius: 4px;
+    font-weight: 800;
+    text-transform: uppercase;
 }
 
 .line-clamp-1 {
     display: -webkit-box;
     -webkit-line-clamp: 1;
-    line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -78,7 +95,6 @@
 .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
-    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -92,5 +108,11 @@
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@media (max-width: 1024px) {
+    .admin-table-wrapper {
+        overflow-x: auto;
     }
 }

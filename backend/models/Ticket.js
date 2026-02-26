@@ -32,10 +32,21 @@ const ticketSchema = new mongoose.Schema({
         enum: ['registered', 'guest'],
         default: 'guest'
     },
-    message: {
-        type: String,
-        required: [true, 'Please add a message']
-    },
+    conversation: [{
+        sender: {
+            type: String,
+            enum: ['user', 'admin'],
+            required: true
+        },
+        message: {
+            type: String,
+            required: true
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now
+        }
+    }],
     status: {
         type: String,
         enum: ['open', 'pending', 'resolved', 'closed'],

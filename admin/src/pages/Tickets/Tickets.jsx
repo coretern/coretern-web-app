@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Search, Mail, MessageCircle, Clock, CheckCircle, AlertCircle, Trash2, Loader2, ExternalLink } from 'lucide-react';
+import { Search, Clock, CheckCircle, AlertCircle, Trash2, Loader2, Eye } from 'lucide-react';
 import toast from 'react-hot-toast';
 import './Tickets.css';
 
 const Tickets = () => {
+    const navigate = useNavigate();
     const [tickets, setTickets] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -30,7 +32,7 @@ const Tickets = () => {
     const handleUpdateStatus = async (id, status) => {
         const token = localStorage.getItem('token');
         try {
-            await axios.put(`http://localhost:5000/api/tickets/${id}`, { status }, {
+            await axios.put(`http://localhost:5000/api/tickets/${id}/status`, { status }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             toast.success(`Ticket status updated to ${status}`);
@@ -65,7 +67,8 @@ const Tickets = () => {
         switch (status) {
             case 'open': return <Clock size={16} className="text-primary" />;
             case 'pending': return <AlertCircle size={16} className="text-warning" />;
-            case 'closed': return <CheckCircle size={16} className="text-success" />;
+            case 'resolved': return <CheckCircle size={16} className="text-success" />;
+            case 'closed': return <CheckCircle size={16} className="text-muted" />;
             default: return <Clock size={16} />;
         }
     };
@@ -98,7 +101,7 @@ const Tickets = () => {
                             <th>Ticket ID</th>
                             <th>Type</th>
                             <th>User Info</th>
-                            <th>Subject & Message</th>
+                            <th>Subject & Initial Msg</th>
                             <th>Status</th>
                             <th>Raised On</th>
                             <th>Actions</th>
@@ -125,7 +128,9 @@ const Tickets = () => {
                                 <td className="max-w-xs">
                                     <div className="flex flex-col">
                                         <span className="font-semibold line-clamp-1">{ticket.subject}</span>
-                                        <span className="text-xs text-text-muted line-clamp-2">{ticket.message}</span>
+                                        <span className="text-xs text-text-muted line-clamp-2">
+                                            {ticket.conversation && ticket.conversation[0]?.message}
+                                        </span>
                                     </div>
                                 </td>
                                 <td>
@@ -137,14 +142,22 @@ const Tickets = () => {
                                 <td>{new Date(ticket.createdAt).toLocaleDateString()}</td>
                                 <td>
                                     <div className="flex gap-2">
+                                        <button
+                                            className="btn-icon view"
+                                            title="View Full Conversation"
+                                            onClick={() => navigate(`/tickets/${ticket._id}`)}
+                                        >
+                                            <Eye size={16} />
+                                        </button>
                                         <select
                                             className="status-select"
                                             value={ticket.status}
                                             onChange={(e) => handleUpdateStatus(ticket._id, e.target.value)}
                                         >
-                                            <option value="open">New Ticket</option>
+                                            <option value="open">Open</option>
                                             <option value="pending">Pending</option>
-                                            <option value="closed">Closed / Contacted</option>
+                                            <option value="resolved">Resolved</option>
+                                            <option value="closed">Closed</option>
                                         </select>
                                         <button
                                             className="btn-icon delete"

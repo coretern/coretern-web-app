@@ -9,6 +9,7 @@ import ManageInternships from './pages/ManageInternships/ManageInternships';
 import ManageEnrollments from './pages/ManageEnrollments/ManageEnrollments';
 import ManageUsers from './pages/ManageUsers/ManageUsers';
 import Tickets from './pages/Tickets/Tickets';
+import TicketDetail from './pages/Tickets/TicketDetail';
 import Login from './pages/Login/Login';
 
 function App() {
@@ -47,6 +48,10 @@ function App() {
               <Route
                 path="/tickets"
                 element={isAuthenticated ? <Tickets /> : <Navigate to="/login" />}
+              />
+              <Route
+                path="/tickets/:id"
+                element={isAuthenticated ? <TicketDetail /> : <Navigate to="/login" />}
               />
             </Routes>
           </main>

@@ -1,18 +1,31 @@
 const express = require('express');
-const { createTicket, getTickets, updateTicket, deleteTicket } = require('../controllers/ticketController');
+const {
+    createTicket,
+    getTickets,
+    getMyTickets,
+    getTicket,
+    replyToTicket,
+    updateTicketStatus,
+    deleteTicket
+} = require('../controllers/ticketController');
 const { protect, authorize, identifyUser } = require('../middleware/auth');
 
 const router = express.Router();
 
-// Allow public to create tickets, but check if they are logged in
+// Public routes
 router.post('/', identifyUser, createTicket);
+
+// Protected routes (User)
+router.get('/my', protect, getMyTickets);
+router.get('/:id', protect, getTicket);
+router.put('/:id/reply', protect, replyToTicket);
 
 // Admin-only routes
 router.use(protect);
 router.use(authorize('admin'));
 
 router.get('/', getTickets);
-router.put('/:id', updateTicket);
+router.put('/:id/status', updateTicketStatus);
 router.delete('/:id', deleteTicket);
 
 module.exports = router;

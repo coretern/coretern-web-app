@@ -12,6 +12,7 @@ import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import VerifyCertificate from './pages/VerifyCertificate/VerifyCertificate';
 import ContactUs from './pages/ContactUs/ContactUs';
+import TicketConversation from './pages/TicketConversation/TicketConversation';
 import FloatingAction from './Components/FloatingAction/FloatingAction';
 import ScrollToTop from './Components/ScrollToTop';
 
@@ -26,6 +27,7 @@ function App() {
           <Route path="/internships" element={<Internships />} />
           <Route path="/internships/:id" element={<InternshipDetails />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/tickets/:id" element={<TicketConversation />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/contact" element={<ContactUs />} />
