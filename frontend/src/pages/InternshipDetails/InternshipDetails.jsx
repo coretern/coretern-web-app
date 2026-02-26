@@ -108,7 +108,7 @@ const InternshipDetails = () => {
                                     )}
 
                                     {internship?.details && (
-                                        <div className="details-rich-content ql-editor" dangerouslySetInnerHTML={{ __html: internship.details }} />
+                                        <div className="details-rich-content" dangerouslySetInnerHTML={{ __html: internship.details }} />
                                     )}
 
                                     {internship?.curriculum && internship.curriculum.length > 0 && (

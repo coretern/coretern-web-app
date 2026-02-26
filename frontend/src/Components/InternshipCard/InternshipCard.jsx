@@ -1,10 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Clock, ArrowRight, Wallet } from 'lucide-react';
 import './InternshipCard.css';
 
 const InternshipCard = ({ item, index }) => {
+    const navigate = useNavigate();
     const backendUrl = 'http://localhost:5000';
     const imageUrl = item.image?.startsWith('http') ? item.image : `${backendUrl}/${item.image}`;
 
@@ -15,6 +16,7 @@ const InternshipCard = ({ item, index }) => {
             transition={{ delay: index * 0.1 }}
             viewport={{ once: true }}
             className="intern-card"
+            onClick={() => navigate(`/internships/${item._id}`)}
         >
             <div className="intern-card-image">
                 <img src={imageUrl} alt={item.title} />
@@ -48,9 +50,9 @@ const InternshipCard = ({ item, index }) => {
                     </div>
                 </div>
 
-                <Link to={`/internships/${item._id}`} className="btn btn-primary intern-card-btn">
+                <div className="btn btn-primary intern-card-btn">
                     Enrol Now <ArrowRight size={18} />
-                </Link>
+                </div>
             </div>
         </motion.div>
     );
