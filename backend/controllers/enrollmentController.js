@@ -311,11 +311,34 @@ exports.cashfreeWebhook = asyncHandler(async (req, res, next) => {
 exports.getAllEnrollments = asyncHandler(async (req, res, next) => {
     const enrollments = await Enrollment.find().populate('user').populate('internship');
 
-    // For each enrollment, check if certificate exists
-    const updatedEnrollments = await Promise.all(enrollments.map(async (enrol) => {
+    // 1. Identify valid and orphaned enrollments
+    const validEnrollments = [];
+    const orphanedIds = [];
+
+    for (const enrol of enrollments) {
+        if (!enrol.user) {
+            orphanedIds.push(enrol._id);
+        } else {
+            validEnrollments.push(enrol);
+        }
+    }
+
+    // 2. Background cleanup: Delete enrollments and their certificates if user doesn't exist
+    if (orphanedIds.length > 0) {
+        console.log(`Cleaning up ${orphanedIds.length} orphaned enrollment records...`);
+        // We don't await this to keep the response fast
+        Enrollment.deleteMany({ _id: { $in: orphanedIds } }).catch(err => console.error('Auto-cleanup Enrollment error:', err));
+        Certificate.deleteMany({ enrollment: { $in: orphanedIds } }).catch(err => console.error('Auto-cleanup Certificate error:', err));
+    }
+
+    // 3. Process valid ones for certificate status
+    const updatedEnrollments = await Promise.all(validEnrollments.map(async (enrol) => {
         const enrolObj = enrol.toObject();
         if (enrolObj.status === 'completed') {
-            const certExists = await Certificate.exists({ user: enrolObj.user?._id, internship: enrolObj.internship?._id });
+            const certExists = await Certificate.exists({
+                user: enrolObj.user?._id,
+                internship: enrolObj.internship?._id
+            });
             if (!certExists) enrolObj.status = 'enrolled';
         }
         return enrolObj;
