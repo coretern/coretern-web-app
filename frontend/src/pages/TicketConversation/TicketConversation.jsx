@@ -103,9 +103,10 @@ const TicketConversation = () => {
                             <div key={i} className={`chat-wrapper ${msg.sender}`}>
                                 <div className="chat-bubble">
                                     <p className="bubble-msg">{msg.message}</p>
-                                    <span className="bubble-time">
-                                        {msg.sender === 'admin' ? 'Support Team' : 'You'} • {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                    </span>
+                                    <div className="bubble-meta-inline">
+                                        <span className="bubble-sender">{msg.sender === 'admin' ? 'Support Team' : 'You'}</span>
+                                        <span className="bubble-time-tag">{new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                    </div>
                                 </div>
                             </div>
                         ))}

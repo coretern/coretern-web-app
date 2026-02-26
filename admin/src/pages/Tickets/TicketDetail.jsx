@@ -136,12 +136,12 @@ const TicketDetail = () => {
                     <div className="chat-messages">
                         {ticket.conversation.map((msg, i) => (
                             <div key={i} className={`message-wrapper ${msg.sender}`}>
-                                <div className="message-meta">
-                                    <span className="sender-tag">{msg.sender === 'admin' ? 'Support Team' : ticket.name}</span>
-                                    <span className="time-tag">{new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                                </div>
                                 <div className="message-bubble">
-                                    {msg.message}
+                                    <p className="bubble-msg">{msg.message}</p>
+                                    <div className="message-meta-inline">
+                                        <span className="sender-tag">{msg.sender === 'admin' ? 'Support Team' : ticket.name}</span>
+                                        <span className="time-tag">{new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                    </div>
                                 </div>
                             </div>
                         ))}

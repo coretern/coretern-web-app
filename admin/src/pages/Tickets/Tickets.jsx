@@ -100,8 +100,8 @@ const Tickets = () => {
                         <tr>
                             <th>Ticket ID</th>
                             <th>Type</th>
-                            <th>User Info</th>
-                            <th>Subject & Initial Msg</th>
+                            <th>Email</th>
+                            <th>Subject</th>
                             <th>Status</th>
                             <th>Raised On</th>
                             <th>Actions</th>
@@ -119,19 +119,10 @@ const Tickets = () => {
                                     </span>
                                 </td>
                                 <td>
-                                    <div className="flex flex-col">
-                                        <span className="font-semibold">{ticket.name}</span>
-                                        <span className="text-xs text-text-muted">{ticket.email}</span>
-                                        <span className="text-xs text-primary">{ticket.phone}</span>
-                                    </div>
+                                    <span className="font-medium text-text-main">{ticket.email}</span>
                                 </td>
                                 <td className="max-w-xs">
-                                    <div className="flex flex-col">
-                                        <span className="font-semibold line-clamp-1">{ticket.subject}</span>
-                                        <span className="text-xs text-text-muted line-clamp-2">
-                                            {ticket.conversation && ticket.conversation[0]?.message}
-                                        </span>
-                                    </div>
+                                    <span className="font-semibold text-text-main line-clamp-2">{ticket.subject}</span>
                                 </td>
                                 <td>
                                     <span className={`status-pill ${ticket.status}`}>
