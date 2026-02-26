@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Users, BookOpen, Award, TrendingUp, Loader2 } from 'lucide-react';
+import { Users, BookOpen, Award, TrendingUp, Loader2, LifeBuoy } from 'lucide-react';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -10,7 +10,8 @@ const Dashboard = () => {
         internships: 0,
         enrollments: 0,
         students: 0,
-        completed: 0
+        completed: 0,
+        tickets: 0
     });
     const [loading, setLoading] = useState(true);
 
@@ -19,17 +20,19 @@ const Dashboard = () => {
             const token = localStorage.getItem('token');
             const config = { headers: { Authorization: `Bearer ${token}` } };
             try {
-                const [intRes, enrRes, userRes] = await Promise.all([
+                const [intRes, enrRes, userRes, ticketRes] = await Promise.all([
                     axios.get('http://localhost:5000/api/internships', config),
                     axios.get('http://localhost:5000/api/enrollments', config),
-                    axios.get('http://localhost:5000/api/users', config)
+                    axios.get('http://localhost:5000/api/users', config),
+                    axios.get('http://localhost:5000/api/tickets', config)
                 ]);
 
                 setStats({
                     internships: intRes.data.count || 0,
                     enrollments: enrRes.data.count || 0,
                     students: userRes.data.count || 0,
-                    completed: enrRes.data.data?.filter(e => e.status === 'completed').length || 0
+                    completed: enrRes.data.data?.filter(e => e.status === 'completed').length || 0,
+                    tickets: ticketRes.data.data?.filter(t => t.status === 'open').length || 0
                 });
             } catch (err) {
                 console.error(err);
@@ -44,6 +47,7 @@ const Dashboard = () => {
         { label: 'Total Registered Users', value: stats.students, icon: <Users />, color: '#6366f1', link: '/students' },
         { label: 'Total Internships', value: stats.internships, icon: <BookOpen />, color: 'var(--primary)', link: '/internships' },
         { label: 'Total Enrollments', value: stats.enrollments, icon: <TrendingUp />, color: 'var(--secondary)', link: '/enrollments' },
+        { label: 'Open Tickets', value: stats.tickets, icon: <LifeBuoy />, color: '#f59e0b', link: '/tickets' },
         { label: 'Certificates Issued', value: stats.completed, icon: <Award />, color: 'var(--success)', link: '/enrollments' }
     ];
 

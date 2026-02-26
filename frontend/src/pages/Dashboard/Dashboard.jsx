@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { BookOpen, Award, LogOut, Download, X, Loader2 } from 'lucide-react';
+import { BookOpen, Award, LogOut, Download, X, Loader2, LifeBuoy } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { toPng } from 'html-to-image';
 import download from 'downloadjs';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
 import CertificateTemplate from '../../Components/CertificateTemplate/CertificateTemplate';
+import TicketsForRegistered from '../TicketsForRegistered/TicketsForRegistered';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -16,6 +17,7 @@ const Dashboard = () => {
     const [enrollments, setEnrollments] = useState([]);
     const [certificates, setCertificates] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState('internships');
     const [selectedCert, setSelectedCert] = useState(null);
     const navigate = useNavigate();
 
@@ -127,49 +129,71 @@ const Dashboard = () => {
                                 <p>{certificates.length}</p>
                             </div>
                         </div>
+                        <div
+                            className={`stat-card glass clickable ${activeTab === 'support' ? 'active-tab' : ''}`}
+                            onClick={() => setActiveTab('support')}
+                        >
+                            <div className="stat-icon warning"><LifeBuoy size={24} /></div>
+                            <div className="stat-info">
+                                <h3>Support</h3>
+                                <p>Help Center</p>
+                            </div>
+                        </div>
                     </aside>
 
                     <main className="internships-list">
-                        <h2 className="outfit">My Internships</h2>
-                        {enrollments.length === 0 ? (
-                            <div className="glass p-12 rounded-3xl text-center">
-                                <p className="text-text-muted mb-6">Start your career with our professional programs.</p>
-                                <Link to="/internships" className="btn btn-primary">Browse Internships</Link>
-                            </div>
-                        ) : (
-                            enrollments.map((enrol, i) => {
-                                const cert = certificates.find(c => c.internship?._id === enrol.internship?._id);
-                                return (
-                                    <motion.div
-                                        key={enrol._id}
-                                        initial={{ opacity: 0, x: 20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        className="enrollment-card glass"
-                                    >
-                                        <div className="enroll-info">
-                                            <img src={enrol.internship.image} className="enroll-img" alt="" />
-                                            <div className="enroll-text">
-                                                <h3 className="outfit">{enrol.internship.title}</h3>
-                                                <span className={`status-badge ${enrol.paymentStatus}`}>
-                                                    {enrol.paymentStatus}
-                                                </span>
-                                            </div>
-                                        </div>
+                        <div className="flex items-center justify-between mb-8">
+                            <h2 className="outfit">{activeTab === 'internships' ? 'My Internships' : 'Help & Support'}</h2>
+                            {activeTab !== 'internships' && (
+                                <button className="btn btn-sm btn-outline" onClick={() => setActiveTab('internships')}>
+                                    Back to Courses
+                                </button>
+                            )}
+                        </div>
 
-                                        <div className="enroll-actions">
-                                            {cert ? (
-                                                <button onClick={() => setSelectedCert(cert)} className="btn btn-primary">
-                                                    View Certificate
-                                                </button>
-                                            ) : (
-                                                <button className="btn btn-outline" disabled>
-                                                    {enrol.status === 'pending' ? 'Verification Pending' : 'In Progress'}
-                                                </button>
-                                            )}
-                                        </div>
-                                    </motion.div>
-                                );
-                            })
+                        {activeTab === 'support' ? (
+                            <TicketsForRegistered />
+                        ) : (
+                            enrollments.length === 0 ? (
+                                <div className="glass p-12 rounded-3xl text-center">
+                                    <p className="text-text-muted mb-6">Start your career with our professional programs.</p>
+                                    <Link to="/internships" className="btn btn-primary">Browse Internships</Link>
+                                </div>
+                            ) : (
+                                enrollments.map((enrol, i) => {
+                                    const cert = certificates.find(c => c.internship?._id === enrol.internship?._id);
+                                    return (
+                                        <motion.div
+                                            key={enrol._id}
+                                            initial={{ opacity: 0, x: 20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            className="enrollment-card glass"
+                                        >
+                                            <div className="enroll-info">
+                                                <img src={enrol.internship.image} className="enroll-img" alt="" />
+                                                <div className="enroll-text">
+                                                    <h3 className="outfit">{enrol.internship.title}</h3>
+                                                    <span className={`status-badge ${enrol.paymentStatus}`}>
+                                                        {enrol.paymentStatus}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div className="enroll-actions">
+                                                {cert ? (
+                                                    <button onClick={() => setSelectedCert(cert)} className="btn btn-primary">
+                                                        View Certificate
+                                                    </button>
+                                                ) : (
+                                                    <button className="btn btn-outline" disabled>
+                                                        {enrol.status === 'pending' ? 'Verification Pending' : 'In Progress'}
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </motion.div>
+                                    );
+                                })
+                            )
                         )}
                     </main>
                 </div>

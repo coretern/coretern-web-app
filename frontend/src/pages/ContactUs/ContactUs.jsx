@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Send, MessageSquare, Loader2 } from 'lucide-react';
+import axios from 'axios';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
 import PageTransition from '../../Components/PageTransition';
@@ -12,6 +13,7 @@ const ContactUs = () => {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
+        phone: '',
         subject: '',
         message: ''
     });
@@ -19,12 +21,17 @@ const ContactUs = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        // Simulate API call
-        setTimeout(() => {
-            toast.success('Message sent! We will get back to you soon.');
-            setFormData({ name: '', email: '', subject: '', message: '' });
+        try {
+            const { data } = await axios.post('http://localhost:5000/api/tickets', formData);
+            if (data.success) {
+                toast.success(`Ticket Raised! ID: ${data.data.ticketId}`, { duration: 6000 });
+                setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+            }
+        } catch (err) {
+            toast.error(err.response?.data?.error || 'Failed to raise ticket');
+        } finally {
             setLoading(false);
-        }, 1500);
+        }
     };
 
     return (
@@ -114,15 +121,25 @@ const ContactUs = () => {
                                             />
                                         </div>
                                         <div className="form-group">
-                                            <label>Email Address</label>
+                                            <label>Phone Number</label>
                                             <input
-                                                type="email"
-                                                placeholder="john@example.com"
+                                                type="tel"
+                                                placeholder="+91 XXXXX XXXXX"
                                                 required
-                                                value={formData.email}
-                                                onChange={e => setFormData({ ...formData, email: e.target.value })}
+                                                value={formData.phone}
+                                                onChange={e => setFormData({ ...formData, phone: e.target.value })}
                                             />
                                         </div>
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Email Address</label>
+                                        <input
+                                            type="email"
+                                            placeholder="john@example.com"
+                                            required
+                                            value={formData.email}
+                                            onChange={e => setFormData({ ...formData, email: e.target.value })}
+                                        />
                                     </div>
                                     <div className="form-group">
                                         <label>Subject</label>

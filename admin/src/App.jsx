@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import ManageInternships from './pages/ManageInternships/ManageInternships';
 import ManageEnrollments from './pages/ManageEnrollments/ManageEnrollments';
 import ManageUsers from './pages/ManageUsers/ManageUsers';
+import Tickets from './pages/Tickets/Tickets';
 import Login from './pages/Login/Login';
 
 function App() {
@@ -42,6 +43,10 @@ function App() {
               <Route
                 path="/students"
                 element={isAuthenticated ? <ManageUsers /> : <Navigate to="/login" />}
+              />
+              <Route
+                path="/tickets"
+                element={isAuthenticated ? <Tickets /> : <Navigate to="/login" />}
               />
             </Routes>
           </main>
