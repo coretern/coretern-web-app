@@ -42,13 +42,15 @@ const VerifyCertificate = () => {
     };
 
     const handleDownload = async () => {
-        if (!certificateRef.current) return;
+        const element = document.getElementById('certificate-download-area');
+        if (!element) return;
+
         setDownloading(true);
         try {
-            const dataUrl = await toPng(certificateRef.current, {
+            const dataUrl = await toPng(element, {
                 quality: 1,
-                pixelRatio: 2,
-                backgroundColor: '#0d1117' // Match your surface color
+                pixelRatio: 3, // Higher resolution for professional look
+                backgroundColor: '#030712'
             });
             download(dataUrl, `Certificate-${certificate.certificateId}.png`);
         } catch (err) {
@@ -120,38 +122,41 @@ const VerifyCertificate = () => {
                             )}
 
                             {certificate && (
-                                <div className="success-state" ref={certificateRef}>
-                                    <div className="verify-badge-container">
-                                        <div className="verify-shield-bg" style={{ background: '#10b981' }}></div>
-                                        <ShieldCheck className="verify-icon success" size={80} />
-                                    </div>
-                                    <h1 className="verify-title outfit">Verified Authentic</h1>
-                                    <p className="verify-subtitle">This document is valid and was officially issued by <strong>TechStart Platforms</strong>.</p>
+                                <div className="success-state">
+                                    {/* Capture Area for Download (styled for PNG) */}
+                                    <div id="certificate-download-area" className="success-state" style={{ padding: '40px', background: '#030712', borderRadius: '15px' }}>
+                                        <div className="verify-badge-container">
+                                            <div className="verify-shield-bg" style={{ background: '#10b981' }}></div>
+                                            <ShieldCheck className="verify-icon success" size={80} />
+                                        </div>
+                                        <h1 className="verify-title outfit" style={{ color: '#10b981' }}>Verified Authentic</h1>
+                                        <p className="verify-subtitle" style={{ color: '#94a3b8' }}>This document is valid and was officially issued by <strong>TechStart Platforms</strong>.</p>
 
-                                    <div className="verify-info-grid">
-                                        <div className="info-item">
-                                            <div className="label"><User size={14} /> Issued To</div>
-                                            <div className="value">{certificate.user?.name}</div>
-                                        </div>
-                                        <div className="info-item">
-                                            <div className="label"><Book size={14} /> Internship</div>
-                                            <div className="value">{certificate.internship?.title}</div>
-                                        </div>
-                                        <div className="info-item">
-                                            <div className="label"><ShieldCheck size={14} /> Certificate ID</div>
-                                            <div className="value">{certificate.certificateId}</div>
-                                        </div>
-                                        <div className="info-item">
-                                            <div className="label"><Calendar size={14} /> Issue Date</div>
-                                            <div className="value">{new Date(certificate.issueDate).toLocaleDateString(undefined, {
-                                                year: 'numeric',
-                                                month: 'long',
-                                                day: 'numeric'
-                                            })}</div>
+                                        <div className="verify-info-grid">
+                                            <div className="info-item">
+                                                <div className="label"><User size={14} /> Issued To</div>
+                                                <div className="value">{certificate.user?.name}</div>
+                                            </div>
+                                            <div className="info-item">
+                                                <div className="label"><Book size={14} /> Internship</div>
+                                                <div className="value">{certificate.internship?.title}</div>
+                                            </div>
+                                            <div className="info-item">
+                                                <div className="label"><ShieldCheck size={14} /> Certificate ID</div>
+                                                <div className="value">{certificate.certificateId}</div>
+                                            </div>
+                                            <div className="info-item">
+                                                <div className="label"><Calendar size={14} /> Issue Date</div>
+                                                <div className="value">{new Date(certificate.issueDate).toLocaleDateString(undefined, {
+                                                    year: 'numeric',
+                                                    month: 'long',
+                                                    day: 'numeric'
+                                                })}</div>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div className="flex flex-col gap-4 mt-8 print-hide">
+                                    <div className="verify-actions px-4">
                                         <button
                                             onClick={handleDownload}
                                             disabled={downloading}
@@ -160,11 +165,11 @@ const VerifyCertificate = () => {
                                             {downloading ? <Loader2 className="animate-spin" /> : <><Download size={20} /> Download Certificate</>}
                                         </button>
 
-                                        <div className="flex gap-4">
-                                            <button onClick={() => setCertificate(null)} className="btn btn-outline flex-1 py-4">
+                                        <div className="verify-btn-group">
+                                            <button onClick={() => setCertificate(null)} className="btn btn-outline py-4">
                                                 <RefreshCw size={18} /> Verify Another
                                             </button>
-                                            <Link to="/" className="btn btn-outline flex-1 py-4">
+                                            <Link to="/" className="btn btn-outline py-4">
                                                 <Home size={18} /> Return Home
                                             </Link>
                                         </div>
