@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Upload, Send, Loader2, Calendar, User, BookOpen, Hash, Mail, Phone, GraduationCap } from 'lucide-react';
+import { X, Upload, Send, Loader2, Calendar, User, BookOpen, Hash, Mail, Phone, GraduationCap, Users } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import PhoneInput from 'react-phone-input-2';
@@ -11,6 +11,7 @@ const InternshipForm = ({ internship, onClose, onEnrollSuccess }) => {
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         fullName: '',
+        gender: '',
         collegeRegNumber: '',
         collegeName: '',
         course: '',
@@ -35,7 +36,7 @@ const InternshipForm = ({ internship, onClose, onEnrollSuccess }) => {
         e.preventDefault();
 
         // Validation
-        if (!formData.fullName || !formData.startDate || !formData.endDate || !formData.whatsappNumber || !formData.email) {
+        if (!formData.fullName || !formData.gender || !formData.startDate || !formData.endDate || !formData.whatsappNumber || !formData.email) {
             return toast.error('Please fill all required fields');
         }
 
@@ -46,6 +47,7 @@ const InternshipForm = ({ internship, onClose, onEnrollSuccess }) => {
         const data = new FormData();
         data.append('internshipId', internship._id);
         data.append('fullName', formData.fullName);
+        data.append('gender', formData.gender);
         data.append('collegeRegNumber', formData.collegeRegNumber);
         data.append('collegeName', formData.collegeName);
         data.append('course', formData.course === 'Other' ? (formData.otherCourse || 'Other') : formData.course);
@@ -101,7 +103,7 @@ const InternshipForm = ({ internship, onClose, onEnrollSuccess }) => {
                         <div className="form-section">
                             <h3 className="section-title">Personal Details</h3>
                             <div className="input-group">
-                                <label><User size={16} /> Full Name (for certificate) *</label>
+                                <label><User size={16} /> Full Name <span className="label-sub">(To be printed on certificate)</span> *</label>
                                 <input
                                     type="text"
                                     name="fullName"
@@ -110,6 +112,22 @@ const InternshipForm = ({ internship, onClose, onEnrollSuccess }) => {
                                     onChange={handleChange}
                                     required
                                 />
+                            </div>
+
+                            <div className="input-group">
+                                <label><Users size={16} /> Gender *</label>
+                                <select
+                                    name="gender"
+                                    value={formData.gender}
+                                    onChange={handleChange}
+                                    required
+                                    className="form-select"
+                                >
+                                    <option value="">Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
                             </div>
 
                             <div className="input-row">
@@ -130,7 +148,6 @@ const InternshipForm = ({ internship, onClose, onEnrollSuccess }) => {
                                         country={'in'}
                                         value={formData.whatsappNumber}
                                         onChange={(phone) => setFormData(prev => ({ ...prev, whatsappNumber: phone }))}
-                                        disableFormatting={true}
                                         inputProps={{
                                             required: true,
                                             name: 'whatsappNumber',
@@ -208,7 +225,7 @@ const InternshipForm = ({ internship, onClose, onEnrollSuccess }) => {
                         </div>
 
                         <div className="form-section">
-                            <h3 className="section-title">Internship Duration (For Certificate)</h3>
+                            <h3 className="section-title">Internship Duration <span className="title-sub">(To be printed on certificate)</span></h3>
                             <div className="input-row">
                                 <div className="input-group">
                                     <label><Calendar size={16} /> Start Date *</label>

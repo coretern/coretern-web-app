@@ -147,6 +147,10 @@ const ManageEnrollments = () => {
                                 <p>{selectedEnrol.fullName || selectedEnrol.user?.name}</p>
                             </div>
                             <div className="info-item">
+                                <label>Gender</label>
+                                <p>{selectedEnrol.gender || 'N/A'}</p>
+                            </div>
+                            <div className="info-item">
                                 <label>WhatsApp / Phone</label>
                                 <p>{selectedEnrol.whatsappNumber || selectedEnrol.user?.phone || 'N/A'}</p>
                             </div>

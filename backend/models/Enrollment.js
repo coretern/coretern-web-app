@@ -28,6 +28,11 @@ const enrollmentSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    gender: {
+        type: String,
+        required: true,
+        enum: ['Male', 'Female', 'Other']
+    },
     collegeRegNumber: String,
     collegeName: String,
     course: String,

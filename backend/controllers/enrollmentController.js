@@ -10,6 +10,7 @@ exports.enroll = asyncHandler(async (req, res, next) => {
     const {
         internshipId,
         fullName,
+        gender,
         collegeRegNumber,
         collegeName,
         course,
@@ -112,6 +113,7 @@ exports.enroll = asyncHandler(async (req, res, next) => {
         paymentStatus: 'unpaid',
         cfOrderId: orderId,
         fullName,
+        gender,
         collegeRegNumber,
         collegeName,
         course,

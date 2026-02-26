@@ -115,6 +115,16 @@
     letter-spacing: 0.05em;
 }
 
+.label-sub,
+.title-sub {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: none;
+    letter-spacing: normal;
+    font-weight: 500;
+    margin-left: 0.25rem;
+}
+
 .input-group input,
 .input-group select {
     background: var(--surface-1);
