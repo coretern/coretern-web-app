@@ -26,7 +26,7 @@ exports.toggleUserStatus = asyncHandler(async (req, res, next) => {
     }
 
     user.status = user.status === 'active' ? 'suspended' : 'active';
-    await user.save();
+    await User.findByIdAndUpdate(req.params.id, { status: user.status });
 
     res.status(200).json({
         success: true,
