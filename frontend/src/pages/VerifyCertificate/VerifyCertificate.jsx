@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { ShieldCheck, User, Book, Calendar, Loader2 } from 'lucide-react';
+import { ShieldCheck, User, Book, Calendar, Loader2, Download, XCircle, Home, RefreshCw } from 'lucide-react';
+import { toPng } from 'html-to-image';
+import download from 'downloadjs';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
 import PageTransition from '../../Components/PageTransition';
@@ -15,6 +17,8 @@ const VerifyCertificate = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [verifying, setVerifying] = useState(false);
+    const [downloading, setDownloading] = useState(false);
+    const certificateRef = React.useRef(null);
 
     useEffect(() => {
         if (urlId) {
@@ -31,9 +35,26 @@ const VerifyCertificate = () => {
             const { data } = await axios.get(`http://localhost:5000/api/certificates/verify/${certId}`);
             setCertificate(data.data);
         } catch (err) {
-            setError('Invalid or expired certificate ID');
+            setError('Certificate not found or invalid ID. Please check the ID and try again.');
         } finally {
             setVerifying(false);
+        }
+    };
+
+    const handleDownload = async () => {
+        if (!certificateRef.current) return;
+        setDownloading(true);
+        try {
+            const dataUrl = await toPng(certificateRef.current, {
+                quality: 1,
+                pixelRatio: 2,
+                backgroundColor: '#0d1117' // Match your surface color
+            });
+            download(dataUrl, `Certificate-${certificate.certificateId}.png`);
+        } catch (err) {
+            console.error('Download failed', err);
+        } finally {
+            setDownloading(false);
         }
     };
 
@@ -99,7 +120,7 @@ const VerifyCertificate = () => {
                             )}
 
                             {certificate && (
-                                <div className="success-state">
+                                <div className="success-state" ref={certificateRef}>
                                     <div className="verify-badge-container">
                                         <div className="verify-shield-bg" style={{ background: '#10b981' }}></div>
                                         <ShieldCheck className="verify-icon success" size={80} />
@@ -130,13 +151,23 @@ const VerifyCertificate = () => {
                                         </div>
                                     </div>
 
-                                    <div className="flex flex-col gap-4">
-                                        <button onClick={() => setCertificate(null)} className="btn btn-outline w-full py-4">
-                                            Verify Another
+                                    <div className="flex flex-col gap-4 mt-8 print-hide">
+                                        <button
+                                            onClick={handleDownload}
+                                            disabled={downloading}
+                                            className="btn btn-primary w-full py-4 justify-center"
+                                        >
+                                            {downloading ? <Loader2 className="animate-spin" /> : <><Download size={20} /> Download Certificate</>}
                                         </button>
-                                        <Link to="/" className="btn btn-primary w-full py-4">
-                                            Return Home
-                                        </Link>
+
+                                        <div className="flex gap-4">
+                                            <button onClick={() => setCertificate(null)} className="btn btn-outline flex-1 py-4">
+                                                <RefreshCw size={18} /> Verify Another
+                                            </button>
+                                            <Link to="/" className="btn btn-outline flex-1 py-4">
+                                                <Home size={18} /> Return Home
+                                            </Link>
+                                        </div>
                                     </div>
                                 </div>
                             )}
