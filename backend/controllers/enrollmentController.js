@@ -49,8 +49,47 @@ exports.enroll = asyncHandler(async (req, res, next) => {
         }
     }
 
-    // Prepare Cashfree Order
+    // Prepare Order ID and URLs
     const orderId = `ORDER_${Date.now()}`;
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+
+    // Cashfree Production REQUIRES https even for localhost during testing
+    let returnUrl = `${frontendUrl}/dashboard?order_id=${orderId}`;
+    if (process.env.CASHFREE_ENV === 'production' && returnUrl.startsWith('http:')) {
+        returnUrl = returnUrl.replace('http:', 'https:');
+    }
+
+    // 1. SAVE/UPDATE ENROLLMENT IN DB FIRST
+    let enrollment = await Enrollment.findOne({ user: req.user.id, internship: internshipId });
+
+    const enrollmentData = {
+        user: req.user.id,
+        internship: internshipId,
+        status: 'pending',
+        paymentStatus: 'unpaid',
+        cfOrderId: orderId,
+        fullName,
+        gender,
+        collegeRegNumber,
+        collegeName,
+        course,
+        startDate,
+        endDate,
+        whatsappNumber,
+        email,
+        resume: resumePath || (enrollment ? enrollment.resume : undefined)
+    };
+
+    if (enrollment) {
+        if (enrollment.paymentStatus !== 'paid') {
+            Object.assign(enrollment, enrollmentData);
+            await enrollment.save();
+        }
+    } else {
+        enrollment = await Enrollment.create(enrollmentData);
+    }
+
+    // 2. NOW PREPARE CASHFREE ORDER
     const url = process.env.CASHFREE_ENV === 'production'
         ? 'https://api.cashfree.com/pg/orders'
         : 'https://sandbox.cashfree.com/pg/orders';
@@ -75,12 +114,12 @@ exports.enroll = asyncHandler(async (req, res, next) => {
                 customer_phone: whatsappNumber ? whatsappNumber.replace(/\D/g, '').slice(-10) : (req.user.phone ? req.user.phone.replace(/\D/g, '').slice(-10) : '9999999999')
             },
             order_meta: {
-                return_url: `http://localhost:5173/dashboard?order_id=${orderId}`
+                return_url: returnUrl
             }
         })
     };
 
-    console.log(`Creating order for internship: ${internship.title}, user: ${req.user.email}`);
+    console.log(`Creating Cashfree order for: ${orderId}, Return URL: ${returnUrl}`);
 
     let cfResponse;
     let cfData;
@@ -101,35 +140,11 @@ exports.enroll = asyncHandler(async (req, res, next) => {
         return next(new ErrorResponse(cfData.message || 'Failed to create payment order', 500));
     }
 
-    console.log('Cashfree order created successfully:', cfData.payment_session_id);
-
-    // Create or update enrollment
-    let enrollment = await Enrollment.findOne({ user: req.user.id, internship: internshipId });
-
-    const enrollmentData = {
-        user: req.user.id,
-        internship: internshipId,
-        status: 'pending',
-        paymentStatus: 'unpaid',
-        cfOrderId: orderId,
-        fullName,
-        gender,
-        collegeRegNumber,
-        collegeName,
-        course,
-        startDate,
-        endDate,
-        whatsappNumber,
-        email,
-        resume: resumePath || (enrollment ? enrollment.resume : undefined)
-    };
-
-    if (enrollment) {
-        Object.assign(enrollment, enrollmentData);
-        await enrollment.save();
-    } else {
-        enrollment = await Enrollment.create(enrollmentData);
-    }
+    console.log('✓ Cashfree Order Created:', {
+        orderId,
+        sessionId: cfData.payment_session_id,
+        env: process.env.CASHFREE_ENV
+    });
 
     res.status(201).json({
         success: true,
@@ -210,14 +225,35 @@ exports.verifyPayment = asyncHandler(async (req, res, next) => {
     }
 
     if (cfData.order_status === 'PAID') {
+        const isAlreadyPaid = enrollment.paymentStatus === 'paid';
+
         enrollment.paymentStatus = 'paid';
         enrollment.status = 'enrolled';
-        // We can also store the payment ID if needed from cfData.payments[0].cf_payment_id
+
+        // Try to get payment ID from the first successful payment if available
+        try {
+            const paymentsUrl = process.env.CASHFREE_ENV === 'production'
+                ? `https://api.cashfree.com/pg/orders/${orderId}/payments`
+                : `https://sandbox.cashfree.com/pg/orders/${orderId}/payments`;
+
+            const paymentsResponse = await fetch(paymentsUrl, options);
+            const paymentsData = await paymentsResponse.json();
+
+            if (paymentsData && paymentsData.length > 0) {
+                const successfulPayment = paymentsData.find(p => p.payment_status === 'SUCCESS');
+                if (successfulPayment) {
+                    enrollment.paymentId = successfulPayment.cf_payment_id;
+                }
+            }
+        } catch (paymentErr) {
+            console.error('Error fetching payment details:', paymentErr.message);
+        }
+
         await enrollment.save();
 
         res.status(200).json({
             success: true,
-            message: 'Payment verified and enrollment activated',
+            message: isAlreadyPaid ? 'Payment already verified' : 'Payment verified and enrollment activated',
             data: enrollment
         });
     } else {
@@ -227,6 +263,35 @@ exports.verifyPayment = asyncHandler(async (req, res, next) => {
             status: cfData.order_status
         });
     }
+});
+
+// @desc    Cashfree Webhook for payment confirmation
+// @route   POST /api/enrollments/webhook
+// @access  Public
+exports.cashfreeWebhook = asyncHandler(async (req, res, next) => {
+    // In a real production app, you should verify the signature here
+    // For now, we'll implement the logic to update based on the payload
+    const { data } = req.body;
+
+    if (!data || !data.order || !data.order.order_id) {
+        return res.status(400).send('Invalid webhook payload');
+    }
+
+    const orderId = data.order.order_id;
+    const paymentStatus = data.payment ? data.payment.payment_status : null;
+
+    if (paymentStatus === 'SUCCESS') {
+        const enrollment = await Enrollment.findOne({ cfOrderId: orderId });
+        if (enrollment && enrollment.paymentStatus !== 'paid') {
+            enrollment.paymentStatus = 'paid';
+            enrollment.status = 'enrolled';
+            enrollment.paymentId = data.payment.cf_payment_id;
+            await enrollment.save();
+            console.log(`Webhook: Order ${orderId} marked as PAID`);
+        }
+    }
+
+    res.status(200).send('Webhook Received');
 });
 
 // @desc    Get all enrollments (Admin only)

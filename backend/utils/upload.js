@@ -21,7 +21,7 @@ if (isCloudinaryConfigured) {
         cloudinary: cloudinary,
         params: {
             folder: 'tech_startup_internships',
-            allowed_formats: ['jpg', 'png', 'jpeg', 'pdf', 'docx', 'doc'],
+            allowed_formats: ['jpg', 'png', 'jpeg', 'pdf'],
         },
     });
     console.log('Using Cloudinary for file storage.');
@@ -45,7 +45,7 @@ if (isCloudinaryConfigured) {
 
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
+    limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
 });
 
 module.exports = upload;

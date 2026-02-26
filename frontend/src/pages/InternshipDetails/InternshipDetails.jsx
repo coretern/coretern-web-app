@@ -36,7 +36,7 @@ const InternshipDetails = () => {
         script.src = 'https://sdk.cashfree.com/js/v3/cashfree.js';
         script.async = true;
         script.onload = () => {
-            setCashfree(window.Cashfree({ mode: 'production' }));
+            setCashfree(window.Cashfree({ mode: 'sandbox' }));
         };
         document.body.appendChild(script);
 
@@ -65,6 +65,13 @@ const InternshipDetails = () => {
 
     const handlePayment = (sessionId) => {
         if (!cashfree) return;
+
+        console.log('Initiating checkout with session ID:', sessionId);
+
+        if (!sessionId) {
+            toast.error('Payment session creation failed');
+            return;
+        }
 
         toast.success('Opening Checkout...');
         cashfree.checkout({

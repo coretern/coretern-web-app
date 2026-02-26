@@ -5,7 +5,62 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
+import 'react-phone-input-2/lib/style.css';
 import './InternshipForm.css';
+import { ChevronDown } from 'lucide-react';
+
+const CustomSelect = ({ label, icon: Icon, name, value, options, onChange, placeholder, required }) => {
+    const [isOpen, setIsOpen] = React.useState(false);
+    const containerRef = React.useRef(null);
+
+    React.useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (containerRef.current && !containerRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    return (
+        <div className="input-group custom-select-container" ref={containerRef}>
+            <label>{Icon && <Icon size={16} />} {label} {required && '*'}</label>
+            <div
+                className={`custom-select-trigger ${isOpen ? 'active' : ''}`}
+                onClick={() => setIsOpen(!isOpen)}
+            >
+                <span>{value ? options.find(opt => opt.value === value)?.label : placeholder}</span>
+                <ChevronDown size={18} className={`select-arrow ${isOpen ? 'rotate' : ''}`} />
+            </div>
+
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                        className="custom-select-dropdown"
+                    >
+                        {options.map((option) => (
+                            <div
+                                key={option.value}
+                                className={`custom-select-option ${value === option.value ? 'selected' : ''}`}
+                                onClick={() => {
+                                    onChange({ target: { name, value: option.value } });
+                                    setIsOpen(false);
+                                }}
+                            >
+                                {option.label}
+                            </div>
+                        ))}
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    );
+};
 
 const InternshipForm = ({ internship, onClose, onEnrollSuccess }) => {
     const [loading, setLoading] = useState(false);
@@ -29,7 +84,15 @@ const InternshipForm = ({ internship, onClose, onEnrollSuccess }) => {
     };
 
     const handleFileChange = (e) => {
-        setFormData(prev => ({ ...prev, resume: e.target.files[0] }));
+        const file = e.target.files[0];
+        if (file) {
+            if (file.size > 10 * 1024 * 1024) {
+                toast.error('File size must be less than 10MB');
+                e.target.value = null;
+                return;
+            }
+            setFormData(prev => ({ ...prev, resume: file }));
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -114,21 +177,20 @@ const InternshipForm = ({ internship, onClose, onEnrollSuccess }) => {
                                 />
                             </div>
 
-                            <div className="input-group">
-                                <label><Users size={16} /> Gender *</label>
-                                <select
-                                    name="gender"
-                                    value={formData.gender}
-                                    onChange={handleChange}
-                                    required
-                                    className="form-select"
-                                >
-                                    <option value="">Select Gender</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
+                            <CustomSelect
+                                label="Gender"
+                                icon={Users}
+                                name="gender"
+                                value={formData.gender}
+                                onChange={handleChange}
+                                placeholder="Select Gender"
+                                required
+                                options={[
+                                    { value: 'Male', label: 'Male' },
+                                    { value: 'Female', label: 'Female' },
+                                    { value: 'Other', label: 'Other' }
+                                ]}
+                            />
 
                             <div className="input-row">
                                 <div className="input-group">
@@ -163,27 +225,26 @@ const InternshipForm = ({ internship, onClose, onEnrollSuccess }) => {
 
                         <div className="form-section">
                             <h3 className="section-title">Academic Details</h3>
-                            <div className="input-group">
-                                <label><GraduationCap size={16} /> Course / Degree *</label>
-                                <select
-                                    name="course"
-                                    value={formData.course}
-                                    onChange={handleChange}
-                                    required
-                                    className="form-select"
-                                >
-                                    <option value="">Select your course</option>
-                                    <option value="B.Tech">B.Tech / B.E</option>
-                                    <option value="BCA">BCA</option>
-                                    <option value="MCA">MCA</option>
-                                    <option value="M.Tech">M.Tech / M.E</option>
-                                    <option value="BSC">B.Sc</option>
-                                    <option value="MSC">M.Sc</option>
-                                    <option value="B.Com">B.Com</option>
-                                    <option value="MBA">MBA</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
+                            <CustomSelect
+                                label="Course / Degree"
+                                icon={GraduationCap}
+                                name="course"
+                                value={formData.course}
+                                onChange={handleChange}
+                                placeholder="Select your course"
+                                required
+                                options={[
+                                    { value: 'B.Tech', label: 'B.Tech / B.E' },
+                                    { value: 'BCA', label: 'BCA' },
+                                    { value: 'MCA', label: 'MCA' },
+                                    { value: 'M.Tech', label: 'M.Tech / M.E' },
+                                    { value: 'BSC', label: 'B.Sc' },
+                                    { value: 'MSC', label: 'M.Sc' },
+                                    { value: 'B.Com', label: 'B.Com' },
+                                    { value: 'MBA', label: 'MBA' },
+                                    { value: 'Other', label: 'Other' }
+                                ]}
+                            />
 
                             {formData.course === 'Other' && (
                                 <motion.div
@@ -191,7 +252,7 @@ const InternshipForm = ({ internship, onClose, onEnrollSuccess }) => {
                                     animate={{ opacity: 1, height: 'auto' }}
                                     className="input-group"
                                 >
-                                    <label>Specify Course (Optional)</label>
+                                    <label>Specify Course <span className="label-sub">(Optional)</span></label>
                                     <input
                                         type="text"
                                         name="otherCourse"
@@ -203,7 +264,7 @@ const InternshipForm = ({ internship, onClose, onEnrollSuccess }) => {
                             )}
 
                             <div className="input-group">
-                                <label><BookOpen size={16} /> College Name (Optional)</label>
+                                <label><BookOpen size={16} /> College Name <span className="label-sub">(Optional)</span></label>
                                 <input
                                     type="text"
                                     name="collegeName"
@@ -213,7 +274,7 @@ const InternshipForm = ({ internship, onClose, onEnrollSuccess }) => {
                                 />
                             </div>
                             <div className="input-group">
-                                <label><Hash size={16} /> Registration / Roll Number (Optional)</label>
+                                <label><Hash size={16} /> Registration / Roll Number <span className="label-sub">(Optional)</span></label>
                                 <input
                                     type="text"
                                     name="collegeRegNumber"
@@ -258,11 +319,16 @@ const InternshipForm = ({ internship, onClose, onEnrollSuccess }) => {
                                     <span>{formData.resume ? formData.resume.name : 'Upload NOC or Resume (Optional)'}</span>
                                     <input
                                         type="file"
-                                        accept=".pdf,.doc,.docx"
+                                        accept=".pdf,.jpg,.jpeg,.png"
                                         onChange={handleFileChange}
                                         style={{ display: 'none' }}
                                     />
                                 </label>
+                                <div style={{ textAlign: 'center', marginTop: '0.8rem' }}>
+                                    <p className="label-sub" style={{ fontSize: '0.7rem' }}>
+                                        Accepted: PDF, JPG, PNG (Max 10MB)
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>

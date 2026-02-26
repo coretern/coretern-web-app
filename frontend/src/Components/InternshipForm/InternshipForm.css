@@ -113,20 +113,97 @@
     gap: 0.5rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    flex-wrap: wrap;
+    /* Allow wrapping for long labels on tiny screens */
 }
 
 .label-sub,
 .title-sub {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     color: var(--text-muted);
     text-transform: none;
     letter-spacing: normal;
     font-weight: 500;
-    margin-left: 0.25rem;
+    margin-left: 0.1rem;
+    opacity: 0.8;
 }
 
-.input-group input,
-.input-group select {
+/* Custom Select Styling */
+.custom-select-container {
+    position: relative;
+    width: 100%;
+}
+
+.custom-select-trigger {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.25rem;
+    color: var(--text);
+    font-size: 1.05rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.custom-select-trigger:hover {
+    border-color: var(--primary-light);
+    background: var(--surface-light);
+}
+
+.custom-select-trigger.active {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+.select-arrow {
+    transition: transform 0.3s;
+    color: var(--primary);
+}
+
+.select-arrow.rotate {
+    transform: rotate(180deg);
+}
+
+.custom-select-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: var(--surface);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    z-index: 200;
+    overflow: hidden;
+    padding: 0.5rem;
+}
+
+.custom-select-option {
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-subtle);
+    font-weight: 500;
+}
+
+.custom-select-option:hover {
+    background: var(--surface-light);
+    color: var(--primary);
+    padding-left: 1.25rem;
+}
+
+.custom-select-option.selected {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.input-group input {
     background: var(--surface-1);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
@@ -138,17 +215,7 @@
     outline: none;
 }
 
-.input-group select {
-    appearance: none;
-    cursor: pointer;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    background-size: 1.2rem;
-}
-
 .input-group input:focus,
-.input-group select:focus,
 .phone-input-container:focus-within {
     outline: none;
     border-color: var(--primary);
@@ -283,16 +350,74 @@
 }
 
 @media (max-width: 640px) {
+    .form-overlay {
+        padding: 5rem 1rem 4rem;
+        /* Large paddings to show background navbar & footer */
+        align-items: center;
+        /* Center the form in the middle */
+    }
+
+    .form-container {
+        width: 100%;
+        height: auto;
+        max-height: 85vh;
+        /* Don't cover everything */
+        border-radius: 20px;
+        /* Modern rounded corners */
+        margin: 0;
+        border: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-header {
+        padding: 1.25rem 1.5rem;
+        flex-shrink: 0;
+    }
+
+    .form-header h2 {
+        font-size: 1.45rem;
+    }
+
+    .enroll-form {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        padding: 0;
+    }
+
+    .form-scroll {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1.5rem;
+        gap: 1.75rem;
+    }
+
     .input-row {
         grid-template-columns: 1fr;
         gap: 0;
     }
 
-    .form-header h2 {
-        font-size: 1.75rem;
+    .form-footer {
+        padding: 1rem 1.5rem;
+        flex-direction: column-reverse;
+        gap: 0.75rem;
+        flex-shrink: 0;
+        border-top: 1px solid var(--border);
+        background: var(--surface);
     }
 
-    .form-container {
-        max-height: 95vh;
+    .btn-submit,
+    .btn-cancel {
+        width: 100%;
+        margin: 0;
+        padding: 0.9rem;
+        font-size: 1rem;
+        border-radius: 12px;
+    }
+
+    .btn-submit {
+        justify-content: center;
     }
 }

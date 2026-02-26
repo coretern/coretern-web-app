@@ -3,6 +3,7 @@ const {
     enroll,
     getMyEnrollments,
     verifyPayment,
+    cashfreeWebhook,
     updateToPaid,
     getAllEnrollments
 } = require('../controllers/enrollmentController');
@@ -10,6 +11,8 @@ const { protect, authorize } = require('../middleware/auth');
 const upload = require('../utils/upload');
 
 const router = express.Router();
+
+router.post('/webhook', cashfreeWebhook); // Public route for Cashfree
 
 router.use(protect);
 
