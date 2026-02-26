@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { ShieldCheck, User, Book, Calendar, Loader2, Download, XCircle, Home, RefreshCw } from 'lucide-react';
-import { toPng } from 'html-to-image';
-import download from 'downloadjs';
+import { ShieldCheck, User, Book, Calendar, Loader2, AlertCircle } from 'lucide-react';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
 import PageTransition from '../../Components/PageTransition';
@@ -17,8 +15,6 @@ const VerifyCertificate = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [verifying, setVerifying] = useState(false);
-    const [downloading, setDownloading] = useState(false);
-    const certificateRef = React.useRef(null);
 
     useEffect(() => {
         if (urlId) {
@@ -35,28 +31,9 @@ const VerifyCertificate = () => {
             const { data } = await axios.get(`http://localhost:5000/api/certificates/verify/${certId}`);
             setCertificate(data.data);
         } catch (err) {
-            setError('Certificate not found or invalid ID. Please check the ID and try again.');
+            setError('Invalid or expired certificate ID');
         } finally {
             setVerifying(false);
-        }
-    };
-
-    const handleDownload = async () => {
-        const element = document.getElementById('certificate-download-area');
-        if (!element) return;
-
-        setDownloading(true);
-        try {
-            const dataUrl = await toPng(element, {
-                quality: 1,
-                pixelRatio: 3, // Higher resolution for professional look
-                backgroundColor: '#030712'
-            });
-            download(dataUrl, `Certificate-${certificate.certificateId}.png`);
-        } catch (err) {
-            console.error('Download failed', err);
-        } finally {
-            setDownloading(false);
         }
     };
 
@@ -79,7 +56,7 @@ const VerifyCertificate = () => {
                             animate={{ opacity: 1, scale: 1 }}
                             className="verify-card glass"
                         >
-                            {!certificate && !verifying && (
+                            {!certificate && !verifying && (!error || id !== urlId) && (
                                 <div className="search-state">
                                     <div className="verify-badge-container">
                                         <div className="verify-shield-bg"></div>
@@ -105,9 +82,29 @@ const VerifyCertificate = () => {
                                     </form>
                                     {error && (
                                         <div className="error-msg font-bold">
-                                            <XCircle size={18} /> {error}
+                                            <AlertCircle size={18} /> {error}
                                         </div>
                                     )}
+                                </div>
+                            )}
+
+                            {!certificate && !verifying && error && id === urlId && (
+                                <div className="error-state">
+                                    <div className="verify-badge-container">
+                                        <div className="verify-shield-bg" style={{ background: '#ef4444' }}></div>
+                                        <AlertCircle className="verify-icon danger" size={80} />
+                                    </div>
+                                    <h1 className="verify-title outfit text-danger">Invalid Certificate</h1>
+                                    <p className="verify-subtitle">No record found for ID: <strong>{urlId || id}</strong>. This certificate may be invalid or officially revoked.</p>
+
+                                    <div className="flex flex-col gap-4">
+                                        <button onClick={() => { setError(null); setId(''); window.history.pushState({}, '', '/verify'); }} className="btn btn-outline w-full py-4">
+                                            Try Different ID
+                                        </button>
+                                        <Link to="/" className="btn btn-primary w-full py-4">
+                                            Return Home
+                                        </Link>
+                                    </div>
                                 </div>
                             )}
 
@@ -123,56 +120,43 @@ const VerifyCertificate = () => {
 
                             {certificate && (
                                 <div className="success-state">
-                                    {/* Capture Area for Download (styled for PNG) */}
-                                    <div id="certificate-download-area" className="success-state" style={{ padding: '40px', background: '#030712', borderRadius: '15px' }}>
-                                        <div className="verify-badge-container">
-                                            <div className="verify-shield-bg" style={{ background: '#10b981' }}></div>
-                                            <ShieldCheck className="verify-icon success" size={80} />
-                                        </div>
-                                        <h1 className="verify-title outfit" style={{ color: '#10b981' }}>Verified Authentic</h1>
-                                        <p className="verify-subtitle" style={{ color: '#94a3b8' }}>This document is valid and was officially issued by <strong>TechStart Platforms</strong>.</p>
+                                    <div className="verify-badge-container">
+                                        <div className="verify-shield-bg" style={{ background: '#10b981' }}></div>
+                                        <ShieldCheck className="verify-icon success" size={80} />
+                                    </div>
+                                    <h1 className="verify-title outfit">Verified Authentic</h1>
+                                    <p className="verify-subtitle">This document is valid and was officially issued by <strong>TechStart Platforms</strong>.</p>
 
-                                        <div className="verify-info-grid">
-                                            <div className="info-item">
-                                                <div className="label"><User size={14} /> Issued To</div>
-                                                <div className="value">{certificate.user?.name}</div>
-                                            </div>
-                                            <div className="info-item">
-                                                <div className="label"><Book size={14} /> Internship</div>
-                                                <div className="value">{certificate.internship?.title}</div>
-                                            </div>
-                                            <div className="info-item">
-                                                <div className="label"><ShieldCheck size={14} /> Certificate ID</div>
-                                                <div className="value">{certificate.certificateId}</div>
-                                            </div>
-                                            <div className="info-item">
-                                                <div className="label"><Calendar size={14} /> Issue Date</div>
-                                                <div className="value">{new Date(certificate.issueDate).toLocaleDateString(undefined, {
-                                                    year: 'numeric',
-                                                    month: 'long',
-                                                    day: 'numeric'
-                                                })}</div>
-                                            </div>
+                                    <div className="verify-info-grid">
+                                        <div className="info-item">
+                                            <div className="label"><User size={14} /> Issued To</div>
+                                            <div className="value">{certificate.user?.name}</div>
+                                        </div>
+                                        <div className="info-item">
+                                            <div className="label"><Book size={14} /> Internship</div>
+                                            <div className="value">{certificate.internship?.title}</div>
+                                        </div>
+                                        <div className="info-item">
+                                            <div className="label"><ShieldCheck size={14} /> Certificate ID</div>
+                                            <div className="value">{certificate.certificateId}</div>
+                                        </div>
+                                        <div className="info-item">
+                                            <div className="label"><Calendar size={14} /> Issue Date</div>
+                                            <div className="value">{new Date(certificate.issueDate).toLocaleDateString(undefined, {
+                                                year: 'numeric',
+                                                month: 'long',
+                                                day: 'numeric'
+                                            })}</div>
                                         </div>
                                     </div>
 
-                                    <div className="verify-actions px-4">
-                                        <button
-                                            onClick={handleDownload}
-                                            disabled={downloading}
-                                            className="btn btn-primary w-full py-4 justify-center"
-                                        >
-                                            {downloading ? <Loader2 className="animate-spin" /> : <><Download size={20} /> Download Certificate</>}
+                                    <div className="flex flex-col gap-4">
+                                        <button onClick={() => setCertificate(null)} className="btn btn-outline w-full py-4">
+                                            Verify Another
                                         </button>
-
-                                        <div className="verify-btn-group">
-                                            <button onClick={() => setCertificate(null)} className="btn btn-outline py-4">
-                                                <RefreshCw size={18} /> Verify Another
-                                            </button>
-                                            <Link to="/" className="btn btn-outline py-4">
-                                                <Home size={18} /> Return Home
-                                            </Link>
-                                        </div>
+                                        <Link to="/" className="btn btn-primary w-full py-4">
+                                            Return Home
+                                        </Link>
                                     </div>
                                 </div>
                             )}
