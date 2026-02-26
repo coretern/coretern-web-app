@@ -215,6 +215,28 @@
     outline: none;
 }
 
+.input-group input::placeholder {
+    color: var(--text-muted);
+    opacity: 0.4;
+}
+
+/* Custom Select Placeholder Style */
+.custom-select-trigger span:not(.selected-value) {
+    color: var(--text-muted);
+    opacity: 0.4;
+}
+
+/* When a value is selected, reset opacity */
+.custom-select-trigger.has-value span {
+    opacity: 1;
+    color: var(--text);
+}
+
+.input-group input::placeholder {
+    color: var(--text-muted);
+    opacity: 0.4;
+}
+
 .input-group input:focus,
 .phone-input-container:focus-within {
     outline: none;
@@ -240,6 +262,11 @@
     font-size: 1.05rem !important;
     font-family: inherit !important;
     transition: all 0.2s !important;
+}
+
+.phone-input-field::placeholder {
+    color: var(--text-muted) !important;
+    opacity: 0.4 !important;
 }
 
 .phone-input-button {

@@ -27,10 +27,12 @@ const CustomSelect = ({ label, icon: Icon, name, value, options, onChange, place
         <div className="input-group custom-select-container" ref={containerRef}>
             <label>{Icon && <Icon size={16} />} {label} {required && '*'}</label>
             <div
-                className={`custom-select-trigger ${isOpen ? 'active' : ''}`}
+                className={`custom-select-trigger ${isOpen ? 'active' : ''} ${value ? 'has-value' : ''}`}
                 onClick={() => setIsOpen(!isOpen)}
             >
-                <span>{value ? options.find(opt => opt.value === value)?.label : placeholder}</span>
+                <span className={value ? 'selected-value' : ''}>
+                    {value ? options.find(opt => opt.value === value)?.label : placeholder}
+                </span>
                 <ChevronDown size={18} className={`select-arrow ${isOpen ? 'rotate' : ''}`} />
             </div>
 
