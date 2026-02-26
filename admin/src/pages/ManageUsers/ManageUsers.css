@@ -74,6 +74,20 @@
     color: white;
 }
 
+.clickable-name {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 4px 8px;
+    border-radius: 6px;
+    width: fit-content;
+}
+
+.clickable-name:hover {
+    background: rgba(var(--primary-rgb), 0.1);
+    color: var(--primary);
+    text-decoration: underline;
+}
+
 .btn-icon {
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);

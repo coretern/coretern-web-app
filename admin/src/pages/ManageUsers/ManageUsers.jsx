@@ -60,6 +60,22 @@ const ManageUsers = () => {
         }
     };
 
+    const handleImpersonate = async (id, name) => {
+        const token = localStorage.getItem('token');
+        try {
+            const { data } = await axios.post(`http://localhost:5000/api/users/${id}/impersonate`, {}, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            // Redirect to frontend with token in query param
+            // Note: In production you'd use your actual frontend URL
+            const frontendUrl = 'http://localhost:5173'; // Assuming default Vite port for frontend
+            window.open(`${frontendUrl}/login?adminToken=${data.token}`, '_blank');
+            toast.success(`Accessing platform as ${name}`);
+        } catch (err) {
+            toast.error('Impersonation failed');
+        }
+    };
+
     const filteredUsers = users.filter(user =>
         user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -103,7 +119,11 @@ const ManageUsers = () => {
                         {filteredUsers.map(user => (
                             <tr key={user._id} className={user.status === 'suspended' ? 'row-suspended' : ''}>
                                 <td className="student-name">
-                                    <div className="flex items-center gap-2">
+                                    <div
+                                        className="flex items-center gap-2 clickable-name"
+                                        onClick={() => handleImpersonate(user._id, user.name)}
+                                        title={`Login as ${user.name}`}
+                                    >
                                         <User size={16} className="text-primary" />
                                         {user.name}
                                         {user.role === 'admin' && <span className="mini-badge admin">Admin</span>}

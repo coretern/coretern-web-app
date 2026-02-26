@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, Lock, Loader2 } from 'lucide-react';
 import axios from 'axios';
@@ -10,6 +10,19 @@ const Login = () => {
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // Handle Admin Impersonation Token
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const adminToken = queryParams.get('adminToken');
+
+        if (adminToken) {
+            localStorage.setItem('token', adminToken);
+            toast.success('Accessing account as Admin');
+            navigate('/dashboard');
+        }
+    }, [location, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
