@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
 import PageTransition from '../../Components/PageTransition';
+import InternshipForm from '../../Components/InternshipForm/InternshipForm';
 import './InternshipDetails.css';
 
 const InternshipDetails = () => {
@@ -14,6 +15,7 @@ const InternshipDetails = () => {
     const navigate = useNavigate();
     const [internship, setInternship] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [showForm, setShowForm] = useState(false);
     const [enrolling, setEnrolling] = useState(false);
     const [cashfree, setCashfree] = useState(null);
 
@@ -45,7 +47,7 @@ const InternshipDetails = () => {
         };
     }, [id]);
 
-    const handleEnroll = async () => {
+    const handleEnroll = () => {
         const token = localStorage.getItem('token');
         if (!token) {
             toast.error('Please login to enroll');
@@ -58,27 +60,17 @@ const InternshipDetails = () => {
             return;
         }
 
-        setEnrolling(true);
-        try {
-            // Create pending enrollment and get session ID
-            const { data } = await axios.post('http://localhost:5000/api/enrollments',
-                { internshipId: id },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
+        setShowForm(true);
+    };
 
-            toast.success('Order Created! Opening Checkout...');
+    const handlePayment = (sessionId) => {
+        if (!cashfree) return;
 
-            // Trigger Cashfree Checkout
-            cashfree.checkout({
-                paymentSessionId: data.payment_session_id,
-                redirectTarget: '_self'
-            });
-
-        } catch (err) {
-            toast.error(err.response?.data?.error || 'Enrollment failed');
-        } finally {
-            setEnrolling(false);
-        }
+        toast.success('Opening Checkout...');
+        cashfree.checkout({
+            paymentSessionId: sessionId,
+            redirectTarget: '_self'
+        });
     };
 
     if (loading) return <div className="loader-container"><Loader2 className="animate-spin text-primary" size={60} /></div>;
@@ -181,6 +173,14 @@ const InternshipDetails = () => {
 
                 <Footer />
             </div>
+
+            {showForm && (
+                <InternshipForm
+                    internship={internship}
+                    onClose={() => setShowForm(false)}
+                    onEnrollSuccess={handlePayment}
+                />
+            )}
         </PageTransition>
     );
 };

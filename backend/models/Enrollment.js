@@ -23,6 +23,30 @@ const enrollmentSchema = new mongoose.Schema({
     },
     cfOrderId: String,
     paymentId: String,
+    // Student Details for Enrollment/Certificate
+    fullName: {
+        type: String,
+        required: true
+    },
+    collegeRegNumber: String,
+    collegeName: String,
+    startDate: {
+        type: Date,
+        required: true
+    },
+    endDate: {
+        type: Date,
+        required: true
+    },
+    whatsappNumber: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    resume: String,
     enrolledAt: {
         type: Date,
         default: Date.now

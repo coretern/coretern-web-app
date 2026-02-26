@@ -21,7 +21,7 @@ if (isCloudinaryConfigured) {
         cloudinary: cloudinary,
         params: {
             folder: 'tech_startup_internships',
-            allowed_formats: ['jpg', 'png', 'jpeg'],
+            allowed_formats: ['jpg', 'png', 'jpeg', 'pdf', 'docx', 'doc'],
         },
     });
     console.log('Using Cloudinary for file storage.');

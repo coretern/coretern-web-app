@@ -7,12 +7,13 @@ const {
     getAllEnrollments
 } = require('../controllers/enrollmentController');
 const { protect, authorize } = require('../middleware/auth');
+const upload = require('../utils/upload');
 
 const router = express.Router();
 
 router.use(protect);
 
-router.post('/', enroll);
+router.post('/', upload.single('resume'), enroll);
 router.get('/my', getMyEnrollments);
 router.get('/verify/:orderId', verifyPayment);
 

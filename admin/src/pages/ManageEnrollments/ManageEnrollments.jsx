@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Search, Award, CheckCircle, Clock, Loader2 } from 'lucide-react';
+import { Search, Award, CheckCircle, Clock, Loader2, FileText, X, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
 import './ManageEnrollments.css';
 
@@ -9,6 +9,7 @@ const ManageEnrollments = () => {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [issuingId, setIssuingId] = useState(null);
+    const [selectedEnrol, setSelectedEnrol] = useState(null);
 
     useEffect(() => {
         fetchEnrollments();
@@ -75,6 +76,7 @@ const ManageEnrollments = () => {
                     <thead>
                         <tr>
                             <th>Student</th>
+                            <th>Info</th>
                             <th>Internship Program</th>
                             <th>Payment</th>
                             <th>Status</th>
@@ -85,6 +87,15 @@ const ManageEnrollments = () => {
                         {filtered.map(enrol => (
                             <tr key={enrol._id}>
                                 <td className="student-info">{enrol.user?.name}</td>
+                                <td>
+                                    <button
+                                        className="btn-icon"
+                                        title="View Student Info"
+                                        onClick={() => setSelectedEnrol(enrol)}
+                                    >
+                                        <FileText size={18} />
+                                    </button>
+                                </td>
                                 <td>{enrol.internship?.title}</td>
                                 <td>
                                     <span className={`payment-badge ${enrol.paymentStatus}`}>
@@ -120,6 +131,56 @@ const ManageEnrollments = () => {
                 </table>
                 {filtered.length === 0 && <div className="p-12 text-center text-text-muted">No records found matching your query.</div>}
             </div>
+
+            {/* Student Info Modal */}
+            {selectedEnrol && (
+                <div className="admin-modal-overlay">
+                    <div className="admin-modal-content glass" style={{ maxWidth: '600px' }}>
+                        <button className="modal-close" onClick={() => setSelectedEnrol(null)}>
+                            <X size={20} />
+                        </button>
+                        <h2 className="outfit mb-6">Student Enrollment Profile</h2>
+
+                        <div className="info-grid">
+                            <div className="info-item">
+                                <label>Full Name (for Cert)</label>
+                                <p>{selectedEnrol.fullName || selectedEnrol.user?.name}</p>
+                            </div>
+                            <div className="info-item">
+                                <label>WhatsApp / Phone</label>
+                                <p>{selectedEnrol.whatsappNumber || selectedEnrol.user?.phone || 'N/A'}</p>
+                            </div>
+                            <div className="info-item">
+                                <label>Email Address</label>
+                                <p>{selectedEnrol.email || selectedEnrol.user?.email}</p>
+                            </div>
+                            <div className="info-item">
+                                <label>College Name</label>
+                                <p>{selectedEnrol.collegeName || 'N/A'}</p>
+                            </div>
+                            <div className="info-item">
+                                <label>College Reg No.</label>
+                                <p>{selectedEnrol.collegeRegNumber || 'N/A'}</p>
+                            </div>
+                            <div className="info-item">
+                                <label>Duration</label>
+                                <p>
+                                    {selectedEnrol.startDate ? new Date(selectedEnrol.startDate).toLocaleDateString() : 'N/A'} -
+                                    {selectedEnrol.endDate ? new Date(selectedEnrol.endDate).toLocaleDateString() : 'N/A'}
+                                </p>
+                            </div>
+                            {selectedEnrol.resume && (
+                                <div className="info-item full-width">
+                                    <label>Resume / Documents</label>
+                                    <a href={selectedEnrol.resume} target="_blank" rel="noreferrer" className="resume-link">
+                                        <ExternalLink size={16} /> View Submitted Document
+                                    </a>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

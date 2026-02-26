@@ -7,7 +7,16 @@ const Internship = require('../models/Internship');
 // @route   POST /api/enrollments
 // @access  Private
 exports.enroll = asyncHandler(async (req, res, next) => {
-    const { internshipId } = req.body;
+    const {
+        internshipId,
+        fullName,
+        collegeRegNumber,
+        collegeName,
+        startDate,
+        endDate,
+        whatsappNumber,
+        email
+    } = req.body;
 
     // Check if internship exists
     const internship = await Internship.findById(internshipId);
@@ -24,6 +33,18 @@ exports.enroll = asyncHandler(async (req, res, next) => {
 
     if (existingEnrollment) {
         return next(new ErrorResponse('You are already enrolled in this internship', 400));
+    }
+
+    // Handle resume file
+    let resumePath = '';
+    if (req.file) {
+        const isCloudinary = req.file.path.startsWith('http');
+        if (isCloudinary) {
+            resumePath = req.file.path;
+        } else {
+            const normalizedPath = req.file.path.replace(/\\/g, '/');
+            resumePath = `http://localhost:5000/${normalizedPath}`;
+        }
     }
 
     // Prepare Cashfree Order
@@ -47,9 +68,9 @@ exports.enroll = asyncHandler(async (req, res, next) => {
             order_id: orderId,
             customer_details: {
                 customer_id: req.user.id.toString(),
-                customer_name: req.user.name,
-                customer_email: req.user.email,
-                customer_phone: req.user.phone ? req.user.phone.replace(/\D/g, '').slice(-10) : '9999999999'
+                customer_name: fullName || req.user.name,
+                customer_email: email || req.user.email,
+                customer_phone: whatsappNumber ? whatsappNumber.replace(/\D/g, '').slice(-10) : (req.user.phone ? req.user.phone.replace(/\D/g, '').slice(-10) : '9999999999')
             },
             order_meta: {
                 return_url: `http://localhost:5173/dashboard?order_id=${orderId}`
@@ -83,17 +104,27 @@ exports.enroll = asyncHandler(async (req, res, next) => {
     // Create or update enrollment
     let enrollment = await Enrollment.findOne({ user: req.user.id, internship: internshipId });
 
+    const enrollmentData = {
+        user: req.user.id,
+        internship: internshipId,
+        status: 'pending',
+        paymentStatus: 'unpaid',
+        cfOrderId: orderId,
+        fullName,
+        collegeRegNumber,
+        collegeName,
+        startDate,
+        endDate,
+        whatsappNumber,
+        email,
+        resume: resumePath || (enrollment ? enrollment.resume : undefined)
+    };
+
     if (enrollment) {
-        enrollment.cfOrderId = orderId;
+        Object.assign(enrollment, enrollmentData);
         await enrollment.save();
     } else {
-        enrollment = await Enrollment.create({
-            user: req.user.id,
-            internship: internshipId,
-            status: 'pending',
-            paymentStatus: 'unpaid',
-            cfOrderId: orderId
-        });
+        enrollment = await Enrollment.create(enrollmentData);
     }
 
     res.status(201).json({
