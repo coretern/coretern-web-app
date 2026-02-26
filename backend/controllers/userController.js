@@ -15,6 +15,25 @@ exports.getAllUsers = asyncHandler(async (req, res, next) => {
     });
 });
 
+// @desc    Toggle user status (active/suspended)
+// @route   PUT /api/users/:id/toggle-status
+// @access  Private/Admin
+exports.toggleUserStatus = asyncHandler(async (req, res, next) => {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+        return next(new ErrorResponse(`No user with id ${req.params.id}`, 404));
+    }
+
+    user.status = user.status === 'active' ? 'suspended' : 'active';
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        data: user
+    });
+});
+
 // @desc    Delete user
 // @route   DELETE /api/users/:id
 // @access  Private/Admin
@@ -25,6 +44,12 @@ exports.deleteUser = asyncHandler(async (req, res, next) => {
         return next(new ErrorResponse(`No user with id ${req.params.id}`, 404));
     }
 
+    // Explicitly delete associated data (Good practice even with background cleanup)
+    const Enrollment = require('../models/Enrollment');
+    const Certificate = require('../models/Certificate');
+
+    await Enrollment.deleteMany({ user: user._id });
+    await Certificate.deleteMany({ user: user._id });
     await user.deleteOne();
 
     res.status(200).json({

@@ -26,6 +26,11 @@ const userSchema = new mongoose.Schema({
         enum: ['student', 'admin'],
         default: 'student'
     },
+    status: {
+        type: String,
+        enum: ['active', 'suspended'],
+        default: 'active'
+    },
     phone: String,
     resetPasswordToken: String,
     resetPasswordExpire: Date,

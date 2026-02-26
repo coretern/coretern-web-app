@@ -27,14 +27,14 @@ const Sidebar = () => {
                 <NavLink to="/" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`}>
                     <LayoutDashboard size={20} /> <span>Dashboard</span>
                 </NavLink>
+                <NavLink to="/students" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`}>
+                    <Rocket size={20} /> <span>Total Users</span>
+                </NavLink>
                 <NavLink to="/internships" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`}>
                     <BookOpen size={20} /> <span>Internships</span>
                 </NavLink>
                 <NavLink to="/enrollments" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`}>
                     <Users size={20} /> <span>Enrollments</span>
-                </NavLink>
-                <NavLink to="/students" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`}>
-                    <Rocket size={20} /> <span>Students</span>
                 </NavLink>
             </nav>
 

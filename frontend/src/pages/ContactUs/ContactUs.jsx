@@ -1,0 +1,162 @@
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Mail, Phone, MapPin, Send, MessageSquare, Loader2 } from 'lucide-react';
+import Navbar from '../../Components/Navbar/Navbar';
+import Footer from '../../Components/Footer/Footer';
+import PageTransition from '../../Components/PageTransition';
+import toast from 'react-hot-toast';
+import './ContactUs.css';
+
+const ContactUs = () => {
+    const [loading, setLoading] = useState(false);
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+    });
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        // Simulate API call
+        setTimeout(() => {
+            toast.success('Message sent! We will get back to you soon.');
+            setFormData({ name: '', email: '', subject: '', message: '' });
+            setLoading(false);
+        }, 1500);
+    };
+
+    return (
+        <PageTransition>
+            <div className="contact-page">
+                <Navbar />
+
+                <section className="contact-hero">
+                    <div className="container">
+                        <motion.h1
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="outfit display-title text-center"
+                        >
+                            Get in <span className="text-gradient">Touch</span>
+                        </motion.h1>
+                        <p className="subtitle text-center mx-auto">
+                            Have questions about our internships or facing issues with your account?
+                            Our team is here to help you 24/7.
+                        </p>
+                    </div>
+                </section>
+
+                <main className="contact-container container">
+                    <div className="contact-grid">
+                        <motion.div
+                            initial={{ opacity: 0, x: -30 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className="contact-info"
+                        >
+                            <div className="card glass info-card">
+                                <h2 className="outfit">Contact Information</h2>
+                                <p className="text-text-muted mb-8">Feel free to reach out via any of these channels.</p>
+
+                                <div className="info-items">
+                                    <div className="info-item">
+                                        <div className="icon-box"><Mail size={24} /></div>
+                                        <div>
+                                            <h3>Email Us</h3>
+                                            <p>support@techstart.com</p>
+                                        </div>
+                                    </div>
+                                    <div className="info-item">
+                                        <div className="icon-box"><Phone size={24} /></div>
+                                        <div>
+                                            <h3>Call Us</h3>
+                                            <p>+91 12345 67890</p>
+                                        </div>
+                                    </div>
+                                    <div className="info-item">
+                                        <div className="icon-box"><MapPin size={24} /></div>
+                                        <div>
+                                            <h3>Location</h3>
+                                            <p>New Delhi, India</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="social-connect mt-12">
+                                    <h4 className="outfit mb-4">Connect with us</h4>
+                                    <div className="flex gap-4">
+                                        {/* Social Icons Placeholder */}
+                                        <div className="social-circle"></div>
+                                        <div className="social-circle"></div>
+                                        <div className="social-circle"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
+
+                        <motion.div
+                            initial={{ opacity: 0, x: 30 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className="contact-form-wrapper"
+                        >
+                            <div className="card glass p-8">
+                                <form onSubmit={handleSubmit} className="contact-form">
+                                    <div className="form-row">
+                                        <div className="form-group">
+                                            <label>Full Name</label>
+                                            <input
+                                                type="text"
+                                                placeholder="John Doe"
+                                                required
+                                                value={formData.name}
+                                                onChange={e => setFormData({ ...formData, name: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Email Address</label>
+                                            <input
+                                                type="email"
+                                                placeholder="john@example.com"
+                                                required
+                                                value={formData.email}
+                                                onChange={e => setFormData({ ...formData, email: e.target.value })}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Subject</label>
+                                        <input
+                                            type="text"
+                                            placeholder="Case: Account Issue"
+                                            required
+                                            value={formData.subject}
+                                            onChange={e => setFormData({ ...formData, subject: e.target.value })}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Your Message</label>
+                                        <textarea
+                                            rows="5"
+                                            placeholder="Write your message here..."
+                                            required
+                                            value={formData.message}
+                                            onChange={e => setFormData({ ...formData, message: e.target.value })}
+                                        ></textarea>
+                                    </div>
+                                    <button disabled={loading} className="btn btn-primary w-full py-4 flex items-center justify-center gap-2">
+                                        {loading ? <Loader2 className="animate-spin" /> : <><Send size={18} /> Send Message</>}
+                                    </button>
+                                </form>
+                            </div>
+                        </motion.div>
+                    </div>
+                </main>
+
+                <Footer />
+            </div>
+        </PageTransition>
+    );
+};
+
+export default ContactUs;

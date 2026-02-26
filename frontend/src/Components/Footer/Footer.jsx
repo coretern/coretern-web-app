@@ -27,6 +27,7 @@ const Footer = () => {
                         <li><Link to="/internships">Summer Internship</Link></li>
                         <li><Link to="/#services">Our Services</Link></li>
                         <li><Link to="/verify">Verify Certificate</Link></li>
+                        <li><Link to="/contact">Contact Us</Link></li>
                     </ul>
                 </div>
 

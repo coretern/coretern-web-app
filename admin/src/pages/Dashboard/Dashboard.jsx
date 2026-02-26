@@ -41,9 +41,9 @@ const Dashboard = () => {
     }, []);
 
     const statCards = [
+        { label: 'Total Registered Users', value: stats.students, icon: <Users />, color: '#6366f1', link: '/students' },
         { label: 'Total Internships', value: stats.internships, icon: <BookOpen />, color: 'var(--primary)', link: '/internships' },
         { label: 'Total Enrollments', value: stats.enrollments, icon: <TrendingUp />, color: 'var(--secondary)', link: '/enrollments' },
-        { label: 'Total Students', value: stats.students, icon: <Users />, color: '#6366f1', link: '/students' },
         { label: 'Certificates Issued', value: stats.completed, icon: <Award />, color: 'var(--success)', link: '/enrollments' }
     ];
 

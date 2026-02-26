@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Search, User, Mail, Phone, Trash2, Loader2 } from 'lucide-react';
+import { Search, User, Mail, Phone, Trash2, Loader2, ShieldAlert, ShieldCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
 import './ManageUsers.css';
 
@@ -27,15 +27,33 @@ const ManageUsers = () => {
         }
     };
 
+    const handleToggleStatus = async (id, currentStatus) => {
+        const token = localStorage.getItem('token');
+        try {
+            await axios.put(`http://localhost:5000/api/users/${id}/toggle-status`, {}, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            toast.success(`Account ${currentStatus === 'active' ? 'Suspended' : 'Activated'}`);
+            fetchUsers();
+        } catch (err) {
+            toast.error('Failed to update status');
+        }
+    };
+
     const handleDeleteUser = async (id, name) => {
-        if (!window.confirm(`Are you sure you want to delete ${name}? This will also affect their enrollments.`)) return;
+        // Double Confirmation
+        const firstConfirm = window.confirm(`Are you sure you want to delete ${name}? This ACTION IS PERMANENT.`);
+        if (!firstConfirm) return;
+
+        const secondConfirm = window.confirm(`RE-CONFIRM: Are you ABSOLUTELY sure? All certificates and enrollments for ${name} will be DELETED.`);
+        if (!secondConfirm) return;
 
         const token = localStorage.getItem('token');
         try {
             await axios.delete(`http://localhost:5000/api/users/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            toast.success('User Deleted Successfully');
+            toast.success('User and all associated records deleted');
             fetchUsers();
         } catch (err) {
             toast.error('Failed to delete user');
@@ -54,7 +72,7 @@ const ManageUsers = () => {
         <div className="manage-users-page">
             <header className="title-box flex justify-between items-center">
                 <div>
-                    <h1 className="outfit">Registered Students</h1>
+                    <h1 className="outfit">Total Platform Users</h1>
                     <p className="text-text-muted">Total registered accounts on the platform</p>
                 </div>
                 <div className="search-container">
@@ -76,47 +94,47 @@ const ManageUsers = () => {
                             <th>Student Name</th>
                             <th>Email Address</th>
                             <th>Phone</th>
+                            <th>Status</th>
                             <th>Joined On</th>
-                            <th>Role</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {filteredUsers.map(user => (
-                            <tr key={user._id}>
+                            <tr key={user._id} className={user.status === 'suspended' ? 'row-suspended' : ''}>
                                 <td className="student-name">
                                     <div className="flex items-center gap-2">
                                         <User size={16} className="text-primary" />
                                         {user.name}
+                                        {user.role === 'admin' && <span className="mini-badge admin">Admin</span>}
                                     </div>
                                 </td>
+                                <td>{user.email}</td>
+                                <td>{user.phone || 'N/A'}</td>
                                 <td>
-                                    <div className="flex items-center gap-2">
-                                        <Mail size={14} className="text-text-muted" />
-                                        {user.email}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="flex items-center gap-2">
-                                        <Phone size={14} className="text-text-muted" />
-                                        {user.phone || 'N/A'}
-                                    </div>
+                                    <span className={`status-pill ${user.status}`}>
+                                        {user.status === 'active' ? 'Active' : 'Suspended'}
+                                    </span>
                                 </td>
                                 <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                                 <td>
-                                    <span className={`role-badge ${user.role}`}>
-                                        {user.role}
-                                    </span>
-                                </td>
-                                <td>
                                     {user.role !== 'admin' && (
-                                        <button
-                                            className="btn-icon delete"
-                                            title="Delete Account"
-                                            onClick={() => handleDeleteUser(user._id, user.name)}
-                                        >
-                                            <Trash2 size={18} />
-                                        </button>
+                                        <div className="flex gap-2">
+                                            <button
+                                                className={`btn-icon ${user.status === 'active' ? 'suspend' : 'activate'}`}
+                                                title={user.status === 'active' ? 'Suspend User' : 'Activate User'}
+                                                onClick={() => handleToggleStatus(user._id, user.status)}
+                                            >
+                                                {user.status === 'active' ? <ShieldAlert size={18} /> : <ShieldCheck size={18} />}
+                                            </button>
+                                            <button
+                                                className="btn-icon delete"
+                                                title="Permanently Delete"
+                                                onClick={() => handleDeleteUser(user._id, user.name)}
+                                            >
+                                                <Trash2 size={18} />
+                                            </button>
+                                        </div>
                                     )}
                                 </td>
                             </tr>
@@ -124,7 +142,7 @@ const ManageUsers = () => {
                     </tbody>
                 </table>
                 {filteredUsers.length === 0 && (
-                    <div className="p-12 text-center text-text-muted">No students found matching your search.</div>
+                    <div className="p-12 text-center text-text-muted">No users found matching your search.</div>
                 )}
             </div>
         </div>

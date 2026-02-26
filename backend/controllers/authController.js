@@ -51,6 +51,11 @@ exports.login = asyncHandler(async (req, res, next) => {
         return next(new ErrorResponse('Invalid credentials', 401));
     }
 
+    // Check if user is suspended
+    if (user.status === 'suspended') {
+        return next(new ErrorResponse('Your account is suspended. Please contact us to resolve this issue.', 403));
+    }
+
     console.log(`Login successful: ${email}`);
     sendTokenResponse(user, 200, res);
 });

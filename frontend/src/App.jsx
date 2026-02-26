@@ -11,6 +11,7 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import VerifyCertificate from './pages/VerifyCertificate/VerifyCertificate';
+import ContactUs from './pages/ContactUs/ContactUs';
 import FloatingAction from './Components/FloatingAction/FloatingAction';
 import ScrollToTop from './Components/ScrollToTop';
 
@@ -27,6 +28,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/contact" element={<ContactUs />} />
           <Route path="/verify/:id" element={<VerifyCertificate />} />
           <Route path="/verify" element={<VerifyCertificate />} />
         </Routes>

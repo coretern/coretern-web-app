@@ -20,7 +20,12 @@ const Login = () => {
             toast.success('Login Successful!');
             navigate('/dashboard');
         } catch (err) {
-            toast.error(err.response?.data?.error || 'Invalid credentials');
+            if (err.response?.status === 403) {
+                toast.error(err.response.data.error, { duration: 5000 });
+                setTimeout(() => navigate('/contact'), 3000);
+            } else {
+                toast.error(err.response?.data?.error || 'Invalid credentials');
+            }
         } finally {
             setLoading(false);
         }
