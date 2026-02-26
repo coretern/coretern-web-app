@@ -7,6 +7,7 @@ import Sidebar from './components/Sidebar/Sidebar';
 import Dashboard from './pages/Dashboard/Dashboard';
 import ManageInternships from './pages/ManageInternships/ManageInternships';
 import ManageEnrollments from './pages/ManageEnrollments/ManageEnrollments';
+import ManageUsers from './pages/ManageUsers/ManageUsers';
 import Login from './pages/Login/Login';
 
 function App() {
@@ -37,6 +38,10 @@ function App() {
               <Route
                 path="/enrollments"
                 element={isAuthenticated ? <ManageEnrollments /> : <Navigate to="/login" />}
+              />
+              <Route
+                path="/students"
+                element={isAuthenticated ? <ManageUsers /> : <Navigate to="/login" />}
               />
             </Routes>
           </main>

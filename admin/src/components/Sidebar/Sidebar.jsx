@@ -33,6 +33,9 @@ const Sidebar = () => {
                 <NavLink to="/enrollments" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`}>
                     <Users size={20} /> <span>Enrollments</span>
                 </NavLink>
+                <NavLink to="/students" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`}>
+                    <Rocket size={20} /> <span>Students</span>
+                </NavLink>
             </nav>
 
             <div className="sidebar-footer" style={{ padding: '0 1.5rem', marginBottom: '1.5rem' }}>

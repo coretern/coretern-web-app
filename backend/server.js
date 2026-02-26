@@ -30,6 +30,7 @@ app.use('/api/internships', require('./routes/internships'));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/enrollments', require('./routes/enrollments'));
 app.use('/api/certificates', require('./routes/certificates'));
+app.use('/api/users', require('./routes/users'));
 
 // Error Handler Middleware
 app.use(require('./middleware/error'));
