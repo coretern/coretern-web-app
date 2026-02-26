@@ -17,6 +17,11 @@ const certificateSchema = new mongoose.Schema({
         ref: 'Internship',
         required: true
     },
+    enrollment: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Enrollment',
+        required: true
+    },
     issueDate: {
         type: Date,
         default: Date.now

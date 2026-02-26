@@ -191,6 +191,7 @@ const Dashboard = () => {
                             id={selectedCert.certificateId}
                             user={user}
                             internship={selectedCert.internship}
+                            enrollment={selectedCert.enrollment}
                             date={selectedCert.issueDate}
                             qrCode={selectedCert.qrCode}
                         />

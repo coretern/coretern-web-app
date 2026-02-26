@@ -130,12 +130,24 @@ const VerifyCertificate = () => {
                                     <div className="verify-info-grid">
                                         <div className="info-item">
                                             <div className="label"><User size={14} /> Issued To</div>
-                                            <div className="value">{certificate.user?.name}</div>
+                                            <div className="value">{certificate.enrollment?.fullName || certificate.user?.name}</div>
                                         </div>
                                         <div className="info-item">
                                             <div className="label"><Book size={14} /> Internship</div>
                                             <div className="value">{certificate.internship?.title}</div>
                                         </div>
+                                        {certificate.enrollment?.collegeName && (
+                                            <div className="info-item">
+                                                <div className="label"><ShieldCheck size={14} /> Institution</div>
+                                                <div className="value">{certificate.enrollment.collegeName}</div>
+                                            </div>
+                                        )}
+                                        {certificate.enrollment?.course && (
+                                            <div className="info-item">
+                                                <div className="label"><Book size={14} /> Course</div>
+                                                <div className="value">{certificate.enrollment.course}</div>
+                                            </div>
+                                        )}
                                         <div className="info-item">
                                             <div className="label"><ShieldCheck size={14} /> Certificate ID</div>
                                             <div className="value">{certificate.certificateId}</div>

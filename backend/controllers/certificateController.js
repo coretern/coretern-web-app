@@ -36,7 +36,8 @@ exports.issueCertificate = asyncHandler(async (req, res, next) => {
     // Create certificate
     certificate = new Certificate({
         user: enrollment.user._id,
-        internship: enrollment.internship._id
+        internship: enrollment.internship._id,
+        enrollment: enrollment._id
     });
 
     // Generate Verification URL (Frontend Page)
@@ -67,7 +68,8 @@ exports.issueCertificate = asyncHandler(async (req, res, next) => {
 exports.verifyCertificate = asyncHandler(async (req, res, next) => {
     const certificate = await Certificate.findOne({ certificateId: req.params.id })
         .populate('user', 'name')
-        .populate('internship', 'title domain duration');
+        .populate('internship', 'title domain duration')
+        .populate('enrollment');
 
     if (!certificate) {
         return next(new ErrorResponse('Certificate not found or invalid', 404));
@@ -83,7 +85,9 @@ exports.verifyCertificate = asyncHandler(async (req, res, next) => {
 // @route   GET /api/certificates/my
 // @access  Private
 exports.getMyCertificates = asyncHandler(async (req, res, next) => {
-    const certificates = await Certificate.find({ user: req.user.id }).populate('internship');
+    const certificates = await Certificate.find({ user: req.user.id })
+        .populate('internship')
+        .populate('enrollment');
 
     res.status(200).json({
         success: true,
