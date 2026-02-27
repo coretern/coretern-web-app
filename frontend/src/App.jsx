@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from './context/ThemeContext';
 
@@ -17,26 +17,36 @@ import TicketConversation from './pages/TicketConversation/TicketConversation';
 import FloatingAction from './Components/FloatingAction/FloatingAction';
 import ScrollToTop from './Components/ScrollToTop';
 
+const AppContent = () => {
+  const location = useLocation();
+
+  return (
+    <>
+      <ScrollToTop />
+      <Toaster position="top-right" />
+      <Routes>
+        <Route path="/" element={<LandingPage key={location.key} />} />
+        <Route path="/internships" element={<Internships key={location.key} />} />
+        <Route path="/internships/:id" element={<InternshipDetails key={location.key} />} />
+        <Route path="/dashboard" element={<Dashboard key={location.key} />} />
+        <Route path="/dashboard/tickets/:id" element={<TicketConversation key={location.key} />} />
+        <Route path="/login" element={<Login key={location.key} />} />
+        <Route path="/register" element={<Register key={location.key} />} />
+        <Route path="/forgot-password" element={<ForgotPassword key={location.key} />} />
+        <Route path="/contact" element={<ContactUs key={location.key} />} />
+        <Route path="/verify/:id" element={<VerifyCertificate key={location.key} />} />
+        <Route path="/verify" element={<VerifyCertificate key={location.key} />} />
+      </Routes>
+      <FloatingAction />
+    </>
+  );
+};
+
 function App() {
   return (
     <ThemeProvider>
       <Router>
-        <ScrollToTop />
-        <Toaster position="top-right" />
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/internships" element={<Internships />} />
-          <Route path="/internships/:id" element={<InternshipDetails />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/dashboard/tickets/:id" element={<TicketConversation />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/contact" element={<ContactUs />} />
-          <Route path="/verify/:id" element={<VerifyCertificate />} />
-          <Route path="/verify" element={<VerifyCertificate />} />
-        </Routes>
-        <FloatingAction />
+        <AppContent />
       </Router>
     </ThemeProvider>
   );

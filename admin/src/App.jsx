@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import axios from 'axios';
 import { Loader2 } from 'lucide-react';
@@ -14,6 +14,52 @@ import Tickets from './pages/Tickets/Tickets';
 import TicketDetail from './pages/Tickets/TicketDetail';
 import Login from './pages/Login/Login';
 import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
+
+const AppContent = ({ isAuthenticated, handleLogin }) => {
+  const location = useLocation();
+
+  return (
+    <div className="admin-layout">
+      {isAuthenticated && <Sidebar />}
+      <main>
+        <Routes>
+          <Route
+            path="/login"
+            element={!isAuthenticated ? <Login onLogin={handleLogin} /> : <Navigate to="/" />}
+          />
+          <Route
+            path="/forgot-password"
+            element={!isAuthenticated ? <ForgotPassword /> : <Navigate to="/" />}
+          />
+          <Route
+            path="/"
+            element={isAuthenticated ? <Dashboard key={location.key} /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/internships"
+            element={isAuthenticated ? <ManageInternships key={location.key} /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/enrollments"
+            element={isAuthenticated ? <ManageEnrollments key={location.key} /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/students"
+            element={isAuthenticated ? <ManageUsers key={location.key} /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/tickets"
+            element={isAuthenticated ? <Tickets key={location.key} /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/tickets/:id"
+            element={isAuthenticated ? <TicketDetail key={location.key} /> : <Navigate to="/login" />}
+          />
+        </Routes>
+      </main>
+    </div>
+  );
+};
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -36,7 +82,6 @@ function App() {
         if (data.data.role === 'admin') {
           setIsAuthenticated(true);
         } else {
-          // If token exists but role is not admin (e.g. student logged in main app)
           console.warn('Student token found in Admin context - Access Denied');
           localStorage.removeItem('token');
           setIsAuthenticated(false);
@@ -66,45 +111,7 @@ function App() {
     <ThemeProvider>
       <Router>
         <Toaster position="top-right" />
-        <div className="admin-layout">
-          {isAuthenticated && <Sidebar />}
-          <main>
-            <Routes>
-              <Route
-                path="/login"
-                element={!isAuthenticated ? <Login onLogin={handleLogin} /> : <Navigate to="/" />}
-              />
-              <Route
-                path="/forgot-password"
-                element={!isAuthenticated ? <ForgotPassword /> : <Navigate to="/" />}
-              />
-              <Route
-                path="/"
-                element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />}
-              />
-              <Route
-                path="/internships"
-                element={isAuthenticated ? <ManageInternships /> : <Navigate to="/login" />}
-              />
-              <Route
-                path="/enrollments"
-                element={isAuthenticated ? <ManageEnrollments /> : <Navigate to="/login" />}
-              />
-              <Route
-                path="/students"
-                element={isAuthenticated ? <ManageUsers /> : <Navigate to="/login" />}
-              />
-              <Route
-                path="/tickets"
-                element={isAuthenticated ? <Tickets /> : <Navigate to="/login" />}
-              />
-              <Route
-                path="/tickets/:id"
-                element={isAuthenticated ? <TicketDetail /> : <Navigate to="/login" />}
-              />
-            </Routes>
-          </main>
-        </div>
+        <AppContent isAuthenticated={isAuthenticated} handleLogin={handleLogin} />
       </Router>
     </ThemeProvider>
   );
