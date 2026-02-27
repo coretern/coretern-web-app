@@ -34,11 +34,18 @@ const Login = () => {
             toast.success('Login Successful!');
             navigate('/dashboard');
         } catch (err) {
+            const errorMessage = err.response?.data?.error || 'Login failed';
+
             if (err.response?.status === 403) {
-                toast.error(err.response.data.error, { duration: 5000 });
+                toast.error(errorMessage, { duration: 5000 });
                 setTimeout(() => navigate('/contact'), 3000);
+            } else if (errorMessage === 'User not registered') {
+                toast.error('Account not found! Redirecting to sign up...', { duration: 4000 });
+                setTimeout(() => navigate('/register'), 2000);
+            } else if (errorMessage === 'Incorrect password') {
+                toast.error('Incorrect password! Please try again.');
             } else {
-                toast.error(err.response?.data?.error || 'Invalid credentials');
+                toast.error(errorMessage);
             }
         } finally {
             setLoading(false);
