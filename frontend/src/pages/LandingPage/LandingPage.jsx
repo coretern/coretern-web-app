@@ -5,6 +5,7 @@ import Footer from '../../Components/Footer/Footer';
 import Hero from '../../Components/Hero/Hero';
 import Services from '../../Components/Services/Services';
 import InternshipSection from '../../Components/InternshipSection/InternshipSection';
+import ClientReviews from '../../Components/Reviews/ClientReviews';
 import PageTransition from '../../Components/PageTransition';
 import './LandingPage.css';
 
@@ -27,6 +28,8 @@ const LandingPage = () => {
                 <Services />
 
                 <InternshipSection />
+
+                <ClientReviews />
 
                 <section className="benefits-section">
                     <div className="container benefits-container">

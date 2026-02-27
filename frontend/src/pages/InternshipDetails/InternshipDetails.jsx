@@ -8,6 +8,7 @@ import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
 import PageTransition from '../../Components/PageTransition';
 import InternshipForm from '../../Components/InternshipForm/InternshipForm';
+import StudentReviews from '../../Components/Reviews/StudentReviews';
 import './InternshipDetails.css';
 
 const InternshipDetails = () => {
@@ -123,6 +124,8 @@ const InternshipDetails = () => {
                                             </div>
                                         </div>
                                     )}
+
+                                    <StudentReviews internshipTitle={internship?.title} />
                                 </div>
                             </motion.div>
                         </main>

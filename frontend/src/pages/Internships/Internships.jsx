@@ -4,6 +4,7 @@ import { Loader2 } from 'lucide-react';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
 import InternshipCard from '../../Components/InternshipCard/InternshipCard';
+import StudentReviews from '../../Components/Reviews/StudentReviews';
 import PageTransition from '../../Components/PageTransition';
 import './Internships.css';
 
@@ -51,6 +52,8 @@ const Internships = () => {
                             ))}
                         </div>
                     )}
+
+                    <StudentReviews internshipTitle="Internship" />
                 </div>
 
                 <Footer />
