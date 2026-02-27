@@ -15,17 +15,15 @@ const router = express.Router();
 // Public routes
 router.post('/', identifyUser, createTicket);
 
-// Protected routes (User)
+// User-specific routes
 router.get('/my', protect, getMyTickets);
 router.get('/:id', protect, getTicket);
 router.put('/:id/reply', protect, replyToTicket);
 
-// Admin-only routes
-router.use(protect);
-router.use(authorize('admin'));
-
-router.get('/', getTickets);
-router.put('/:id/status', updateTicketStatus);
-router.delete('/:id', deleteTicket);
+// Admin-specific routes
+// Use protect and authorize ONLY for the routes defined below
+router.get('/', protect, authorize('admin'), getTickets);
+router.put('/:id/status', protect, authorize('admin'), updateTicketStatus);
+router.delete('/:id', protect, authorize('admin'), deleteTicket);
 
 module.exports = router;

@@ -68,7 +68,7 @@ const ManageUsers = () => {
             });
             // Redirect to frontend with token in query param
             // Note: In production you'd use your actual frontend URL
-            const frontendUrl = 'http://localhost:5173'; // Assuming default Vite port for frontend
+            const frontendUrl = 'http://localhost:5174'; // Updated to 5174 as Admin is on 5173
             window.open(`${frontendUrl}/login?adminToken=${data.token}`, '_blank');
             toast.success(`Accessing platform as ${name}`);
         } catch (err) {

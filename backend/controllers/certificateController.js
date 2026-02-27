@@ -42,7 +42,8 @@ exports.issueCertificate = asyncHandler(async (req, res, next) => {
 
     // Generate Verification URL (Frontend Page)
     // Assuming the frontend verification page is at /verify/:id
-    const verificationUrl = `${req.protocol}://${req.get('host').replace('5000', '5173')}/verify/${certificate.certificateId}`;
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5174';
+    const verificationUrl = `${frontendUrl}/verify/${certificate.certificateId}`;
 
     // Generate QR Code
     const qrCodeData = await generateQRCode(verificationUrl);

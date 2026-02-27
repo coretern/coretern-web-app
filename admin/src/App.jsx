@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import axios from 'axios';
+import { Loader2 } from 'lucide-react';
 import { ThemeProvider } from './context/ThemeContext';
 
 import Sidebar from './components/Sidebar/Sidebar';
@@ -13,9 +15,51 @@ import TicketDetail from './pages/Tickets/TicketDetail';
 import Login from './pages/Login/Login';
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const verifyAdmin = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setIsAuthenticated(false);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const { data } = await axios.get('http://localhost:5000/api/auth/me', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        if (data.data.role === 'admin') {
+          setIsAuthenticated(true);
+        } else {
+          // If token exists but role is not admin (e.g. student logged in main app)
+          console.warn('Student token found in Admin context - Access Denied');
+          localStorage.removeItem('token');
+          setIsAuthenticated(false);
+        }
+      } catch (err) {
+        localStorage.removeItem('token');
+        setIsAuthenticated(false);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    verifyAdmin();
+  }, []);
 
   const handleLogin = () => setIsAuthenticated(true);
+
+  if (loading) {
+    return (
+      <div className="admin-loading-screen" style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0a0b', color: 'white' }}>
+        <Loader2 className="animate-spin" size={40} />
+      </div>
+    );
+  }
 
   return (
     <ThemeProvider>
