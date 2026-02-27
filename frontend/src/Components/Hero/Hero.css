@@ -1,10 +1,10 @@
 .hero {
     position: relative;
-    min-height: 100vh;
+    min-height: 80vh;
     display: flex;
     align-items: center;
     text-align: center;
-    padding: var(--space-xl) 0 var(--space-lg);
+    padding: 100px 0 60px;
     overflow: hidden;
     isolation: isolate;
 }
@@ -190,7 +190,7 @@
 @media (max-width: 768px) {
     .hero {
         min-height: auto;
-        padding: 7rem 0 4rem;
+        padding: 5rem 0 2rem;
     }
 
     .hero-actions {

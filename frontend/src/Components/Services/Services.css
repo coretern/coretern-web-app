@@ -1,12 +1,12 @@
 .services {
     background: var(--background);
-    padding: var(--space-xl) 0;
+    padding: 80px 0;
     position: relative;
     overflow: hidden;
 }
 
 .services-header {
-    margin-bottom: 4rem;
+    margin-bottom: 3rem;
     text-align: center;
 }
 

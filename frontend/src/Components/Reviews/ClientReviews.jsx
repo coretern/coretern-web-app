@@ -35,7 +35,6 @@ const ClientReviews = () => {
         <section className="client-reviews-section">
             <div className="container">
                 <header className="reviews-header text-center">
-                    <span className="badge">Testimonials</span>
                     <h2 className="outfit section-title">What Our <span className="text-primary">Partners Say</span></h2>
                     <p className="section-subtitle">Join hundreds of successful professionals who elevated their careers with us.</p>
                 </header>
