@@ -27,11 +27,13 @@ const Hero = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
                 >
-                    <span className="hero-eyebrow">
-                        <span className="hero-eyebrow-dot" />
-                        <Sparkles size={14} />
-                        Summer Internship 2026 — Applications Open
-                    </span>
+                    <Link to="/internships" className="hero-eyebrow-link">
+                        <span className="hero-eyebrow">
+                            <span className="hero-eyebrow-dot" />
+                            <Sparkles size={14} />
+                            Summer Internship 2026 — Applications Open
+                        </span>
+                    </Link>
 
                     <h1 className="hero-title outfit">
                         <span className="line">Build the Future</span>

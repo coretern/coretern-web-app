@@ -1,6 +1,7 @@
 .student-reviews-container {
     margin-top: 60px;
     padding-top: 40px;
+    padding-bottom: 80px;
     border-top: 1px solid var(--border);
 }
 
