@@ -109,6 +109,22 @@
     border-top: 1px solid var(--border);
 }
 
+.forgot-password-link {
+    text-align: right;
+    margin-top: -0.5rem;
+}
+
+.forgot-password-link a {
+    font-size: 0.85rem;
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.forgot-password-link a:hover {
+    color: var(--primary-light);
+    text-decoration: underline;
+}
+
 .auth-link {
     color: var(--primary);
     font-weight: 700;
@@ -120,6 +136,73 @@
 .auth-link:hover {
     color: var(--primary-light);
     text-decoration: underline;
+}
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 1.5rem 0;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--border);
+}
+
+.auth-divider span {
+    padding: 0 1rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.google-login-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.otp-input {
+    text-align: center;
+    font-size: 1.5rem;
+    letter-spacing: 0.5rem;
+    font-weight: 800;
+}
+
+.resend-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding: 0 0.5rem;
+}
+
+.resend-btn,
+.change-email-btn {
+    background: none;
+    border: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: color var(--transition-fast);
+}
+
+.resend-btn:hover,
+.change-email-btn:hover {
+    color: var(--primary-light);
+    text-decoration: underline;
+}
+
+.resend-btn:disabled {
+    color: var(--text-muted);
+    cursor: not-allowed;
 }
 
 @media (max-width: 480px) {

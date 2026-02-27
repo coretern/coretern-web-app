@@ -17,9 +17,13 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: [true, 'Please add a password'],
         minlength: 6,
         select: false
+    },
+    googleId: {
+        type: String,
+        unique: true,
+        sparse: true
     },
     role: {
         type: String,
@@ -32,6 +36,12 @@ const userSchema = new mongoose.Schema({
         default: 'active'
     },
     phone: String,
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+    otp: String,
+    otpExpires: Date,
     resetPasswordToken: String,
     resetPasswordExpire: Date,
     createdAt: {

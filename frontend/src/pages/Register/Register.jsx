@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { User, Mail, Lock, Phone, Loader2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { User, Mail, Lock, Phone, Loader2, ShieldCheck, RefreshCw } from 'lucide-react';
+import { GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import './Register.css';
 
 const Register = () => {
     const [formData, setFormData] = useState({ name: '', email: '', password: '', phone: '' });
+    const [otp, setOtp] = useState('');
+    const [step, setStep] = useState(1); // 1: Register, 2: OTP
     const [loading, setLoading] = useState(false);
+    const [resending, setResending] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -16,11 +20,58 @@ const Register = () => {
         setLoading(true);
         try {
             const { data } = await axios.post('http://localhost:5000/api/auth/register', formData);
-            localStorage.setItem('token', data.token);
-            toast.success('Registration Successful!');
-            navigate('/dashboard');
+            toast.success(data.message || 'OTP sent to your email!');
+            setStep(2);
         } catch (err) {
             toast.error(err.response?.data?.error || 'Registration failed');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleVerifyOtp = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            const { data } = await axios.post('http://localhost:5000/api/auth/verify-otp', {
+                email: formData.email,
+                otp
+            });
+            localStorage.setItem('token', data.token);
+            toast.success('Email verified! Registration successful');
+            navigate('/dashboard');
+        } catch (err) {
+            toast.error(err.response?.data?.error || 'Verification failed');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleResendOtp = async () => {
+        setResending(true);
+        try {
+            const { data } = await axios.post('http://localhost:5000/api/auth/resend-otp', {
+                email: formData.email
+            });
+            toast.success(data.message || 'OTP resent successfully');
+        } catch (err) {
+            toast.error(err.response?.data?.error || 'Failed to resend OTP');
+        } finally {
+            setResending(false);
+        }
+    };
+
+    const handleGoogleSuccess = async (credentialResponse) => {
+        setLoading(true);
+        try {
+            const { data } = await axios.post('http://localhost:5000/api/auth/google', {
+                tokenId: credentialResponse.credential
+            });
+            localStorage.setItem('token', data.token);
+            toast.success('Logged in with Google!');
+            navigate('/dashboard');
+        } catch (err) {
+            toast.error(err.response?.data?.error || 'Google Login failed');
         } finally {
             setLoading(false);
         }
@@ -42,72 +93,150 @@ const Register = () => {
                 className="auth-card register-card glass"
             >
                 <header className="auth-header">
-                    <h1 className="outfit">Create Account</h1>
-                    <p className="text-text-muted">Start your journey with TechStart today</p>
+                    <h1 className="outfit">{step === 1 ? 'Create Account' : 'Verify Email'}</h1>
+                    <p className="text-text-muted">
+                        {step === 1
+                            ? 'Start your journey with TechStart today'
+                            : `We've sent a 6-digit code to ${formData.email}`}
+                    </p>
                 </header>
 
-                <form onSubmit={handleSubmit}>
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label className="form-label">Full Name</label>
-                            <div className="input-wrapper">
-                                <input
-                                    type="text" required
-                                    className="auth-input"
-                                    placeholder="John Doe"
-                                    value={formData.name}
-                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                />
-                                <User className="input-icon" size={18} />
+                <AnimatePresence mode='wait'>
+                    {step === 1 ? (
+                        <motion.div
+                            key="register-form"
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: 20 }}
+                        >
+                            <form onSubmit={handleSubmit}>
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label className="form-label">Full Name</label>
+                                        <div className="input-wrapper">
+                                            <input
+                                                type="text" required
+                                                className="auth-input"
+                                                placeholder="John Doe"
+                                                value={formData.name}
+                                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                            />
+                                            <User className="input-icon" size={18} />
+                                        </div>
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label">Phone Number</label>
+                                        <div className="input-wrapper">
+                                            <input
+                                                type="text" required
+                                                className="auth-input"
+                                                placeholder="+91..."
+                                                value={formData.phone}
+                                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                            />
+                                            <Phone className="input-icon" size={18} />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="form-group">
+                                    <label className="form-label">Email Address</label>
+                                    <div className="input-wrapper">
+                                        <input
+                                            type="email" required
+                                            className="auth-input"
+                                            placeholder="name@example.com"
+                                            value={formData.email}
+                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                        />
+                                        <Mail className="input-icon" size={18} />
+                                    </div>
+                                </div>
+
+                                <div className="form-group">
+                                    <label className="form-label">Password</label>
+                                    <div className="input-wrapper">
+                                        <input
+                                            type="password" required
+                                            className="auth-input"
+                                            placeholder="••••••••"
+                                            value={formData.password}
+                                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                        />
+                                        <Lock className="input-icon" size={18} />
+                                    </div>
+                                </div>
+
+                                <button disabled={loading} className="btn btn-primary auth-btn">
+                                    {loading ? <Loader2 className="animate-spin" /> : 'Create Account'}
+                                </button>
+                            </form>
+
+                            <div className="auth-divider">
+                                <span>OR</span>
                             </div>
-                        </div>
-                        <div className="form-group">
-                            <label className="form-label">Phone Number</label>
-                            <div className="input-wrapper">
-                                <input
-                                    type="text" required
-                                    className="auth-input"
-                                    placeholder="+91..."
-                                    value={formData.phone}
-                                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+
+                            <div className="google-login-container">
+                                <GoogleLogin
+                                    onSuccess={handleGoogleSuccess}
+                                    onError={() => toast.error('Google Login Failed')}
+                                    useOneTap
+                                    theme="filled_blue"
+                                    shape="pill"
                                 />
-                                <Phone className="input-icon" size={18} />
                             </div>
-                        </div>
-                    </div>
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key="otp-form"
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -20 }}
+                        >
+                            <form onSubmit={handleVerifyOtp}>
+                                <div className="form-group">
+                                    <label className="form-label">Verification Code</label>
+                                    <div className="input-wrapper">
+                                        <input
+                                            type="text"
+                                            required
+                                            maxLength="6"
+                                            className="auth-input otp-input"
+                                            placeholder="123456"
+                                            value={otp}
+                                            onChange={(e) => setOtp(e.target.value)}
+                                        />
+                                        <ShieldCheck className="input-icon" size={18} />
+                                    </div>
+                                </div>
 
-                    <div className="form-group">
-                        <label className="form-label">Email Address</label>
-                        <div className="input-wrapper">
-                            <input
-                                type="email" required
-                                className="auth-input"
-                                placeholder="name@example.com"
-                                value={formData.email}
-                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                            />
-                            <Mail className="input-icon" size={18} />
-                        </div>
-                    </div>
+                                <button disabled={loading} className="btn btn-primary auth-btn">
+                                    {loading ? <Loader2 className="animate-spin" /> : 'Verify & Register'}
+                                </button>
+                            </form>
 
-                    <div className="form-group">
-                        <label className="form-label">Password</label>
-                        <div className="input-wrapper">
-                            <input
-                                type="password" required
-                                className="auth-input"
-                                placeholder="••••••••"
-                                value={formData.password}
-                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                            />
-                            <Lock className="input-icon" size={18} />
-                        </div>
-                    </div>
-
-                    <button disabled={loading} className="btn btn-primary auth-btn">
-                        {loading ? <Loader2 className="animate-spin" /> : 'Create Account'}
-                    </button>
-                </form>
+                            <div className="resend-container">
+                                <button
+                                    onClick={handleResendOtp}
+                                    disabled={resending}
+                                    className="resend-btn"
+                                >
+                                    {resending ? (
+                                        <RefreshCw className="animate-spin" size={14} />
+                                    ) : (
+                                        'Resend Code'
+                                    )}
+                                </button>
+                                <button
+                                    onClick={() => setStep(1)}
+                                    className="change-email-btn"
+                                >
+                                    Change Email
+                                </button>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
 
                 <div className="auth-footer">
                     <p>

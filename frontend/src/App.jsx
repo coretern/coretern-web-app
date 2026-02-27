@@ -10,6 +10,7 @@ import InternshipDetails from './pages/InternshipDetails/InternshipDetails';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
+import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 import VerifyCertificate from './pages/VerifyCertificate/VerifyCertificate';
 import ContactUs from './pages/ContactUs/ContactUs';
 import TicketConversation from './pages/TicketConversation/TicketConversation';
@@ -30,6 +31,7 @@ function App() {
           <Route path="/dashboard/tickets/:id" element={<TicketConversation />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/verify/:id" element={<VerifyCertificate />} />
           <Route path="/verify" element={<VerifyCertificate />} />
