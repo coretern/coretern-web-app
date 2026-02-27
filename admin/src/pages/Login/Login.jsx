@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { Lock, Mail, Loader2, Shield } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -32,7 +32,8 @@ const Login = ({ onLogin }) => {
             onLogin();
             navigate('/');
         } catch (err) {
-            toast.error('Invalid Credentials or Connection error');
+            const message = err.response?.data?.error || 'Invalid Credentials or Connection error';
+            toast.error(message);
         } finally {
             setLoading(false);
         }
@@ -76,6 +77,11 @@ const Login = ({ onLogin }) => {
                                 onChange={e => setPassword(e.target.value)}
                             />
                             <Lock className="input-icon" size={18} />
+                        </div>
+                        <div className="admin-forgot-link-container">
+                            <Link to="/forgot-password" style={{ color: 'var(--primary)', fontSize: '0.9rem', fontWeight: '600', textDecoration: 'none', display: 'block', marginTop: '0.8rem', textAlign: 'right' }}>
+                                Forgot Password?
+                            </Link>
                         </div>
                     </div>
                     <button disabled={loading} className="btn btn-primary admin-login-btn justify-center">

@@ -13,6 +13,7 @@ import ManageUsers from './pages/ManageUsers/ManageUsers';
 import Tickets from './pages/Tickets/Tickets';
 import TicketDetail from './pages/Tickets/TicketDetail';
 import Login from './pages/Login/Login';
+import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -72,6 +73,10 @@ function App() {
               <Route
                 path="/login"
                 element={!isAuthenticated ? <Login onLogin={handleLogin} /> : <Navigate to="/" />}
+              />
+              <Route
+                path="/forgot-password"
+                element={!isAuthenticated ? <ForgotPassword /> : <Navigate to="/" />}
               />
               <Route
                 path="/"

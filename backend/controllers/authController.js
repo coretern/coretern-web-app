@@ -285,6 +285,7 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 
     // Set new password
     user.password = password;
+    user.isVerified = true;
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
 
