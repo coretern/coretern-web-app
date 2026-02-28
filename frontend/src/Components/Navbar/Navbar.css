@@ -3,22 +3,30 @@
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 1000;
+    z-index: 10000;
+    /* Increased to ensure absolute dominance */
+    /* Absolute priority to prevent any card from overlapping */
     padding: 1.2rem 0;
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    isolation: isolate;
 }
 
 .navbar.scrolled {
     padding: 0.8rem 0;
-    background: rgba(3, 7, 18, 0.85);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
+    background: var(--background) !important;
+    /* Fully opaque theme background */
+    backdrop-filter: none;
+    /* Remove translucency to fix overlapping look */
+    -webkit-backdrop-filter: none;
+    /* Solid background to hide underlying content */
     border-bottom: 1px solid var(--border);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 [data-theme='light'] .navbar.scrolled {
-    background: rgba(248, 250, 252, 0.85);
+    background: #ffffff !important;
+    border-bottom: 2px solid var(--primary);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .nav-container {
