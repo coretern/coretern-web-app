@@ -31,7 +31,7 @@ const Hero = () => {
                         <span className="hero-eyebrow">
                             <span className="hero-eyebrow-dot" />
                             <Sparkles size={14} />
-                            Summer Internship 2026 — Applications Open
+                            Summer Internship 2026 - Applications Open
                         </span>
                     </Link>
 

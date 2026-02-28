@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Search, Award, CheckCircle, Clock, Loader2, FileText, X, ExternalLink } from 'lucide-react';
+import { Search, Award, CheckCircle, Clock, Loader2, FileText, X, ExternalLink, User, Mail, Phone, GraduationCap, Calendar, Hash, UserCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import './ManageEnrollments.css';
 
@@ -135,57 +135,102 @@ const ManageEnrollments = () => {
             {/* Student Info Modal */}
             {selectedEnrol && (
                 <div className="admin-modal-overlay">
-                    <div className="admin-modal-content glass" style={{ maxWidth: '600px' }}>
+                    <div className="admin-modal-content glass profile-modal">
                         <button className="modal-close" onClick={() => setSelectedEnrol(null)}>
                             <X size={20} />
                         </button>
-                        <h2 className="outfit mb-6">Student Enrollment Profile</h2>
 
-                        <div className="info-grid">
-                            <div className="info-item">
-                                <label>Full Name (for Cert)</label>
-                                <p>{selectedEnrol.fullName || selectedEnrol.user?.name}</p>
+                        <div className="modal-profile-header">
+                            <div className="profile-avatar outfit">
+                                {(selectedEnrol.fullName || selectedEnrol.user?.name)?.charAt(0)}
                             </div>
-                            <div className="info-item">
-                                <label>Gender</label>
-                                <p>{selectedEnrol.gender || 'N/A'}</p>
+                            <div>
+                                <h2 className="outfit">Enrollment Profile</h2>
+                                <p className="profile-subtitle font-bold">{selectedEnrol.internship?.title}</p>
                             </div>
-                            <div className="info-item">
-                                <label>WhatsApp / Phone</label>
-                                <p>{selectedEnrol.whatsappNumber || selectedEnrol.user?.phone || 'N/A'}</p>
-                            </div>
-                            <div className="info-item">
-                                <label>Email Address</label>
-                                <p>{selectedEnrol.email || selectedEnrol.user?.email}</p>
-                            </div>
-                            <div className="info-item">
-                                <label>College Name</label>
-                                <p>{selectedEnrol.collegeName || 'N/A'}</p>
-                            </div>
-                            <div className="info-item">
-                                <label>Course / Degree</label>
-                                <p>{selectedEnrol.course || 'N/A'}</p>
-                            </div>
-                            <div className="info-item">
-                                <label>College Reg No.</label>
-                                <p>{selectedEnrol.collegeRegNumber || 'N/A'}</p>
-                            </div>
-                            <div className="info-item">
-                                <label>Duration (For Certificate)</label>
-                                <p>
-                                    {selectedEnrol.startDate ? new Date(selectedEnrol.startDate).toLocaleDateString() : 'N/A'} -
-                                    {selectedEnrol.endDate ? new Date(selectedEnrol.endDate).toLocaleDateString() : 'N/A'}
-                                </p>
-                            </div>
-                            {selectedEnrol.resume && (
-                                <div className="info-item full-width">
-                                    <label>Resume / Documents</label>
-                                    <a href={selectedEnrol.resume} target="_blank" rel="noreferrer" className="resume-link">
-                                        <ExternalLink size={16} /> View Submitted Document
-                                    </a>
-                                </div>
-                            )}
                         </div>
+
+                        <div className="modal-sections-grid">
+                            <section className="modal-section">
+                                <h3 className="section-subtitle outfit">Personal Details</h3>
+                                <div className="info-list">
+                                    <div className="info-card">
+                                        <div className="card-icon"><UserCircle size={18} /></div>
+                                        <div className="card-details">
+                                            <label>Full Name</label>
+                                            <p>{selectedEnrol.fullName || selectedEnrol.user?.name}</p>
+                                        </div>
+                                    </div>
+                                    <div className="info-card">
+                                        <div className="card-icon"><User size={18} /></div>
+                                        <div className="card-details">
+                                            <label>Gender</label>
+                                            <p className="capitalize">{selectedEnrol.gender || 'N/A'}</p>
+                                        </div>
+                                    </div>
+                                    <div className="info-card">
+                                        <div className="card-icon"><Phone size={18} /></div>
+                                        <div className="card-details">
+                                            <label>WhatsApp / Phone</label>
+                                            <p>{selectedEnrol.whatsappNumber || selectedEnrol.user?.phone || 'N/A'}</p>
+                                        </div>
+                                    </div>
+                                    <div className="info-card">
+                                        <div className="card-icon"><Mail size={18} /></div>
+                                        <div className="card-details">
+                                            <label>Email Address</label>
+                                            <p>{selectedEnrol.email || selectedEnrol.user?.email}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section className="modal-section">
+                                <h3 className="section-subtitle outfit">Academic & Program</h3>
+                                <div className="info-list">
+                                    <div className="info-card">
+                                        <div className="card-icon"><GraduationCap size={18} /></div>
+                                        <div className="card-details">
+                                            <label>College Name</label>
+                                            <p>{selectedEnrol.collegeName || 'N/A'}</p>
+                                        </div>
+                                    </div>
+                                    <div className="info-card">
+                                        <div className="card-icon"><FileText size={18} /></div>
+                                        <div className="card-details">
+                                            <label>Course / Degree</label>
+                                            <p>{selectedEnrol.course || 'N/A'}</p>
+                                        </div>
+                                    </div>
+                                    <div className="info-card">
+                                        <div className="card-icon"><Hash size={18} /></div>
+                                        <div className="card-details">
+                                            <label>College Reg No.</label>
+                                            <p>{selectedEnrol.collegeRegNumber || 'N/A'}</p>
+                                        </div>
+                                    </div>
+                                    <div className="info-card">
+                                        <div className="card-icon"><Calendar size={18} /></div>
+                                        <div className="card-details">
+                                            <label>Duration</label>
+                                            <p>
+                                                {selectedEnrol.startDate ? new Date(selectedEnrol.startDate).toLocaleDateString() : 'N/A'} -
+                                                {selectedEnrol.endDate ? new Date(selectedEnrol.endDate).toLocaleDateString() : 'N/A'}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+
+                        {selectedEnrol.resume && (
+                            <div className="modal-footer-action">
+                                <a href={selectedEnrol.resume} target="_blank" rel="noreferrer" className="resume-link-premium">
+                                    <ExternalLink size={18} />
+                                    <span>View Submitted Documents / Resume</span>
+                                </a>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}

@@ -350,3 +350,73 @@ exports.getAllEnrollments = asyncHandler(async (req, res, next) => {
         data: updatedEnrollments
     });
 });
+
+// @desc    Submit a review for an internship
+// @route   POST /api/enrollments/:id/review
+// @access  Private
+exports.submitReview = asyncHandler(async (req, res, next) => {
+    const { reviewText } = req.body;
+
+    if (!reviewText) {
+        return next(new ErrorResponse('Please provide review text', 400));
+    }
+
+    const enrollment = await Enrollment.findById(req.params.id);
+
+    if (!enrollment) {
+        return next(new ErrorResponse(`No enrollment found with id ${req.params.id}`, 404));
+    }
+
+    // Check if user owns this enrollment
+    if (enrollment.user.toString() !== req.user.id.toString() && req.user.role !== 'admin') {
+        return next(new ErrorResponse('Not authorized to review this enrollment', 401));
+    }
+
+    // Check if completed - Allow review if certificate exists regardless of status string
+    const certExists = await Certificate.exists({
+        user: enrollment.user,
+        internship: enrollment.internship
+    });
+
+    if (enrollment.status !== 'completed' && !certExists && req.user.role !== 'admin') {
+        return next(new ErrorResponse('You can only review after completing the internship', 400));
+    }
+
+    enrollment.reviewText = reviewText;
+    enrollment.reviewDate = Date.now();
+
+    // Bypass validation for other fields during review update to avoid failures if some old data is inconsistent
+    await Enrollment.findByIdAndUpdate(req.params.id, {
+        reviewText,
+        reviewDate: Date.now()
+    });
+
+    res.status(200).json({
+        success: true,
+        message: 'Review submitted successfully'
+    });
+});
+
+// @desc    Get all reviews for an internship
+// @route   GET /api/enrollments/reviews/:internshipId
+// @access  Public
+exports.getInternshipReviews = asyncHandler(async (req, res, next) => {
+    const query = {
+        reviewText: { $exists: true, $ne: '' }
+    };
+
+    if (req.params.internshipId && req.params.internshipId !== 'all') {
+        query.internship = req.params.internshipId;
+    }
+
+    const reviews = await Enrollment.find(query)
+        .select('reviewText reviewDate fullName user internship')
+        .populate('internship', 'title')
+        .sort('-reviewDate');
+
+    res.status(200).json({
+        success: true,
+        count: reviews.length,
+        data: reviews
+    });
+});

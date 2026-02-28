@@ -95,56 +95,171 @@
     transform: translateY(-2px);
 }
 
-.info-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+.profile-modal {
+    max-width: 800px !important;
+    padding: 0 !important;
+    overflow: hidden;
 }
 
-.info-item label {
-    display: block;
-    font-size: 0.75rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    letter-spacing: 0.05em;
-    margin-bottom: 0.5rem;
-}
-
-.info-item p {
-    font-weight: 700;
-    color: var(--text);
-    font-size: 1.05rem;
-}
-
-.info-item.full-width {
-    grid-column: 1 / -1;
-}
-
-.resume-link {
+.modal-profile-header {
+    background: var(--grad-primary);
+    padding: 2.5rem 3.5rem;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    background: rgba(99, 102, 241, 0.1);
-    color: var(--primary);
-    padding: 1rem 1.5rem;
-    border-radius: 12px;
-    text-decoration: none;
-    font-weight: 800;
-    border: 1px solid rgba(99, 102, 241, 0.2);
-    width: fit-content;
-    transition: all 0.2s;
-}
-
-.resume-link:hover {
-    background: var(--primary);
+    gap: 2rem;
     color: white;
 }
 
-@media (max-width: 768px) {
-    .info-grid {
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: 800;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.modal-profile-header h2 {
+    font-size: 1.8rem;
+    margin-bottom: 0.25rem;
+    color: white;
+}
+
+.profile-subtitle {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.modal-close {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    z-index: 10;
+}
+
+.modal-close:hover {
+    background: rgba(239, 68, 68, 0.3);
+    border-color: #ef4444;
+}
+
+.modal-sections-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    padding: 2.5rem 3.5rem;
+}
+
+.section-subtitle {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--border);
+}
+
+.info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.info-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.card-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.card-details label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.2rem;
+}
+
+.card-details p {
+    font-weight: 600;
+    color: var(--text);
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.modal-footer-action {
+    padding: 0 3.5rem 3rem;
+}
+
+.resume-link-premium {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    padding: 1.25rem;
+    border-radius: var(--radius-lg);
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.resume-link-premium:hover {
+    border-color: var(--primary);
+    background: rgba(99, 102, 241, 0.05);
+    color: var(--primary);
+    transform: translateY(-3px);
+}
+
+@media (max-width: 850px) {
+    .modal-sections-grid {
         grid-template-columns: 1fr;
-        gap: 1.5rem;
+        gap: 2rem;
+        padding: 2rem 2rem;
+    }
+
+    .modal-profile-header {
+        padding: 2rem;
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .modal-footer-action {
+        padding: 0 2rem 2rem;
     }
 }
 

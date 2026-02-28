@@ -56,6 +56,11 @@ const enrollmentSchema = new mongoose.Schema({
     enrolledAt: {
         type: Date,
         default: Date.now
+    },
+    // Review Details
+    reviewText: String,
+    reviewDate: {
+        type: Date
     }
 });
 

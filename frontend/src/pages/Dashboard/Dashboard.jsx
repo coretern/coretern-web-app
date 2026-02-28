@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { BookOpen, Award, LogOut, Download, X, Loader2, LifeBuoy } from 'lucide-react';
+import { BookOpen, Award, LogOut, Download, X, Loader2, LifeBuoy, Rocket, Layout } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { toPng } from 'html-to-image';
 import download from 'downloadjs';
@@ -10,6 +10,7 @@ import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
 import CertificateTemplate from '../../Components/CertificateTemplate/CertificateTemplate';
 import TicketsForRegistered from '../TicketsForRegistered/TicketsForRegistered';
+import ReviewModal from '../../Components/Reviews/ReviewModal';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -19,52 +20,54 @@ const Dashboard = () => {
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('internships');
     const [selectedCert, setSelectedCert] = useState(null);
+    const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+    const [reviewTarget, setReviewTarget] = useState(null);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchDashboard = async () => {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                navigate('/login');
-                return;
-            }
+    const fetchDashboard = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/login');
+            return;
+        }
 
-            // Check for order_id in URL (Payment Redirect)
-            const queryParams = new URLSearchParams(window.location.search);
-            const orderId = queryParams.get('order_id');
+        // Check for order_id in URL (Payment Redirect)
+        const queryParams = new URLSearchParams(window.location.search);
+        const orderId = queryParams.get('order_id');
 
-            if (orderId) {
-                toast.loading('Verifying payment...', { id: 'verify' });
-                try {
-                    await axios.get(`http://localhost:5000/api/enrollments/verify/${orderId}`, {
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
-                    toast.success('Enrollment Activated!', { id: 'verify' });
-                    // Clean up URL
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                } catch (err) {
-                    toast.error(err.response?.data?.message || 'Payment verification failed', { id: 'verify' });
-                }
-            }
-
+        if (orderId) {
+            toast.loading('Verifying payment...', { id: 'verify' });
             try {
-                const config = { headers: { Authorization: `Bearer ${token}` } };
-                const [userRes, enrollRes, certRes] = await Promise.all([
-                    axios.get('http://localhost:5000/api/auth/me', config),
-                    axios.get('http://localhost:5000/api/enrollments/my', config),
-                    axios.get('http://localhost:5000/api/certificates/my', config)
-                ]);
-
-                setUser(userRes.data.data);
-                setEnrollments(enrollRes.data.data);
-                setCertificates(certRes.data.data);
+                await axios.get(`http://localhost:5000/api/enrollments/verify/${orderId}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                toast.success('Enrollment Activated!', { id: 'verify' });
+                // Clean up URL
+                window.history.replaceState({}, document.title, window.location.pathname);
             } catch (err) {
-                localStorage.removeItem('token');
-                navigate('/login');
-            } finally {
-                setLoading(false);
+                toast.error(err.response?.data?.error || 'Payment verification failed', { id: 'verify' });
             }
-        };
+        }
+
+        try {
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            const [userRes, enrollRes, certRes] = await Promise.all([
+                axios.get('http://localhost:5000/api/auth/me', config),
+                axios.get('http://localhost:5000/api/enrollments/my', config),
+                axios.get('http://localhost:5000/api/certificates/my', config)
+            ]);
+
+            setUser(userRes.data.data);
+            setEnrollments(enrollRes.data.data);
+            setCertificates(certRes.data.data);
+        } catch (err) {
+            console.error('Dashboard fetch error', err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         fetchDashboard();
     }, [navigate]);
 
@@ -104,9 +107,15 @@ const Dashboard = () => {
 
             <div className="container">
                 <header className="dashboard-header">
-                    <div>
-                        <h1 className="outfit">Hello, {user?.name} 👋</h1>
-                        <p className="text-text-muted">Manage your learning journey</p>
+                    <div className="user-profile-info">
+                        <div className="user-avatar-main outfit">
+                            {user?.name?.charAt(0) || 'U'}
+                        </div>
+                        <div className="user-details-main">
+                            <h1 className="outfit">Hello, {user?.name} 👋</h1>
+                            <p className="user-email-text">{user?.email}</p>
+                            <p className="text-text-muted">Manage your learning journey</p>
+                        </div>
                     </div>
                     <button onClick={handleLogout} className="btn btn-outline">
                         <LogOut size={18} /> Logout
@@ -139,6 +148,26 @@ const Dashboard = () => {
                                 <p>Help Center</p>
                             </div>
                         </div>
+
+                        <Link to="/#services" className="stat-card glass clickable">
+                            <div className="stat-icon secondary">
+                                <Rocket size={24} />
+                            </div>
+                            <div className="stat-info">
+                                <h3>Explore</h3>
+                                <p>Our Services</p>
+                            </div>
+                        </Link>
+
+                        <Link to="/internships" className="stat-card glass clickable">
+                            <div className="stat-icon primary">
+                                <Layout size={24} />
+                            </div>
+                            <div className="stat-info">
+                                <h3>Programmes</h3>
+                                <p>Latest Internships</p>
+                            </div>
+                        </Link>
                     </aside>
 
                     <main className="internships-list">
@@ -159,41 +188,59 @@ const Dashboard = () => {
                                     <p className="text-text-muted mb-6">Start your career with our professional programs.</p>
                                     <Link to="/internships" className="btn btn-primary">Browse Internships</Link>
                                 </div>
-                            ) : (
-                                enrollments.map((enrol, i) => {
-                                    const cert = certificates.find(c => c.internship?._id === enrol.internship?._id);
-                                    return (
-                                        <motion.div
-                                            key={enrol._id}
-                                            initial={{ opacity: 0, x: 20 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            className="enrollment-card glass"
-                                        >
-                                            <div className="enroll-info">
-                                                <img src={enrol.internship.image} className="enroll-img" alt="" />
-                                                <div className="enroll-text">
-                                                    <h3 className="outfit">{enrol.internship.title}</h3>
-                                                    <span className={`status-badge ${enrol.paymentStatus}`}>
-                                                        {enrol.paymentStatus}
-                                                    </span>
-                                                </div>
+                            ) : enrollments.map((enrol, i) => {
+                                const enrollmentInternshipId = enrol.internship?._id || enrol.internship;
+                                const cert = certificates.find(c => {
+                                    const certInternshipId = c.internship?._id || c.internship;
+                                    return certInternshipId?.toString() === enrollmentInternshipId?.toString();
+                                });
+                                return (
+                                    <motion.div
+                                        key={enrol._id}
+                                        initial={{ opacity: 0, x: 20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        className="enrollment-card glass"
+                                    >
+                                        <div className="enroll-info">
+                                            <img src={enrol.internship.image} className="enroll-img" alt="" />
+                                            <div className="enroll-text">
+                                                <h3 className="outfit">{enrol.internship.title}</h3>
+                                                <span className={`status-badge ${enrol.paymentStatus}`}>
+                                                    {enrol.paymentStatus}
+                                                </span>
                                             </div>
+                                        </div>
 
-                                            <div className="enroll-actions">
-                                                {cert ? (
+                                        <div className="enroll-actions">
+                                            {cert ? (
+                                                <div className="flex flex-col gap-2">
                                                     <button onClick={() => setSelectedCert(cert)} className="btn btn-primary">
                                                         View Certificate
                                                     </button>
-                                                ) : (
-                                                    <button className="btn btn-outline" disabled>
-                                                        {enrol.status === 'pending' ? 'Verification Pending' : 'In Progress'}
-                                                    </button>
-                                                )}
-                                            </div>
-                                        </motion.div>
-                                    );
-                                })
-                            )
+                                                    {!enrol.reviewText && (
+                                                        <button
+                                                            onClick={() => {
+                                                                setReviewTarget({
+                                                                    id: enrol._id,
+                                                                    title: enrol.internship.title
+                                                                });
+                                                                setIsReviewModalOpen(true);
+                                                            }}
+                                                            className="btn btn-outline btn-sm"
+                                                        >
+                                                            Write Review
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <button className="btn btn-outline" disabled>
+                                                    {enrol.status === 'pending' ? 'Verification Pending' : 'In Progress'}
+                                                </button>
+                                            )}
+                                        </div>
+                                    </motion.div>
+                                );
+                            })
                         )}
                     </main>
                 </div>
@@ -222,6 +269,14 @@ const Dashboard = () => {
                     </div>
                 </div>
             )}
+
+            <ReviewModal
+                isOpen={isReviewModalOpen}
+                onClose={() => setIsReviewModalOpen(false)}
+                enrollmentId={reviewTarget?.id}
+                internshipTitle={reviewTarget?.title}
+                onReviewSuccess={fetchDashboard}
+            />
 
             <Footer />
         </div>

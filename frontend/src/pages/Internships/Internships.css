@@ -53,13 +53,16 @@
     }
 
     .internships-header {
-        padding: 40px 0 20px;
+        padding: 40px 1.5rem 20px;
     }
 
     .internships-grid {
+        display: grid;
         grid-template-columns: 1fr;
         max-width: 450px;
         margin: 0 auto;
         padding-bottom: 40px;
+        gap: 2rem;
+        justify-items: center;
     }
 }

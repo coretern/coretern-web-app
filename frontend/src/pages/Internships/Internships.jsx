@@ -53,7 +53,7 @@ const Internships = () => {
                         </div>
                     )}
 
-                    <StudentReviews internshipTitle="Internship" />
+                    <StudentReviews internshipTitle="Internship" internshipId={null} />
                 </div>
 
                 <Footer />

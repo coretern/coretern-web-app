@@ -9,6 +9,7 @@
     flex-direction: column;
     box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
     cursor: pointer;
+    width: 100%;
 }
 
 .intern-card:hover {

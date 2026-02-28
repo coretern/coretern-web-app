@@ -125,7 +125,7 @@ const InternshipDetails = () => {
                                         </div>
                                     )}
 
-                                    <StudentReviews internshipTitle={internship?.title} />
+                                    <StudentReviews internshipTitle={internship?.title} internshipId={id} />
                                 </div>
                             </motion.div>
                         </main>
