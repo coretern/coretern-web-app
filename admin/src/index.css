@@ -106,9 +106,11 @@ main {
 
 /* Table Styles */
 .admin-table-wrapper {
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
   padding: 0;
   border-radius: var(--radius-lg);
+  -webkit-overflow-scrolling: touch;
 }
 
 .admin-table {
@@ -263,12 +265,20 @@ main {
   display: flex;
 }
 
+.flex-col {
+  flex-direction: column;
+}
+
 .items-center {
   align-items: center;
 }
 
 .justify-between {
   justify-content: space-between;
+}
+
+.gap-1 {
+  gap: 0.25rem;
 }
 
 .gap-2 {

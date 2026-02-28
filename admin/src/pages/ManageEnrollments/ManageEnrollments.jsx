@@ -77,6 +77,7 @@ const ManageEnrollments = () => {
                         <tr>
                             <th>Student</th>
                             <th>Info</th>
+                            <th>Date & Time</th>
                             <th>Internship Program</th>
                             <th>Payment</th>
                             <th>Status</th>
@@ -95,6 +96,22 @@ const ManageEnrollments = () => {
                                     >
                                         <FileText size={18} />
                                     </button>
+                                </td>
+                                <td>
+                                    <div className="flex flex-col gap-1">
+                                        <div className="flex items-center gap-1 font-bold" style={{ fontSize: '0.9rem' }}>
+                                            <Calendar size={14} className="text-primary" />
+                                            <span>
+                                                {enrol.enrolledAt ? new Date(enrol.enrolledAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A'}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center gap-1 text-text-muted" style={{ fontSize: '0.8rem' }}>
+                                            <Clock size={13} />
+                                            <span>
+                                                {enrol.enrolledAt ? new Date(enrol.enrolledAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                                            </span>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td>{enrol.internship?.title}</td>
                                 <td>
