@@ -102,7 +102,7 @@ const ManageEnrollments = () => {
                                         <div className="flex items-center gap-1 font-bold" style={{ fontSize: '0.9rem' }}>
                                             <Calendar size={14} className="text-primary" />
                                             <span>
-                                                {enrol.enrolledAt ? new Date(enrol.enrolledAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A'}
+                                                {enrol.enrolledAt ? new Date(enrol.enrolledAt).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : 'N/A'}
                                             </span>
                                         </div>
                                         <div className="flex items-center gap-1 text-text-muted" style={{ fontSize: '0.8rem' }}>

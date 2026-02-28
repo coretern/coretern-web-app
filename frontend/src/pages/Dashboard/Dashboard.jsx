@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { BookOpen, Award, LogOut, Download, X, Loader2, LifeBuoy, Rocket, Layout, Play } from 'lucide-react';
+import { BookOpen, Award, LogOut, Download, X, Loader2, LifeBuoy, Rocket, Layout, Play, Calendar, Clock } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { toPng } from 'html-to-image';
 import download from 'downloadjs';
@@ -205,9 +205,23 @@ const Dashboard = () => {
                                             <img src={enrol.internship.image} className="enroll-img" alt="" />
                                             <div className="enroll-text">
                                                 <h3 className="outfit">{enrol.internship.title}</h3>
-                                                <span className={`status-badge ${enrol.paymentStatus}`}>
-                                                    {enrol.paymentStatus}
-                                                </span>
+                                                <div className="flex flex-col gap-2 mt-2">
+                                                    <span className={`status-badge ${enrol.paymentStatus}`} style={{ width: 'fit-content' }}>
+                                                        {enrol.paymentStatus}
+                                                    </span>
+                                                    {enrol.enrolledAt && (
+                                                        <div className="flex flex-col gap-0 mt-1">
+                                                            <div className="flex items-center gap-1 text-text-muted" style={{ fontSize: '0.85rem' }}>
+                                                                <Calendar size={14} className="text-primary" />
+                                                                <span className="font-bold">{new Date(enrol.enrolledAt).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
+                                                            </div>
+                                                            <div className="flex items-center gap-1 text-text-muted" style={{ fontSize: '0.75rem' }}>
+                                                                <Clock size={13} className="text-secondary" />
+                                                                <span>{new Date(enrol.enrolledAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
 
