@@ -2,6 +2,7 @@
     padding-top: 100px;
     min-height: 100vh;
     background: var(--background);
+    overflow-x: hidden;
 }
 
 .internships-header {
@@ -65,5 +66,5 @@
         gap: 2rem;
         justify-items: center;
     }
-    
+
 }
