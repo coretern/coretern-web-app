@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { BookOpen, Award, LogOut, Download, X, Loader2, LifeBuoy, Rocket, Layout } from 'lucide-react';
+import { BookOpen, Award, LogOut, Download, X, Loader2, LifeBuoy, Rocket, Layout, Play } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { toPng } from 'html-to-image';
 import download from 'downloadjs';
@@ -231,11 +231,27 @@ const Dashboard = () => {
                                                             Write Review
                                                         </button>
                                                     )}
+                                                    <Link
+                                                        to={`/dashboard/videos/${enrollmentInternshipId}`}
+                                                        className="btn btn-secondary btn-sm flex items-center justify-center gap-2"
+                                                    >
+                                                        <Play size={14} /> Watch Lectures
+                                                    </Link>
                                                 </div>
                                             ) : (
-                                                <button className="btn btn-outline" disabled>
-                                                    {enrol.status === 'pending' ? 'Verification Pending' : 'In Progress'}
-                                                </button>
+                                                <div className="flex flex-col gap-2">
+                                                    {enrol.paymentStatus === 'paid' && (
+                                                        <Link
+                                                            to={`/dashboard/videos/${enrollmentInternshipId}`}
+                                                            className="btn btn-primary btn-sm flex items-center justify-center gap-2"
+                                                        >
+                                                            <Play size={14} /> Watch Lectures
+                                                        </Link>
+                                                    )}
+                                                    <button className="btn btn-outline" disabled>
+                                                        {enrol.status === 'pending' ? 'Verification Pending' : 'In Progress'}
+                                                    </button>
+                                                </div>
                                             )}
                                         </div>
                                     </motion.div>

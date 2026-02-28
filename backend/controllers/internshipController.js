@@ -45,6 +45,23 @@ exports.createInternship = asyncHandler(async (req, res, next) => {
         req.body.curriculum = req.body.curriculum.split(',').map(i => i.trim()).filter(i => i !== '');
     }
 
+    // Robust parsing for videos (handles JSON array or FormData JSON string)
+    if (req.body.videos) {
+        if (typeof req.body.videos === 'string') {
+            try {
+                req.body.videos = JSON.parse(req.body.videos);
+            } catch (e) {
+                // If parsing fails, maybe it's not JSON? Fallback logic if needed
+                console.error('Failed to parse videos:', e.message);
+            }
+        }
+    } else {
+        req.body.videos = [];
+    }
+
+    console.log('--- CREATE INTERNSHIP ---');
+    console.log('Body after parsing:', req.body);
+
     // Add image URL if file uploaded
     if (req.file) {
         const isCloudinary = req.file.path.startsWith('http');
@@ -90,6 +107,19 @@ exports.updateInternship = asyncHandler(async (req, res, next) => {
         // Fallback for strings sent via JSON (though frontend should send array)
         req.body.curriculum = req.body.curriculum.split(',').map(i => i.trim()).filter(i => i !== '');
     }
+
+    // Robust parsing for videos (handles JSON array or FormData JSON string)
+    if (req.body.videos) {
+        if (typeof req.body.videos === 'string') {
+            try {
+                req.body.videos = JSON.parse(req.body.videos);
+            } catch (e) {
+                console.error('Failed to parse videos:', e.message);
+            }
+        }
+    }
+
+    console.log('Body after parsing:', req.body);
 
     if (req.file) {
         const isCloudinary = req.file.path.startsWith('http');

@@ -14,6 +14,7 @@ import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 import VerifyCertificate from './pages/VerifyCertificate/VerifyCertificate';
 import ContactUs from './pages/ContactUs/ContactUs';
 import TicketConversation from './pages/TicketConversation/TicketConversation';
+import VideoPage from './pages/VideoPage/VideoPage';
 import FloatingAction from './Components/FloatingAction/FloatingAction';
 import ScrollToTop from './Components/ScrollToTop';
 
@@ -29,6 +30,7 @@ const AppContent = () => {
         <Route path="/internships" element={<Internships key={location.key} />} />
         <Route path="/internships/:id" element={<InternshipDetails key={location.key} />} />
         <Route path="/dashboard" element={<Dashboard key={location.key} />} />
+        <Route path="/dashboard/videos/:id" element={<VideoPage key={location.key} />} />
         <Route path="/dashboard/tickets/:id" element={<TicketConversation key={location.key} />} />
         <Route path="/login" element={<Login key={location.key} />} />
         <Route path="/register" element={<Register key={location.key} />} />

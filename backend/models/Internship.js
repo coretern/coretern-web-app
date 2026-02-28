@@ -33,6 +33,19 @@ const internshipSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
+    videos: [
+        {
+            title: {
+                type: String,
+                required: true
+            },
+            url: {
+                type: String,
+                required: true
+            },
+            duration: String
+        }
+    ],
     createdAt: {
         type: Date,
         default: Date.now

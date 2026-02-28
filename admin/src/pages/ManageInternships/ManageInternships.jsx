@@ -33,7 +33,8 @@ const ManageInternships = () => {
         duration: '',
         description: '',
         curriculum: '',
-        details: ''
+        details: '',
+        videos: ''
     });
     const [image, setImage] = useState(null);
     const [submitting, setSubmitting] = useState(false);
@@ -63,7 +64,8 @@ const ManageInternships = () => {
                 duration: intern.duration,
                 description: intern.description,
                 curriculum: intern.curriculum?.join(', ') || '',
-                details: intern.details || ''
+                details: intern.details || '',
+                videos: intern.videos?.map(v => `${v.title}|${v.url}`).join('\n') || ''
             });
         } else {
             setEditingId(null);
@@ -74,7 +76,8 @@ const ManageInternships = () => {
                 duration: '',
                 description: '',
                 curriculum: '',
-                details: ''
+                details: '',
+                videos: ''
             });
         }
         setShowModal(true);
@@ -85,26 +88,35 @@ const ManageInternships = () => {
         setSubmitting(true);
         const token = localStorage.getItem('token');
 
-        let data;
-        let isFormData = false;
+        // Prepare arrays once
+        const currArray = formData.curriculum ? formData.curriculum.split(',').map(i => i.trim()).filter(i => i !== '') : [];
+        const videoArray = formData.videos ? formData.videos.split('\n').map(line => {
+            const [title, url] = line.split('|');
+            return { title: title?.trim(), url: url?.trim() };
+        }).filter(v => v.title && v.url) : [];
 
-        if (image) {
-            data = new FormData();
+        let payload;
+        let isFormData = !!image;
+
+        if (isFormData) {
+            payload = new FormData();
             Object.keys(formData).forEach(key => {
                 if (key === 'curriculum') {
-                    const currArray = formData.curriculum ? formData.curriculum.split(',').map(i => i.trim()).filter(i => i !== '') : [];
-                    currArray.forEach(item => data.append('curriculum[]', item));
+                    // Multer needs array elements appended individually for curriculum[]
+                    currArray.forEach(item => payload.append('curriculum[]', item));
+                } else if (key === 'videos') {
+                    // Send videos as a JSON string for consistent backend parsing
+                    payload.append('videos', JSON.stringify(videoArray));
                 } else {
-                    data.append(key, formData[key]);
+                    payload.append(key, formData[key]);
                 }
             });
-            data.append('image', image);
-            isFormData = true;
+            payload.append('image', image);
         } else {
-            const currArray = formData.curriculum ? formData.curriculum.split(',').map(i => i.trim()).filter(i => i !== '') : [];
-            data = {
+            payload = {
                 ...formData,
-                curriculum: currArray
+                curriculum: currArray,
+                videos: videoArray
             };
         }
 
@@ -115,17 +127,16 @@ const ManageInternships = () => {
                 }
             };
 
-            if (isFormData) {
-                // Config for FormData is already handled by browser
-            } else {
+            // Let axios handle boundaries for FormData, but set JSON type for plain objects
+            if (!isFormData) {
                 config.headers['Content-Type'] = 'application/json';
             }
 
             if (editingId) {
-                await axios.put(`http://localhost:5000/api/internships/${editingId}`, data, config);
+                await axios.put(`http://localhost:5000/api/internships/${editingId}`, payload, config);
                 toast.success('Internship Updated');
             } else {
-                await axios.post('http://localhost:5000/api/internships', data, config);
+                await axios.post('http://localhost:5000/api/internships', payload, config);
                 toast.success('Internship Created');
             }
             setShowModal(false);
@@ -229,6 +240,17 @@ const ManageInternships = () => {
                                 <div>
                                     <label className="admin-label">Curriculum (Tags separated by comma)</label>
                                     <textarea className="admin-textarea" style={{ height: '60px' }} value={formData.curriculum} onChange={e => setFormData({ ...formData, curriculum: e.target.value })} placeholder="React, Node.js, MongoDB..." />
+                                </div>
+
+                                <div>
+                                    <label className="admin-label">Videos (Format: Title|URL per line)</label>
+                                    <textarea
+                                        className="admin-textarea"
+                                        style={{ height: '100px' }}
+                                        value={formData.videos}
+                                        onChange={e => setFormData({ ...formData, videos: e.target.value })}
+                                        placeholder="Introduction|https://youtube.com/...\nModule 1|https://..."
+                                    />
                                 </div>
 
                                 <div className="mb-8">
