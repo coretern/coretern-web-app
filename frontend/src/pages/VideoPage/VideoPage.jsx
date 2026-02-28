@@ -66,9 +66,13 @@ const VideoPage = () => {
 
             <main className="video-content-container">
                 <div className="video-header">
-                    <Link to="/dashboard" className="back-link">
-                        <ChevronLeft size={20} /> Back to Dashboard
-                    </Link>
+                    <div className="video-header-top">
+                        <Link to="/dashboard" className="back-link-premium">
+                            <ChevronLeft size={18} />
+                            <span>Dashboard</span>
+                        </Link>
+                        <div className="video-badge glass">Lecture Mode</div>
+                    </div>
                     <h1 className="outfit">{internship.title}</h1>
                 </div>
 
@@ -145,7 +149,12 @@ const VideoPage = () => {
 
                     <aside className="video-sidebar glass">
                         <div className="sidebar-header">
-                            <h3 className="outfit">Course Content</h3>
+                            <div className="sidebar-title-row">
+                                <h3 className="outfit">Course Content</h3>
+                                <Link to="/dashboard" className="sidebar-back-icon" title="Back to Dashboard">
+                                    <Layout size={18} />
+                                </Link>
+                            </div>
                             <p>{internship.videos?.length || 0} Modules</p>
                         </div>
 

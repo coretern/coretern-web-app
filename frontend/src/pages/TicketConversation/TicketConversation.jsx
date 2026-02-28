@@ -73,9 +73,13 @@ const TicketConversation = () => {
         <div className="ticket-convo-page">
             <div className="convo-container">
                 <header className="convo-header">
-                    <button onClick={() => navigate('/dashboard')} className="back-btn">
-                        <ArrowLeft size={20} />
-                    </button>
+                    <div className="header-top-row">
+                        <button onClick={() => navigate('/dashboard')} className="back-btn-premium">
+                            <ArrowLeft size={18} />
+                            <span>Dashboard</span>
+                        </button>
+                        <div className="support-badge glass">Support Channel</div>
+                    </div>
                     <div className="header-info-main">
                         <div className="case-meta-badges">
                             <span className="case-id-tag">CASE: #{ticket.ticketId}</span>

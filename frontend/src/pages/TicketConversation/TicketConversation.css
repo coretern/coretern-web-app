@@ -14,31 +14,54 @@
 /* Integrated Header */
 .convo-header {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 1.5rem;
     margin-bottom: 2rem;
     padding: 0.5rem;
 }
 
-.back-btn {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
+.header-top-row {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--text);
-    transition: all 0.2s;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    flex-shrink: 0;
+    width: 100%;
 }
 
-.back-btn:hover {
+.back-btn-premium {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 1.2rem;
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 12px;
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(5px);
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.back-btn-premium:hover {
     background: var(--primary);
-    color: white;
-    transform: translateX(-3px);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+.support-badge {
+    padding: 0.4rem 1rem;
+    background: rgba(99, 102, 241, 0.05);
+    border: 1px solid rgba(99, 102, 241, 0.1);
+    color: var(--primary);
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .header-info-main {
@@ -311,7 +334,8 @@
 
 @media (max-width: 768px) {
     .ticket-convo-page {
-        padding: 1rem 0;
+        padding: 5rem 0 1rem 0;
+        /* Clear navbar */
     }
 
     .convo-container {
@@ -323,17 +347,17 @@
         margin-bottom: 1.5rem;
     }
 
-    .back-btn {
-        width: 36px;
-        height: 36px;
+    .subject-title {
+        font-size: 1.4rem;
     }
 
-    .subject-title {
-        font-size: 1.3rem;
+    .back-btn-premium {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
     }
 
     .chat-board {
-        height: calc(100vh - 220px);
+        height: calc(100vh - 280px);
         min-height: 500px;
         border-radius: 20px;
     }
@@ -381,17 +405,8 @@
 
 @media (max-width: 480px) {
     .convo-header {
-        flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
-    }
-
-    .back-btn {
-        width: auto;
-        padding: 0 12px;
-        height: 32px;
-        font-size: 0.7rem;
-        border-radius: 8px;
     }
 
     .chat-bubble {
