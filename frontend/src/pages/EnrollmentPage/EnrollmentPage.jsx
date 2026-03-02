@@ -229,12 +229,11 @@ const EnrollmentPage = () => {
                     </button>
 
                     <div className="enrollment-content">
-                        <div className="enrollment-header glass">
-                            <h1 className="outfit gradient-text">Enrollment Application</h1>
+                        <div className="enrollment-header">
+                            <h1 className="outfit">Enrollment Application</h1>
                             <p className="text-text-muted">You are applying for <strong>{internship?.title}</strong></p>
                         </div>
-
-                        <form onSubmit={handleSubmit} className="enroll-form glass">
+                        <form onSubmit={handleSubmit} className="enroll-form">
                             <div className="form-section">
                                 <h3 className="section-title">Personal Details</h3>
                                 <div className="input-group">
