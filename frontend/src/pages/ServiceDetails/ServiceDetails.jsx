@@ -52,11 +52,6 @@ const ServiceDetails = () => {
 
                 <section className="service-main">
                     <div className="container">
-                        <div className="section-title-wrapper">
-                            <h2 className="section-title outfit">Core Capabilities</h2>
-                            <p className="section-subtitle">A deep dive into our specialized expertise and solutions.</p>
-                        </div>
-
                         <div className="features-grid">
                             {data.features.map((feature, idx) => (
                                 <motion.div

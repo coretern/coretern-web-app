@@ -2,12 +2,16 @@
     background: var(--background);
 }
 
+.services-page .services {
+    padding-top: 20px;
+}
+
 .services-hero {
     position: relative;
-    padding: 10rem 0 6rem;
+    padding: 8rem 0 4rem;
     text-align: center;
     overflow: hidden;
-    background: linear-gradient(to bottom, rgba(15, 23, 42, 0.4), var(--background));
+    background: var(--grad-dark);
 }
 
 .hero-glow {

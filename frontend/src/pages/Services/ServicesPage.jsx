@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
 import Services from '../../Components/Services/Services';
@@ -6,6 +7,7 @@ import PageTransition from '../../Components/PageTransition';
 import './ServicesPage.css';
 
 const ServicesPage = () => {
+    const navigate = useNavigate();
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
@@ -33,7 +35,12 @@ const ServicesPage = () => {
                         <div className="cta-card glass">
                             <h2 className="outfit">Have a specific requirement?</h2>
                             <p>Our team is ready to discuss your custom project needs.</p>
-                            <button className="btn btn-primary lg">Get in Touch</button>
+                            <button
+                                onClick={() => navigate('/contact')}
+                                className="btn btn-primary lg"
+                            >
+                                Get in Touch
+                            </button>
                         </div>
                     </div>
                 </section>

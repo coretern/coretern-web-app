@@ -4,7 +4,8 @@ import {
     Layers, Database, Activity, Shield, Cpu,
     Beaker, Cloud, Network, Star, Award,
     Clock, Zap, Settings, X,
-    PenTool, Layout, Box, Code, Braces, Server
+    PenTool, Layout, Box, Code, Braces, Server,
+    Lock, Share2
 } from 'lucide-react';
 
 export const services = [
@@ -14,7 +15,7 @@ export const services = [
         icon: <Smartphone />,
         image: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=2070',
         id: 'mobile',
-        features: ['Native Apps', 'Cross-Platform', 'UI/UX Design']
+        features: []
     },
     {
         title: 'Full Stack Web Solutions',
@@ -22,7 +23,7 @@ export const services = [
         icon: <Globe />,
         image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=2072',
         id: 'web',
-        features: ['React/Next.js', 'Node.js Backend', 'E-commerce']
+        features: []
     },
     {
         title: 'AI & Data Intelligence',
@@ -30,7 +31,7 @@ export const services = [
         icon: <Brain />,
         image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=2070',
         id: 'ai',
-        features: ['NLP Models', 'Predictive Analysis', 'Neural Networks']
+        features: []
     },
     {
         title: 'Cloud Infrastructure',
@@ -38,7 +39,23 @@ export const services = [
         icon: <Terminal />,
         image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=2072',
         id: 'cloud',
-        features: ['AWS/Azure', 'Kubernetes', 'CI/CD Pipelines']
+        features: []
+    },
+    {
+        title: 'Cybersecurity Systems',
+        desc: 'Protecting your digital assets with advanced threat detection, encryption, and robust security protocols.',
+        icon: <Lock />,
+        image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=2070',
+        id: 'security',
+        features: []
+    },
+    {
+        title: 'Blockchain & Web3',
+        desc: 'Building decentralized solutions, smart contracts, and secure ledger systems for the next generation of the internet.',
+        icon: <Share2 />,
+        image: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&q=80&w=2232',
+        id: 'blockchain',
+        features: []
     }
 ];
 
@@ -94,6 +111,22 @@ export const getDetailedData = (id) => {
                     { icon: <Beaker size={24} />, title: "Synthetic Data Generation", desc: "AI-created datasets for training.", cat: "Innovation", trend: true },
                     { icon: <Cloud size={24} />, title: "Hybrid Data Lakes", desc: "Advanced analytics with structured/unstructured data.", cat: "Storage", trend: true },
                     { icon: <Network size={24} />, title: "IoT Data Integration", desc: "Processing data from connected devices.", cat: "IoT", trend: true }
+                ]
+            };
+        case 'security':
+            return {
+                features: [
+                    { icon: <Lock size={24} />, title: "Threat Detect", desc: "Real-time AI monitoring for threats.", cat: "Security" },
+                    { icon: <Shield size={24} />, title: "Firewall", desc: "Advanced perimeter defense systems.", cat: "Infra" },
+                    { icon: <Terminal size={24} />, title: "Pen Testing", desc: "Vulnerability analysis and reporting.", cat: "Audit" }
+                ]
+            };
+        case 'blockchain':
+            return {
+                features: [
+                    { icon: <Share2 size={24} />, title: "Smart Contracts", desc: "Secure automated contract execution.", cat: "Web3" },
+                    { icon: <Box size={24} />, title: "NFT Mints", desc: "Digital asset creation and management.", cat: "Assets" },
+                    { icon: <Globe size={24} />, title: "DeFi Solutions", desc: "Decentralized finance architectures.", cat: "Finance" }
                 ]
             };
         default:

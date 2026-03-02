@@ -47,24 +47,6 @@ const Services = () => {
     return (
         <section id="services" className="services">
             <div className="container">
-                <div className="services-header">
-                    <motion.h2
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        className="services-title outfit"
-                    >
-                        Expertise We Offer
-                    </motion.h2>
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
-                        className="text-text-muted"
-                    >
-                        Pioneering digital excellence through our core service domains.
-                    </motion.p>
-                </div>
-
                 {/* Desktop Grid View */}
                 <div className="desktop-services-grid">
                     {services.map((service, index) => (
@@ -79,20 +61,19 @@ const Services = () => {
                         >
                             <div className="pro-card-image">
                                 <img src={service.image} alt={service.title} />
-                                <div className="pro-card-icon-tab">
-                                    {React.cloneElement(service.icon, { size: 28 })}
-                                </div>
                             </div>
                             <div className="pro-card-body">
                                 <h3 className="pro-card-title outfit">{service.title}</h3>
                                 <p className="pro-card-desc">{service.desc}</p>
-                                <ul className="pro-card-features">
-                                    {service.features.map((feature, fIndex) => (
-                                        <li key={fIndex}>
-                                            <span className="dot"></span> {feature}
-                                        </li>
-                                    ))}
-                                </ul>
+                                {service.features && service.features.length > 0 && (
+                                    <ul className="pro-card-features">
+                                        {service.features.map((feature, fIndex) => (
+                                            <li key={fIndex}>
+                                                <span className="dot"></span> {feature}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
                                 <div className="pro-card-footer">
                                     <span className="learn-more">
                                         Learn More <ArrowRight size={16} />

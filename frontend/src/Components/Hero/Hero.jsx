@@ -6,7 +6,7 @@ import './Hero.css';
 
 const Hero = () => {
     const stats = [
-        { value: '500+', label: 'Students Trained' },
+        { value: '5000+', label: 'Students Trained' },
         { value: '50+', label: 'Programs Offered' },
         { value: '95%', label: 'Placement Rate' },
         { value: '4.9★', label: 'Student Rating' },
