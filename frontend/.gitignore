@@ -7,7 +7,7 @@ node_modules/
 .env.*.local
 
 # Production
-dist/
+# dist/
 dist-ssr/
 build/
 
