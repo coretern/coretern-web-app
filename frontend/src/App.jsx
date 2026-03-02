@@ -17,6 +17,7 @@ import TicketConversation from './pages/TicketConversation/TicketConversation';
 import VideoPage from './pages/VideoPage/VideoPage';
 import ServicesPage from './pages/Services/ServicesPage';
 import ServiceDetails from './pages/ServiceDetails/ServiceDetails';
+import EnrollmentPage from './pages/EnrollmentPage/EnrollmentPage';
 import FloatingAction from './Components/FloatingAction/FloatingAction';
 import ScrollToTop from './Components/ScrollToTop';
 
@@ -31,6 +32,7 @@ const AppContent = () => {
         <Route path="/" element={<LandingPage key={location.key} />} />
         <Route path="/internships" element={<Internships key={location.key} />} />
         <Route path="/internships/:id" element={<InternshipDetails key={location.key} />} />
+        <Route path="/internships/:id/enroll" element={<EnrollmentPage key={location.key} />} />
         <Route path="/dashboard" element={<Dashboard key={location.key} />} />
         <Route path="/dashboard/videos/:id" element={<VideoPage key={location.key} />} />
         <Route path="/dashboard/tickets/:id" element={<TicketConversation key={location.key} />} />

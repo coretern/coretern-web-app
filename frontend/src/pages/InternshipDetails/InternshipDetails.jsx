@@ -7,7 +7,6 @@ import toast from 'react-hot-toast';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
 import PageTransition from '../../Components/PageTransition';
-import InternshipForm from '../../Components/InternshipForm/InternshipForm';
 import StudentReviews from '../../Components/Reviews/StudentReviews';
 import './InternshipDetails.css';
 
@@ -16,9 +15,6 @@ const InternshipDetails = () => {
     const navigate = useNavigate();
     const [internship, setInternship] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [showForm, setShowForm] = useState(false);
-    const [enrolling, setEnrolling] = useState(false);
-    const [cashfree, setCashfree] = useState(null);
 
     useEffect(() => {
         const fetchDetails = async () => {
@@ -31,21 +27,7 @@ const InternshipDetails = () => {
                 setLoading(false);
             }
         };
-
-        // Load Cashfree SDK
-        const script = document.createElement('script');
-        script.src = 'https://sdk.cashfree.com/js/v3/cashfree.js';
-        script.async = true;
-        script.onload = () => {
-            setCashfree(window.Cashfree({ mode: 'sandbox' }));
-        };
-        document.body.appendChild(script);
-
         fetchDetails();
-
-        return () => {
-            document.body.removeChild(script);
-        };
     }, [id]);
 
     const handleEnroll = () => {
@@ -56,29 +38,7 @@ const InternshipDetails = () => {
             return;
         }
 
-        if (!cashfree) {
-            toast.error('Payment SDK loading, please wait...');
-            return;
-        }
-
-        setShowForm(true);
-    };
-
-    const handlePayment = (sessionId) => {
-        if (!cashfree) return;
-
-        console.log('Initiating checkout with session ID:', sessionId);
-
-        if (!sessionId) {
-            toast.error('Payment session creation failed');
-            return;
-        }
-
-        toast.success('Opening Checkout...');
-        cashfree.checkout({
-            paymentSessionId: sessionId,
-            redirectTarget: '_self'
-        });
+        navigate(`/internships/${id}/enroll`, { state: { internship } });
     };
 
     if (loading) return <div className="loader-container"><Loader2 className="animate-spin text-primary" size={60} /></div>;
@@ -141,10 +101,9 @@ const InternshipDetails = () => {
 
                                 <button
                                     onClick={handleEnroll}
-                                    disabled={enrolling}
                                     className="btn btn-primary enroll-btn"
                                 >
-                                    {enrolling ? <Loader2 className="animate-spin" /> : 'Enroll Now'}
+                                    Enroll Now
                                 </button>
 
                                 <div className="perks-list">
@@ -183,14 +142,6 @@ const InternshipDetails = () => {
 
                 <Footer />
             </div>
-
-            {showForm && (
-                <InternshipForm
-                    internship={internship}
-                    onClose={() => setShowForm(false)}
-                    onEnrollSuccess={handlePayment}
-                />
-            )}
         </PageTransition>
     );
 };
