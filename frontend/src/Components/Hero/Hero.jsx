@@ -50,9 +50,9 @@ const Hero = () => {
                             View Internships
                             <ArrowRight size={18} />
                         </Link>
-                        <a href="#services" className="btn btn-outline">
+                        <Link to="/services" className="btn btn-outline">
                             Explore Services
-                        </a>
+                        </Link>
                     </div>
 
                     <div className="hero-stats">

@@ -15,6 +15,7 @@ import VerifyCertificate from './pages/VerifyCertificate/VerifyCertificate';
 import ContactUs from './pages/ContactUs/ContactUs';
 import TicketConversation from './pages/TicketConversation/TicketConversation';
 import VideoPage from './pages/VideoPage/VideoPage';
+import ServicesPage from './pages/Services/ServicesPage';
 import ServiceDetails from './pages/ServiceDetails/ServiceDetails';
 import FloatingAction from './Components/FloatingAction/FloatingAction';
 import ScrollToTop from './Components/ScrollToTop';
@@ -37,6 +38,7 @@ const AppContent = () => {
         <Route path="/register" element={<Register key={location.key} />} />
         <Route path="/forgot-password" element={<ForgotPassword key={location.key} />} />
         <Route path="/contact" element={<ContactUs key={location.key} />} />
+        <Route path="/services" element={<ServicesPage key={location.key} />} />
         <Route path="/services/:id" element={<ServiceDetails key={location.key} />} />
         <Route path="/verify/:id" element={<VerifyCertificate key={location.key} />} />
         <Route path="/verify" element={<VerifyCertificate key={location.key} />} />
