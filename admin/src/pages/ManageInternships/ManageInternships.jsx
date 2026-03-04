@@ -34,7 +34,8 @@ const ManageInternships = () => {
         description: '',
         curriculum: '',
         details: '',
-        videos: ''
+        videos: '',
+        whatsappGroup: ''
     });
     const [image, setImage] = useState(null);
     const [submitting, setSubmitting] = useState(false);
@@ -65,7 +66,8 @@ const ManageInternships = () => {
                 description: intern.description,
                 curriculum: intern.curriculum?.join(', ') || '',
                 details: intern.details || '',
-                videos: intern.videos?.map(v => `${v.title}|${v.url}`).join('\n') || ''
+                videos: intern.videos?.map(v => `${v.title}|${v.url}`).join('\n') || '',
+                whatsappGroup: intern.whatsappGroup || ''
             });
         } else {
             setEditingId(null);
@@ -77,7 +79,8 @@ const ManageInternships = () => {
                 description: '',
                 curriculum: '',
                 details: '',
-                videos: ''
+                videos: '',
+                whatsappGroup: ''
             });
         }
         setShowModal(true);
@@ -202,85 +205,102 @@ const ManageInternships = () => {
                             exit={{ scale: 0.9, opacity: 0 }}
                             className="card admin-modal-content"
                         >
-                            <button className="modal-close" onClick={() => setShowModal(false)}><X size={24} /></button>
-                            <h2 className="outfit text-2xl mb-8">{editingId ? 'Edit' : 'Create'} Internship</h2>
+                            <div className="admin-modal-header">
+                                <h2 className="outfit text-2xl m-0">{editingId ? 'Edit' : 'Create'} Internship</h2>
+                                <button className="modal-close" onClick={() => setShowModal(false)} aria-label="Close">
+                                    <X size={20} />
+                                </button>
+                            </div>
 
-                            <form onSubmit={handleSubmit}>
-                                <div className="admin-form-row">
-                                    <div>
-                                        <label className="admin-label">Internship Title</label>
-                                        <input type="text" className="admin-input" value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })} required />
+                            <div className="admin-modal-body">
+                                <form onSubmit={handleSubmit}>
+                                    <div className="admin-form-row">
+                                        <div>
+                                            <label className="admin-label">Internship Title</label>
+                                            <input type="text" className="admin-input" value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })} required />
+                                        </div>
+                                        <div>
+                                            <label className="admin-label">Domain</label>
+                                            <select className="admin-select" value={formData.domain} onChange={e => setFormData({ ...formData, domain: e.target.value })}>
+                                                <option>Summer Internship</option>
+                                                <option>Open Source</option>
+                                                <option>Regular Course</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <label className="admin-label">Domain</label>
-                                        <select className="admin-select" value={formData.domain} onChange={e => setFormData({ ...formData, domain: e.target.value })}>
-                                            <option>Summer Internship</option>
-                                            <option>Open Source</option>
-                                            <option>Regular Course</option>
-                                        </select>
+
+                                    <div className="admin-form-row">
+                                        <div>
+                                            <label className="admin-label">Program Fee (₹)</label>
+                                            <input type="number" className="admin-input" value={formData.fee} onChange={e => setFormData({ ...formData, fee: e.target.value })} required />
+                                        </div>
+                                        <div>
+                                            <label className="admin-label">Duration</label>
+                                            <input type="text" className="admin-input" value={formData.duration} onChange={e => setFormData({ ...formData, duration: e.target.value })} placeholder="e.g. 4 Weeks" required />
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div className="admin-form-row">
-                                    <div>
-                                        <label className="admin-label">Program Fee (₹)</label>
-                                        <input type="number" className="admin-input" value={formData.fee} onChange={e => setFormData({ ...formData, fee: e.target.value })} required />
-                                    </div>
-                                    <div>
-                                        <label className="admin-label">Duration</label>
-                                        <input type="text" className="admin-input" value={formData.duration} onChange={e => setFormData({ ...formData, duration: e.target.value })} placeholder="e.g. 4 Weeks" required />
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label className="admin-label">Short Summary (optional)</label>
-                                    <textarea className="admin-textarea" value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} />
-                                </div>
-
-                                <div>
-                                    <label className="admin-label">Curriculum (Tags separated by comma)</label>
-                                    <textarea className="admin-textarea" style={{ height: '60px' }} value={formData.curriculum} onChange={e => setFormData({ ...formData, curriculum: e.target.value })} placeholder="React, Node.js, MongoDB..." />
-                                </div>
-
-                                <div>
-                                    <label className="admin-label">Videos (Format: Title|URL per line)</label>
-                                    <textarea
-                                        className="admin-textarea"
-                                        style={{ height: '100px' }}
-                                        value={formData.videos}
-                                        onChange={e => setFormData({ ...formData, videos: e.target.value })}
-                                        placeholder="Introduction|https://youtube.com/...\nModule 1|https://..."
-                                    />
-                                </div>
-
-                                <div className="mb-8">
-                                    <label className="admin-label">Detailed Internship Content</label>
-                                    <div className="quill-wrapper">
-                                        <ReactQuill
-                                            theme="snow"
-                                            value={formData.details}
-                                            onChange={val => setFormData({ ...formData, details: val })}
-                                            modules={quillModules}
-                                            placeholder="Write detailed information about the internship..."
+                                    <div className="mb-8">
+                                        <label className="admin-label">WhatsApp Group Join Link (Student will see this after enrollment)</label>
+                                        <input
+                                            type="url"
+                                            className="admin-input"
+                                            value={formData.whatsappGroup}
+                                            onChange={e => setFormData({ ...formData, whatsappGroup: e.target.value })}
+                                            placeholder="https://chat.whatsapp.com/..."
                                         />
                                     </div>
-                                </div>
 
-                                <div className="mb-8">
-                                    <label className="admin-label">Cover Image</label>
-                                    <div className="flex items-center gap-4">
-                                        <button type="button" className="btn btn-outline" onClick={() => document.getElementById('admin-img-input').click()}>
-                                            <Upload size={18} /> Choose Visual
-                                        </button>
-                                        <input id="admin-img-input" type="file" className="hidden" onChange={e => setImage(e.target.files[0])} />
-                                        {image && <span className="text-sm text-primary">{image.name}</span>}
+                                    <div>
+                                        <label className="admin-label">Short Summary (optional)</label>
+                                        <textarea className="admin-textarea" value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} />
                                     </div>
-                                </div>
 
-                                <button disabled={submitting} className="btn btn-primary w-full py-4 justify-center">
-                                    {submitting ? <Loader2 className="animate-spin" /> : <><Save size={20} /> {editingId ? 'Save Changes' : 'Publish Internship'}</>}
-                                </button>
-                            </form>
+                                    <div>
+                                        <label className="admin-label">Curriculum (Tags separated by comma)</label>
+                                        <textarea className="admin-textarea" style={{ height: '60px' }} value={formData.curriculum} onChange={e => setFormData({ ...formData, curriculum: e.target.value })} placeholder="React, Node.js, MongoDB..." />
+                                    </div>
+
+                                    <div>
+                                        <label className="admin-label">Videos (Format: Title|URL per line)</label>
+                                        <textarea
+                                            className="admin-textarea"
+                                            style={{ height: '100px' }}
+                                            value={formData.videos}
+                                            onChange={e => setFormData({ ...formData, videos: e.target.value })}
+                                            placeholder="Introduction|https://youtube.com/...\nModule 1|https://..."
+                                        />
+                                    </div>
+
+                                    <div className="mb-8">
+                                        <label className="admin-label">Detailed Internship Content</label>
+                                        <div className="quill-wrapper">
+                                            <ReactQuill
+                                                theme="snow"
+                                                value={formData.details}
+                                                onChange={val => setFormData({ ...formData, details: val })}
+                                                modules={quillModules}
+                                                placeholder="Write detailed information about the internship..."
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="mb-8">
+                                        <label className="admin-label">Cover Image</label>
+                                        <div className="flex items-center gap-4">
+                                            <button type="button" className="btn btn-outline" onClick={() => document.getElementById('admin-img-input').click()}>
+                                                <Upload size={18} /> Choose Visual
+                                            </button>
+                                            <input id="admin-img-input" type="file" className="hidden" onChange={e => setImage(e.target.files[0])} />
+                                            {image && <span className="text-sm text-primary">{image.name}</span>}
+                                        </div>
+                                    </div>
+
+                                    <button disabled={submitting} className="btn btn-primary w-full py-4 justify-center">
+                                        {submitting ? <Loader2 className="animate-spin" /> : <><Save size={20} /> {editingId ? 'Save Changes' : 'Publish Internship'}</>}
+                                    </button>
+                                </form>
+                            </div>
                         </motion.div>
                     </div>
                 )}

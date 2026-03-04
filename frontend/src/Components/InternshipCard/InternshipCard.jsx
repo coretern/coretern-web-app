@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Clock, ArrowRight, Wallet } from 'lucide-react';
+import { Clock, ArrowRight, Wallet, Sparkles } from 'lucide-react';
 import './InternshipCard.css';
 
 const InternshipCard = ({ item, index }) => {
@@ -21,7 +21,8 @@ const InternshipCard = ({ item, index }) => {
             <div className="intern-card-image">
                 <img src={imageUrl} alt={item.title} />
                 <div className="intern-card-badge">
-                    {item.domain}
+                    <Sparkles size={12} />
+                    <span>{item.domain}</span>
                 </div>
             </div>
 

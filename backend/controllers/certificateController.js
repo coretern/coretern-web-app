@@ -40,6 +40,9 @@ exports.issueCertificate = asyncHandler(async (req, res, next) => {
         enrollment: enrollment._id
     });
 
+    // Trigger validation to generate certificateId (via pre-validate hook)
+    await certificate.validate();
+
     // Generate Verification URL (Frontend Page)
     // Assuming the frontend verification page is at /verify/:id
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5174';

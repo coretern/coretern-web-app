@@ -98,7 +98,7 @@ const ServiceDetails = () => {
 
                             <div className="why-us-cards">
                                 {commonWhyChoose.slice(0, 4).map((item, idx) => (
-                                    <div key={idx} className="why-card glass">
+                                    <div key={idx} className="why-card secondary-card glass" data-index={`0${idx + 1}`}>
                                         <div className="why-card-icon">{item.icon}</div>
                                         <h4 className="outfit">{item.title}</h4>
                                         <p>{item.desc}</p>

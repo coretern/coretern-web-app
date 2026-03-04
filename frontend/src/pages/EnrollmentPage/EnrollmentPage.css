@@ -312,21 +312,53 @@
 }
 
 @media (max-width: 768px) {
+    .enrollment-page {
+        padding-top: 70px;
+        padding-bottom: 2rem;
+    }
+
+    .enrollment-container {
+        padding: 0 1rem;
+        margin: 0.5rem auto;
+    }
+
+    .back-btn {
+        margin-bottom: 1rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+
+    .enrollment-content {
+        gap: 1.5rem;
+    }
+
     .enrollment-header {
-        padding: 2rem 1.5rem;
+        padding: 0.5rem 0 1rem;
     }
 
     .enrollment-header h1 {
-        font-size: 1.8rem;
+        font-size: 1.65rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .enrollment-header p {
+        font-size: 0.9rem;
+        line-height: 1.4;
     }
 
     .enroll-form {
-        padding: 1.5rem;
-        gap: 2rem;
+        padding: 1.25rem;
+        gap: 1.5rem;
+        border-radius: 16px;
     }
 
     .input-row {
         grid-template-columns: 1fr;
         gap: 0;
+    }
+
+    .section-title {
+        font-size: 1rem;
+        margin-bottom: 1.25rem;
     }
 }

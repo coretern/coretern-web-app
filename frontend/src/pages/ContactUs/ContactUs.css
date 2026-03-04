@@ -59,27 +59,17 @@
 
 .info-item {
     display: flex;
-    gap: 1rem;
+    gap: 1.25rem;
     align-items: center;
-    padding: 1rem;
-    background: rgba(var(--primary-rgb), 0.03);
-    border-radius: 18px;
-    border: 1px solid transparent;
-    transition: all 0.3s ease;
-}
-
-.info-item:hover {
-    background: var(--card-bg);
-    border-color: var(--glass-border);
-    transform: translateX(10px);
+    padding: 0.5rem 0;
 }
 
 .icon-box {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    background: var(--grad-primary);
-    color: white;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary);
     display: flex;
     align-items: center;
     justify-content: center;

@@ -29,9 +29,12 @@ const Hero = () => {
                 >
                     <Link to="/internships" className="hero-eyebrow-link">
                         <span className="hero-eyebrow">
-                            <span className="hero-eyebrow-dot" />
-                            <Sparkles size={14} />
-                            Summer Internship 2026 - Applications Open
+                            <div className="eyebrow-line-1">
+                                <span className="hero-eyebrow-dot" />
+                                <Sparkles size={14} />
+                                <span className="eyebrow-text-main">Summer Internship 2026</span>
+                            </div>
+                            <span className="eyebrow-text-sub">Applications Open</span>
                         </span>
                     </Link>
 

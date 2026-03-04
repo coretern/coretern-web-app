@@ -55,33 +55,53 @@
     width: 100%;
     max-width: 850px;
     max-height: 90vh;
-    overflow-y: auto;
     position: relative;
-    padding: 3.5rem !important;
+    padding: 0 !important;
     background: var(--surface);
     border: 1px solid var(--border-hover);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
 }
 
-.modal-close {
-    position: absolute;
-    top: 2rem;
-    right: 2rem;
-    background: var(--surface-light);
+.admin-modal-header {
+    padding: 1.5rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    z-index: 10;
+}
+
+.admin-modal-body {
+    padding: 2.5rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.admin-modal-header .modal-close {
+    background: #ef4444 !important;
+    /* Force high-visibility red */
     border: none;
-    color: var(--text-muted);
+    color: white !important;
     cursor: pointer;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s;
+    transition: none;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+    opacity: 1 !important;
 }
 
-.modal-close:hover {
-    color: var(--danger);
-    background: rgba(239, 68, 68, 0.1);
+.admin-modal-header .modal-close:hover {
+    background: #dc2626 !important;
+    transform: none !important;
 }
 
 .admin-form-row {
@@ -109,7 +129,15 @@
     }
 
     .admin-modal-content {
-        padding: 2rem 1.5rem !important;
+        max-height: 95vh;
+    }
+
+    .admin-modal-header {
+        padding: 1.25rem 1.5rem;
+    }
+
+    .admin-modal-body {
+        padding: 1.5rem;
     }
 }
 

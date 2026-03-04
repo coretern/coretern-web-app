@@ -82,19 +82,36 @@ function App() {
         if (data.data.role === 'admin') {
           setIsAuthenticated(true);
         } else {
-          console.warn('Student token found in Admin context - Access Denied');
-          localStorage.removeItem('token');
+          // If the token belongs to a student, do NOT clear it immediately 
+          // as they might have both apps open. Just reject in this context.
           setIsAuthenticated(false);
         }
       } catch (err) {
-        localStorage.removeItem('token');
-        setIsAuthenticated(false);
+        console.error('Verify Admin Error:', err);
+        // ONLY clear token if server explicitly says it's invalid/expired
+        if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+          localStorage.removeItem('token');
+          setIsAuthenticated(false);
+        } else {
+          // Network Error or 500: Stay "Authenticated" locally so they don't lose their page
+          // Any subsequent protected requests will still fail if the token is truly bad.
+          setIsAuthenticated(true);
+        }
       } finally {
         setLoading(false);
       }
     };
 
     verifyAdmin();
+
+    // Listen for storage changes (logout in another tab)
+    const handleStorageChange = (e) => {
+      if (e.key === 'token' && !e.newValue) {
+        setIsAuthenticated(false);
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   const handleLogin = () => setIsAuthenticated(true);

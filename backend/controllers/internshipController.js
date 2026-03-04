@@ -131,10 +131,18 @@ exports.updateInternship = asyncHandler(async (req, res, next) => {
         }
     }
 
-    internship = await Internship.findByIdAndUpdate(req.params.id, req.body, {
-        returnDocument: 'after',
-        runValidators: true
+    // Update fields manually to ensure all schema fields are tracked
+    Object.keys(req.body).forEach(key => {
+        internship[key] = req.body[key];
     });
+
+    console.log('--- DATA TO SAVE ---');
+    console.log('whatsappGroup:', req.body.whatsappGroup);
+
+    await internship.save();
+
+    console.log('--- SAVED SUCCESSFULLY ---');
+    console.log('Field in object:', internship.whatsappGroup);
 
     res.status(200).json({
         success: true,

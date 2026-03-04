@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { BookOpen, Award, LogOut, Download, X, Loader2, LifeBuoy, Rocket, Layout, Play, Calendar, Clock } from 'lucide-react';
+import { BookOpen, Award, LogOut, Download, X, Loader2, LifeBuoy, Rocket, Layout, Play, Calendar, Clock, ArrowLeft, MessageCircle, CheckCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { toPng } from 'html-to-image';
 import download from 'downloadjs';
@@ -179,13 +179,19 @@ const Dashboard = () => {
                     </aside>
 
                     <main className="internships-list">
-                        <div className="flex items-center justify-between mb-8">
-                            <h2 className="outfit">{activeTab === 'internships' ? 'My Internships' : 'Help & Support'}</h2>
+                        <div className="flex items-center gap-4 mb-8 support-tab-header">
                             {activeTab !== 'internships' && (
-                                <button className="btn btn-sm btn-outline" onClick={() => setActiveTab('internships')}>
-                                    Back to Courses
+                                <button
+                                    className="back-btn-dashboard"
+                                    onClick={() => setActiveTab('internships')}
+                                    title="Back to Courses"
+                                >
+                                    <ArrowLeft size={20} />
                                 </button>
                             )}
+                            <h2 className="outfit m-0">
+                                {activeTab === 'internships' ? 'My Internships' : 'Help & Support'}
+                            </h2>
                         </div>
 
                         {activeTab === 'support' ? (
@@ -259,6 +265,17 @@ const Dashboard = () => {
                                                     >
                                                         <Play size={14} /> Watch Lectures
                                                     </Link>
+                                                    {enrol.internship.whatsappGroup && (
+                                                        <a
+                                                            href={enrol.internship.whatsappGroup}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="btn btn-outline btn-sm flex items-center justify-center gap-2"
+                                                            style={{ borderColor: '#25d366', color: '#25d366' }}
+                                                        >
+                                                            <MessageCircle size={14} /> Join WhatsApp Group
+                                                        </a>
+                                                    )}
                                                 </div>
                                             ) : (
                                                 <div className="flex flex-col gap-2">
@@ -270,8 +287,23 @@ const Dashboard = () => {
                                                             <Play size={14} /> Watch Lectures
                                                         </Link>
                                                     )}
+                                                    {enrol.paymentStatus === 'paid' && enrol.internship.whatsappGroup && (
+                                                        <a
+                                                            href={enrol.internship.whatsappGroup}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="btn btn-outline btn-sm flex items-center justify-center gap-2"
+                                                            style={{ borderColor: '#25d366', color: '#25d366' }}
+                                                        >
+                                                            <MessageCircle size={14} /> Join WhatsApp Group
+                                                        </a>
+                                                    )}
                                                     <button className="btn btn-outline" disabled>
-                                                        {enrol.status === 'pending' ? 'Verification Pending' : 'In Progress'}
+                                                        {enrol.status === 'pending' ? 'Verification Pending' : (
+                                                            <span className="flex items-center gap-1">
+                                                                <CheckCircle size={14} /> In Progress
+                                                            </span>
+                                                        )}
                                                     </button>
                                                 </div>
                                             )}

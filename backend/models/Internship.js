@@ -46,6 +46,10 @@ const internshipSchema = new mongoose.Schema({
             duration: String
         }
     ],
+    whatsappGroup: {
+        type: String,
+        default: ''
+    },
     createdAt: {
         type: Date,
         default: Date.now

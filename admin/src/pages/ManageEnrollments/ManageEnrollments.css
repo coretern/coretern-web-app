@@ -169,28 +169,29 @@
     margin: 0;
 }
 
-.modal-close {
-    position: absolute;
-    top: 2rem;
-    right: 2rem;
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: white;
+.admin-modal-header .modal-close {
+    background: #ef4444 !important;
+    border: none;
+    color: white !important;
     cursor: pointer;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s;
-    z-index: 10;
+    transition: none;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+    opacity: 1 !important;
+    position: relative;
+    top: 0;
+    right: 0;
 }
 
-.modal-close:hover {
-    background: rgba(239, 68, 68, 0.3);
-    border-color: #ef4444;
+.admin-modal-header .modal-close:hover {
+    background: #dc2626 !important;
+    transform: none !important;
 }
 
 .modal-sections-grid {

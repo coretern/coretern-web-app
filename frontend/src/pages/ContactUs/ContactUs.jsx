@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Send, Loader2, Instagram, Linkedin, Twitter, Facebook } from 'lucide-react';
+import { Mail, Phone, MessageCircle, MapPin, Send, Loader2, Instagram, Linkedin, Twitter, Facebook } from 'lucide-react';
 import axios from 'axios';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
@@ -75,9 +75,9 @@ const ContactUs = () => {
                                         </div>
                                     </div>
                                     <div className="info-item">
-                                        <div className="icon-box"><Phone size={24} /></div>
+                                        <div className="icon-box whatsapp-icon"><MessageCircle size={24} /></div>
                                         <div>
-                                            <h3>Call Us</h3>
+                                            <h3>WhatsApp Us</h3>
                                             <p>+91 12345 67890</p>
                                         </div>
                                     </div>
