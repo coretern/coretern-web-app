@@ -62,6 +62,12 @@ const Dashboard = () => {
             setCertificates(certRes.data.data);
         } catch (err) {
             console.error('Dashboard fetch error', err);
+            // If token is invalid or user session expired
+            if (err.response?.status === 401 || err.response?.status === 403) {
+                toast.error('Session expired. Please login again.');
+                localStorage.removeItem('token');
+                navigate('/login');
+            }
         } finally {
             setLoading(false);
         }
@@ -112,8 +118,10 @@ const Dashboard = () => {
                             {user?.name?.charAt(0) || 'U'}
                         </div>
                         <div className="user-details-main">
-                            <h1 className="outfit">Hello, {user?.name} 👋</h1>
-                            <p className="user-email-text">{user?.email}</p>
+                            <h1 className="outfit">
+                                {user ? `Hello, ${user.name} 👋` : 'Welcome back! 👋'}
+                            </h1>
+                            {user && <p className="user-email-text">{user.email}</p>}
                             <p className="text-text-muted">Manage your learning journey</p>
                         </div>
                     </div>

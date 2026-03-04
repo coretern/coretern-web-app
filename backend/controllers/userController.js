@@ -27,7 +27,7 @@ exports.impersonateUser = asyncHandler(async (req, res, next) => {
 
     // Generate token for the target user
     const jwt = require('jsonwebtoken');
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: user._id, version: user.tokenVersion || 0 }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRE
     });
 

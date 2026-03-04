@@ -115,6 +115,20 @@
     font-size: 0.85rem;
 }
 
+.footer-legal-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.footer-legal-links a {
+    color: var(--text-subtle);
+    transition: color var(--transition-fast);
+}
+
+.footer-legal-links a:hover {
+    color: var(--primary);
+}
+
 @media (max-width: 1024px) {
     .footer-grid {
         grid-template-columns: 1.5fr 1fr;
@@ -131,5 +145,11 @@
         flex-direction: column;
         gap: 1rem;
         text-align: center;
+    }
+
+    .footer-legal-links {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 1rem;
     }
 }

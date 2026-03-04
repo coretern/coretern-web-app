@@ -18,8 +18,13 @@ import VideoPage from './pages/VideoPage/VideoPage';
 import ServicesPage from './pages/Services/ServicesPage';
 import ServiceDetails from './pages/ServiceDetails/ServiceDetails';
 import EnrollmentPage from './pages/EnrollmentPage/EnrollmentPage';
+import Terms from './pages/Terms/Terms';
+import Privacy from './pages/Privacy/Privacy';
+import RefundPolicy from './pages/RefundPolicy/RefundPolicy';
+import AboutUs from './pages/AboutUs/AboutUs';
 import FloatingAction from './Components/FloatingAction/FloatingAction';
 import ScrollToTop from './Components/ScrollToTop';
+import CookieBanner from './Components/CookieBanner/CookieBanner';
 
 const AppContent = () => {
   const location = useLocation();
@@ -44,8 +49,13 @@ const AppContent = () => {
         <Route path="/services/:id" element={<ServiceDetails key={location.key} />} />
         <Route path="/verify/:id" element={<VerifyCertificate key={location.key} />} />
         <Route path="/verify" element={<VerifyCertificate key={location.key} />} />
+        <Route path="/terms" element={<Terms key={location.key} />} />
+        <Route path="/privacy" element={<Privacy key={location.key} />} />
+        <Route path="/refund-policy" element={<RefundPolicy key={location.key} />} />
+        <Route path="/about" element={<AboutUs key={location.key} />} />
       </Routes>
       <FloatingAction />
+      <CookieBanner />
     </>
   );
 };

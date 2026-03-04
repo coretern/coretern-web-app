@@ -68,7 +68,7 @@ const ManageUsers = () => {
             });
             // Redirect to frontend with token in query param
             // Note: In production you'd use your actual frontend URL
-            const frontendUrl = 'http://localhost:5174'; // Updated to 5174 as Admin is on 5173
+            const frontendUrl = 'http://localhost:5173'; // Updated to 5173 as Admin is on 5174
             window.open(`${frontendUrl}/login?adminToken=${data.token}`, '_blank');
             toast.success(`Accessing platform as ${name}`);
         } catch (err) {
@@ -83,6 +83,8 @@ const ManageUsers = () => {
     );
 
     if (loading) return <div className="loader-container"><Loader2 className="animate-spin text-primary" size={48} /></div>;
+
+    const frontendUrl = 'http://localhost:5173';
 
     return (
         <div className="manage-users-page">
@@ -111,6 +113,7 @@ const ManageUsers = () => {
                             <th>Email Address</th>
                             <th>Phone</th>
                             <th>Status</th>
+                            <th>Agreements</th>
                             <th>Joined On</th>
                             <th>Actions</th>
                         </tr>
@@ -135,6 +138,12 @@ const ManageUsers = () => {
                                     <span className={`status-pill ${user.status}`}>
                                         {user.status === 'active' ? 'Active' : 'Suspended'}
                                     </span>
+                                </td>
+                                <td>
+                                    <div className="flex gap-2">
+                                        <a href={`${frontendUrl}/terms`} target="_blank" rel="noreferrer" className={`mini-badge-pill ${user.agreedToTerms ? 'success' : 'danger'}`} title="Agreement to Terms of Service (Click to view)">T</a>
+                                        <a href={`${frontendUrl}/privacy`} target="_blank" rel="noreferrer" className={`mini-badge-pill ${user.agreedToPrivacy ? 'success' : 'danger'}`} title="Agreement to Privacy Policy (Click to view)">P</a>
+                                    </div>
                                 </td>
                                 <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                                 <td>

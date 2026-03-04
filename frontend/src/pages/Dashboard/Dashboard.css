@@ -83,7 +83,8 @@
     color: var(--primary);
     font-weight: 600;
     font-size: 1.05rem;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.15rem;
+    display: block;
 }
 
 .dashboard-grid {

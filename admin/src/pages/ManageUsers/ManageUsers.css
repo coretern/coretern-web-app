@@ -74,6 +74,31 @@
     color: white;
 }
 
+.mini-badge-pill {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 800;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.mini-badge-pill.success {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.mini-badge-pill.danger {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
 .clickable-name {
     cursor: pointer;
     transition: all 0.2s ease;

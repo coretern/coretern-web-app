@@ -18,7 +18,8 @@ exports.enroll = asyncHandler(async (req, res, next) => {
         startDate,
         endDate,
         whatsappNumber,
-        email
+        email,
+        agreedToRefundPolicy
     } = req.body;
 
     // Check if internship exists
@@ -78,6 +79,7 @@ exports.enroll = asyncHandler(async (req, res, next) => {
         endDate,
         whatsappNumber,
         email,
+        agreedToRefundPolicy,
         resume: resumePath || (enrollment ? enrollment.resume : undefined)
     };
 

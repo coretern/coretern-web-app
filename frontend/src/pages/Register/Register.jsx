@@ -8,7 +8,14 @@ import toast from 'react-hot-toast';
 import './Register.css';
 
 const Register = () => {
-    const [formData, setFormData] = useState({ name: '', email: '', password: '', phone: '' });
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        password: '',
+        phone: '',
+        agreedToTerms: false,
+        agreedToPrivacy: false
+    });
     const [otp, setOtp] = useState('');
     const [step, setStep] = useState(1); // 1: Register, 2: OTP
     const [loading, setLoading] = useState(false);
@@ -164,6 +171,33 @@ const Register = () => {
                                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                         />
                                         <Lock className="input-icon" size={18} />
+                                    </div>
+                                </div>
+
+                                <div className="legal-checkboxes">
+                                    <div className="checkbox-group">
+                                        <input
+                                            type="checkbox"
+                                            id="agreedToTerms"
+                                            required
+                                            checked={formData.agreedToTerms}
+                                            onChange={(e) => setFormData({ ...formData, agreedToTerms: e.target.checked })}
+                                        />
+                                        <label htmlFor="agreedToTerms">
+                                            I agree to the <Link to="/terms" target="_blank">Terms of Service</Link>
+                                        </label>
+                                    </div>
+                                    <div className="checkbox-group">
+                                        <input
+                                            type="checkbox"
+                                            id="agreedToPrivacy"
+                                            required
+                                            checked={formData.agreedToPrivacy}
+                                            onChange={(e) => setFormData({ ...formData, agreedToPrivacy: e.target.checked })}
+                                        />
+                                        <label htmlFor="agreedToPrivacy">
+                                            I agree to the <Link to="/privacy" target="_blank">Privacy Policy</Link>
+                                        </label>
                                     </div>
                                 </div>
 

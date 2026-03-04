@@ -53,6 +53,10 @@ const enrollmentSchema = new mongoose.Schema({
         required: true
     },
     resume: String,
+    agreedToRefundPolicy: {
+        type: Boolean,
+        default: false
+    },
     enrolledAt: {
         type: Date,
         default: Date.now

@@ -54,9 +54,41 @@
 }
 
 .payment-badge.unpaid {
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.mini-badge-pill {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 800;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.mini-badge-pill.success {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.mini-badge-pill.danger {
     background: rgba(239, 68, 68, 0.15);
     color: #ef4444;
     border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.text-success {
+    color: #10b981 !important;
+}
+
+.text-danger {
+    color: #ef4444 !important;
 }
 
 .status-indicator {
@@ -98,7 +130,8 @@
 .profile-modal {
     max-width: 800px !important;
     padding: 0 !important;
-    overflow: hidden;
+    overflow-y: auto !important;
+    max-height: 85vh !important;
 }
 
 .modal-profile-header {

@@ -52,6 +52,12 @@ const Footer = () => {
 
             <div className="container footer-bottom">
                 <p>© {new Date().getFullYear()} TechStart Platforms. Designed for Future Innovators.</p>
+                <div className="footer-legal-links">
+                    <Link to="/terms">Terms</Link>
+                    <Link to="/privacy">Privacy</Link>
+                    <Link to="/refund-policy">Refund Policy</Link>
+                    <Link to="/about">About Us</Link>
+                </div>
             </div>
         </footer>
     );

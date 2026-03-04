@@ -1,0 +1,112 @@
+.cookie-banner-wrapper {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    right: 2rem;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.cookie-banner {
+    pointer-events: auto;
+    max-width: 600px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.25rem 1.5rem;
+    border-radius: 1.25rem;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    animation: slideUp 0.5s ease;
+}
+
+.cookie-icon-box {
+    width: 50px;
+    height: 50px;
+    background: rgba(var(--primary-rgb), 0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.cookie-text {
+    flex: 1;
+}
+
+.cookie-text h4 {
+    margin-bottom: 0.25rem;
+    font-size: 1.1rem;
+}
+
+.cookie-text p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+    margin: 0;
+}
+
+.cookie-text a {
+    color: var(--primary);
+    text-decoration: underline;
+}
+
+.cookie-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.cookie-actions .close-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s;
+}
+
+.cookie-actions .close-btn:hover {
+    color: var(--danger);
+}
+
+@media (max-width: 768px) {
+    .cookie-banner-wrapper {
+        bottom: 1rem;
+        left: 1rem;
+        right: 1rem;
+    }
+
+    .cookie-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1.5rem;
+    }
+
+    .cookie-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .cookie-actions .btn {
+        flex: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

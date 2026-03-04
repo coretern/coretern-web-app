@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Upload, Send, Loader2, Calendar, User, BookOpen, Hash, Mail, Phone, GraduationCap, Users, ArrowLeft, ChevronDown } from 'lucide-react';
@@ -87,7 +87,8 @@ const EnrollmentPage = () => {
         endDate: '',
         whatsappNumber: '',
         email: '',
-        resume: null
+        resume: null,
+        agreedToRefundPolicy: false
     });
 
     useEffect(() => {
@@ -145,8 +146,8 @@ const EnrollmentPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!formData.fullName || !formData.gender || !formData.startDate || !formData.endDate || !formData.whatsappNumber || !formData.email) {
-            return toast.error('Please fill all required fields');
+        if (!formData.fullName || !formData.gender || !formData.startDate || !formData.endDate || !formData.whatsappNumber || !formData.email || !formData.agreedToRefundPolicy) {
+            return toast.error('Please fill all required fields and agree to the Refund Policy');
         }
 
         if (!cashfree) {
@@ -168,6 +169,7 @@ const EnrollmentPage = () => {
         data.append('endDate', formData.endDate);
         data.append('whatsappNumber', formData.whatsappNumber);
         data.append('email', formData.email);
+        data.append('agreedToRefundPolicy', formData.agreedToRefundPolicy);
         if (formData.resume) {
             data.append('resume', formData.resume);
         }
@@ -400,6 +402,22 @@ const EnrollmentPage = () => {
                                             Accepted: PDF, JPG, PNG (Max 10MB)
                                         </p>
                                     </div>
+                                </div>
+                            </div>
+
+                            <div className="form-section legal-section">
+                                <div className="checkbox-group">
+                                    <input
+                                        type="checkbox"
+                                        id="agreedToRefundPolicy"
+                                        required
+                                        name="agreedToRefundPolicy"
+                                        checked={formData.agreedToRefundPolicy}
+                                        onChange={(e) => setFormData(prev => ({ ...prev, agreedToRefundPolicy: e.target.checked }))}
+                                    />
+                                    <label htmlFor="agreedToRefundPolicy">
+                                        I have read and agree to the <Link to="/refund-policy" target="_blank" className="text-primary">Refund Policy</Link>
+                                    </label>
                                 </div>
                             </div>
 

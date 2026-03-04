@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Search, Award, CheckCircle, Clock, Loader2, FileText, X, ExternalLink, User, Mail, Phone, GraduationCap, Calendar, Hash, UserCircle } from 'lucide-react';
+import { Search, Award, CheckCircle, Clock, Loader2, FileText, X, ExternalLink, User, Mail, Phone, GraduationCap, Calendar, Hash, UserCircle, ShieldCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
 import './ManageEnrollments.css';
 
@@ -52,6 +52,8 @@ const ManageEnrollments = () => {
 
     if (loading) return <div className="loader-container"><Loader2 className="animate-spin text-primary" size={48} /></div>;
 
+    const frontendUrl = 'http://localhost:5173';
+
     return (
         <div className="manage-enroll-page">
             <header className="title-box flex justify-between items-center">
@@ -80,6 +82,7 @@ const ManageEnrollments = () => {
                             <th>Date & Time</th>
                             <th>Internship Program</th>
                             <th>Payment</th>
+                            <th>Agreement</th>
                             <th>Status</th>
                             <th>Manual Actions</th>
                         </tr>
@@ -120,6 +123,11 @@ const ManageEnrollments = () => {
                                     </span>
                                 </td>
                                 <td>
+                                    <div className="flex gap-2">
+                                        <a href={`${frontendUrl}/refund-policy`} target="_blank" rel="noreferrer" className={`mini-badge-pill ${enrol.agreedToRefundPolicy ? 'success' : 'danger'}`} title="Agreement to Refund Policy (Click to view)">R</a>
+                                    </div>
+                                </td>
+                                <td>
                                     <div className={`status-indicator ${enrol.status === 'completed' ? 'completed' : 'pending'}`}>
                                         {enrol.status === 'completed' ? <CheckCircle size={16} /> : <Clock size={16} />}
                                         <span className="capitalize">{enrol.status}</span>
@@ -150,108 +158,135 @@ const ManageEnrollments = () => {
             </div>
 
             {/* Student Info Modal */}
-            {selectedEnrol && (
-                <div className="admin-modal-overlay">
-                    <div className="admin-modal-content glass profile-modal">
-                        <button className="modal-close" onClick={() => setSelectedEnrol(null)}>
-                            <X size={20} />
-                        </button>
+            {
+                selectedEnrol && (
+                    <div className="admin-modal-overlay">
+                        <div className="admin-modal-content glass profile-modal">
+                            <button className="modal-close" onClick={() => setSelectedEnrol(null)}>
+                                <X size={20} />
+                            </button>
 
-                        <div className="modal-profile-header">
-                            <div className="profile-avatar outfit">
-                                {(selectedEnrol.fullName || selectedEnrol.user?.name)?.charAt(0)}
-                            </div>
-                            <div>
-                                <h2 className="outfit">Enrollment Profile</h2>
-                                <p className="profile-subtitle font-bold">{selectedEnrol.internship?.title}</p>
-                            </div>
-                        </div>
-
-                        <div className="modal-sections-grid">
-                            <section className="modal-section">
-                                <h3 className="section-subtitle outfit">Personal Details</h3>
-                                <div className="info-list">
-                                    <div className="info-card">
-                                        <div className="card-icon"><UserCircle size={18} /></div>
-                                        <div className="card-details">
-                                            <label>Full Name</label>
-                                            <p>{selectedEnrol.fullName || selectedEnrol.user?.name}</p>
-                                        </div>
-                                    </div>
-                                    <div className="info-card">
-                                        <div className="card-icon"><User size={18} /></div>
-                                        <div className="card-details">
-                                            <label>Gender</label>
-                                            <p className="capitalize">{selectedEnrol.gender || 'N/A'}</p>
-                                        </div>
-                                    </div>
-                                    <div className="info-card">
-                                        <div className="card-icon"><Phone size={18} /></div>
-                                        <div className="card-details">
-                                            <label>WhatsApp / Phone</label>
-                                            <p>{selectedEnrol.whatsappNumber || selectedEnrol.user?.phone || 'N/A'}</p>
-                                        </div>
-                                    </div>
-                                    <div className="info-card">
-                                        <div className="card-icon"><Mail size={18} /></div>
-                                        <div className="card-details">
-                                            <label>Email Address</label>
-                                            <p>{selectedEnrol.email || selectedEnrol.user?.email}</p>
-                                        </div>
-                                    </div>
+                            <div className="modal-profile-header">
+                                <div className="profile-avatar outfit">
+                                    {(selectedEnrol.fullName || selectedEnrol.user?.name)?.charAt(0)}
                                 </div>
-                            </section>
-
-                            <section className="modal-section">
-                                <h3 className="section-subtitle outfit">Academic & Program</h3>
-                                <div className="info-list">
-                                    <div className="info-card">
-                                        <div className="card-icon"><GraduationCap size={18} /></div>
-                                        <div className="card-details">
-                                            <label>College Name</label>
-                                            <p>{selectedEnrol.collegeName || 'N/A'}</p>
-                                        </div>
-                                    </div>
-                                    <div className="info-card">
-                                        <div className="card-icon"><FileText size={18} /></div>
-                                        <div className="card-details">
-                                            <label>Course / Degree</label>
-                                            <p>{selectedEnrol.course || 'N/A'}</p>
-                                        </div>
-                                    </div>
-                                    <div className="info-card">
-                                        <div className="card-icon"><Hash size={18} /></div>
-                                        <div className="card-details">
-                                            <label>College Reg No.</label>
-                                            <p>{selectedEnrol.collegeRegNumber || 'N/A'}</p>
-                                        </div>
-                                    </div>
-                                    <div className="info-card">
-                                        <div className="card-icon"><Calendar size={18} /></div>
-                                        <div className="card-details">
-                                            <label>Duration</label>
-                                            <p>
-                                                {selectedEnrol.startDate ? new Date(selectedEnrol.startDate).toLocaleDateString() : 'N/A'} -
-                                                {selectedEnrol.endDate ? new Date(selectedEnrol.endDate).toLocaleDateString() : 'N/A'}
-                                            </p>
-                                        </div>
-                                    </div>
+                                <div>
+                                    <h2 className="outfit">Enrollment Profile</h2>
+                                    <p className="profile-subtitle font-bold">{selectedEnrol.internship?.title}</p>
                                 </div>
-                            </section>
-                        </div>
-
-                        {selectedEnrol.resume && (
-                            <div className="modal-footer-action">
-                                <a href={selectedEnrol.resume} target="_blank" rel="noreferrer" className="resume-link-premium">
-                                    <ExternalLink size={18} />
-                                    <span>View Submitted Documents / Resume</span>
-                                </a>
                             </div>
-                        )}
+
+                            <div className="modal-sections-grid">
+                                <section className="modal-section">
+                                    <h3 className="section-subtitle outfit">Personal Details</h3>
+                                    <div className="info-list">
+                                        <div className="info-card">
+                                            <div className="card-icon"><UserCircle size={18} /></div>
+                                            <div className="card-details">
+                                                <label>Full Name</label>
+                                                <p>{selectedEnrol.fullName || selectedEnrol.user?.name}</p>
+                                            </div>
+                                        </div>
+                                        <div className="info-card">
+                                            <div className="card-icon"><User size={18} /></div>
+                                            <div className="card-details">
+                                                <label>Gender</label>
+                                                <p className="capitalize">{selectedEnrol.gender || 'N/A'}</p>
+                                            </div>
+                                        </div>
+                                        <div className="info-card">
+                                            <div className="card-icon"><Phone size={18} /></div>
+                                            <div className="card-details">
+                                                <label>WhatsApp / Phone</label>
+                                                <p>{selectedEnrol.whatsappNumber || selectedEnrol.user?.phone || 'N/A'}</p>
+                                            </div>
+                                        </div>
+                                        <div className="info-card">
+                                            <div className="card-icon"><Mail size={18} /></div>
+                                            <div className="card-details">
+                                                <label>Email Address</label>
+                                                <p>{selectedEnrol.email || selectedEnrol.user?.email}</p>
+                                            </div>
+                                        </div>
+                                        <div className="info-card">
+                                            <div className="card-icon"><ShieldCheck size={18} /></div>
+                                            <div className="card-details">
+                                                <label>Refund Policy Agreed</label>
+                                                <p className={selectedEnrol.agreedToRefundPolicy ? 'text-success' : 'text-danger'}>
+                                                    {selectedEnrol.agreedToRefundPolicy ? 'Yes' : 'No'}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section className="modal-section">
+                                    <h3 className="section-subtitle outfit">Academic & Program</h3>
+                                    <div className="info-list">
+                                        <div className="info-card">
+                                            <div className="card-icon"><GraduationCap size={18} /></div>
+                                            <div className="card-details">
+                                                <label>College Name</label>
+                                                <p>{selectedEnrol.collegeName || 'N/A'}</p>
+                                            </div>
+                                        </div>
+                                        <div className="info-card">
+                                            <div className="card-icon"><FileText size={18} /></div>
+                                            <div className="card-details">
+                                                <label>Course / Degree</label>
+                                                <p>{selectedEnrol.course || 'N/A'}</p>
+                                            </div>
+                                        </div>
+                                        <div className="info-card">
+                                            <div className="card-icon"><Hash size={18} /></div>
+                                            <div className="card-details">
+                                                <label>College Reg No.</label>
+                                                <p>{selectedEnrol.collegeRegNumber || 'N/A'}</p>
+                                            </div>
+                                        </div>
+                                        <div className="info-card">
+                                            <div className="card-icon"><Calendar size={18} /></div>
+                                            <div className="card-details">
+                                                <label>Duration</label>
+                                                <p>
+                                                    {selectedEnrol.startDate ? new Date(selectedEnrol.startDate).toLocaleDateString() : 'N/A'} to {' '}
+                                                    {selectedEnrol.endDate ? new Date(selectedEnrol.endDate).toLocaleDateString() : 'N/A'}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="info-card">
+                                            <div className="card-icon"><CheckCircle size={18} /></div>
+                                            <div className="card-details">
+                                                <label>Payment & Date</label>
+                                                <p className="capitalize">{selectedEnrol.paymentStatus} - {selectedEnrol.enrolledAt ? new Date(selectedEnrol.enrolledAt).toLocaleDateString() : 'N/A'}</p>
+                                            </div>
+                                        </div>
+                                        {selectedEnrol.paymentId && (
+                                            <div className="info-card">
+                                                <div className="card-icon"><Hash size={18} /></div>
+                                                <div className="card-details">
+                                                    <label>Transaction ID</label>
+                                                    <p style={{ fontSize: '0.8rem', wordBreak: 'break-all' }}>{selectedEnrol.paymentId}</p>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </section>
+                            </div>
+
+                            {selectedEnrol.resume && (
+                                <div className="modal-footer-action">
+                                    <a href={selectedEnrol.resume} target="_blank" rel="noreferrer" className="resume-link-premium">
+                                        <ExternalLink size={18} />
+                                        <span>View Submitted Documents / Resume</span>
+                                    </a>
+                                </div>
+                            )}
+                        </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+        </div >
     );
 };
 

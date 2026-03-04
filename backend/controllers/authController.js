@@ -15,7 +15,7 @@ const generateOTP = () => {
 // @route   POST /api/auth/register
 // @access  Public
 exports.register = asyncHandler(async (req, res, next) => {
-    const { name, email, password, role, phone } = req.body;
+    const { name, email, password, role, phone, agreedToTerms, agreedToPrivacy } = req.body;
     console.log(`Registration attempt for: ${email}`);
 
     // Check if user already exists
@@ -34,6 +34,8 @@ exports.register = asyncHandler(async (req, res, next) => {
         user.password = password || user.password;
         user.phone = phone || user.phone;
         user.role = role || user.role;
+        user.agreedToTerms = agreedToTerms || user.agreedToTerms;
+        user.agreedToPrivacy = agreedToPrivacy || user.agreedToPrivacy;
         user.otp = otp;
         user.otpExpires = otpExpires;
         await user.save();
@@ -45,6 +47,8 @@ exports.register = asyncHandler(async (req, res, next) => {
             password,
             role,
             phone,
+            agreedToTerms,
+            agreedToPrivacy,
             otp,
             otpExpires,
             isVerified: false
@@ -288,6 +292,7 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
     user.isVerified = true;
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
+    user.tokenVersion = (user.tokenVersion || 0) + 1; // Invalidate all previous sessions
 
     await user.save();
 
@@ -295,7 +300,7 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 });
 
 const sendTokenResponse = (user, statusCode, res) => {
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: user._id, version: user.tokenVersion || 0 }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRE
     });
 

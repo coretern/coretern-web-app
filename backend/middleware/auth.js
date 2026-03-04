@@ -24,8 +24,19 @@ exports.protect = asyncHandler(async (req, res, next) => {
         // Verify token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        req.user = await User.findById(decoded.id);
+        const user = await User.findById(decoded.id);
 
+        if (!user) {
+            return next(new ErrorResponse('User no longer exists', 401));
+        }
+
+        // Check if token version is still valid
+        const currentVersion = user.tokenVersion || 0;
+        if (decoded.version !== currentVersion) {
+            return next(new ErrorResponse('Session expired due to password change. Please login again.', 401));
+        }
+
+        req.user = user;
         next();
     } catch (err) {
         return next(new ErrorResponse('Not authorized to access this route', 401));
