@@ -21,10 +21,10 @@ const Dashboard = () => {
             const config = { headers: { Authorization: `Bearer ${token}` } };
             try {
                 const [intRes, enrRes, userRes, ticketRes] = await Promise.all([
-                    axios.get('http://localhost:5000/api/internships', config),
-                    axios.get('http://localhost:5000/api/enrollments', config),
-                    axios.get('http://localhost:5000/api/users', config),
-                    axios.get('http://localhost:5000/api/tickets', config)
+                    axios.get(`${import.meta.env.VITE_API_URL}/api/internships`, config),
+                    axios.get(`${import.meta.env.VITE_API_URL}/api/enrollments`, config),
+                    axios.get(`${import.meta.env.VITE_API_URL}/api/users`, config),
+                    axios.get(`${import.meta.env.VITE_API_URL}/api/tickets`, config)
                 ]);
 
                 setStats({

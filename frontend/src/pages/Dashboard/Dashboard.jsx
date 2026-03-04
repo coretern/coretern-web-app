@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import SEO from '../../Components/SEO';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { motion } from 'framer-motion';
@@ -38,7 +39,7 @@ const Dashboard = () => {
         if (orderId) {
             toast.loading('Verifying payment...', { id: 'verify' });
             try {
-                await axios.get(`http://localhost:5000/api/enrollments/verify/${orderId}`, {
+                await axios.get(`${import.meta.env.VITE_API_URL}/api/enrollments/verify/${orderId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 toast.success('Enrollment Activated!', { id: 'verify' });
@@ -52,9 +53,9 @@ const Dashboard = () => {
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
             const [userRes, enrollRes, certRes] = await Promise.all([
-                axios.get('http://localhost:5000/api/auth/me', config),
-                axios.get('http://localhost:5000/api/enrollments/my', config),
-                axios.get('http://localhost:5000/api/certificates/my', config)
+                axios.get(`${import.meta.env.VITE_API_URL}/api/auth/me`, config),
+                axios.get(`${import.meta.env.VITE_API_URL}/api/enrollments/my`, config),
+                axios.get(`${import.meta.env.VITE_API_URL}/api/certificates/my`, config)
             ]);
 
             setUser(userRes.data.data);

@@ -6,7 +6,7 @@ import './InternshipCard.css';
 
 const InternshipCard = ({ item, index }) => {
     const navigate = useNavigate();
-    const backendUrl = 'http://localhost:5000';
+    const backendUrl = `${import.meta.env.VITE_API_URL}`;
     const imageUrl = item.image?.startsWith('http') ? item.image : `${backendUrl}/${item.image}`;
 
     return (

@@ -5,6 +5,7 @@ import axios from 'axios';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
 import PageTransition from '../../Components/PageTransition';
+import SEO from '../../Components/SEO';
 import toast from 'react-hot-toast';
 import './ContactUs.css';
 
@@ -22,7 +23,7 @@ const ContactUs = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const { data } = await axios.post('http://localhost:5000/api/tickets', formData);
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/tickets`, formData);
             if (data.success) {
                 toast.success(`Ticket Raised! ID: ${data.data.ticketId}`, { duration: 6000 });
                 setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
@@ -36,6 +37,7 @@ const ContactUs = () => {
 
     return (
         <PageTransition>
+            <SEO title="Contact Us" description="Get in touch with the TechStart team. Connect with us for internship inquiries, B2B technical services, or general support." url="/contact" />
             <div className="contact-page">
                 <Navbar />
 

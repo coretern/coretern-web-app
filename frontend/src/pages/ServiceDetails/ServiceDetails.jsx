@@ -5,6 +5,7 @@ import { ArrowLeft, CheckCircle2 } from 'lucide-react';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
 import PageTransition from '../../Components/PageTransition';
+import SEO from '../../Components/SEO';
 import { services, getDetailedData, commonWhyChoose } from '../../data/servicesData.jsx';
 import './ServiceDetails.css';
 
@@ -29,6 +30,11 @@ const ServiceDetails = () => {
 
     return (
         <PageTransition>
+            <SEO
+                title={`${service.title} Services`}
+                description={service.desc}
+                url={`/services/${id}`}
+            />
             <div className="service-details-page">
                 <Navbar />
 

@@ -7,6 +7,7 @@ import Services from '../../Components/Services/Services';
 import InternshipSection from '../../Components/InternshipSection/InternshipSection';
 import ClientReviews from '../../Components/Reviews/ClientReviews';
 import PageTransition from '../../Components/PageTransition';
+import SEO from '../../Components/SEO';
 import './LandingPage.css';
 
 const LandingPage = () => {
@@ -20,6 +21,7 @@ const LandingPage = () => {
 
     return (
         <PageTransition>
+            <SEO title="Home - TechStart Internships" description="Get hired faster with TechStart's industry-recognized internships in Web Development, Mobile Apps, and Cloud Computing." />
             <div className="landing-page">
                 <Navbar />
 

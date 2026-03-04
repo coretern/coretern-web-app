@@ -127,7 +127,7 @@ exports.updateInternship = asyncHandler(async (req, res, next) => {
             req.body.image = req.file.path;
         } else {
             const normalizedPath = req.file.path.replace(/\\/g, '/');
-            req.body.image = `http://localhost:5000/${normalizedPath}`;
+            req.body.image = `${process.env.BACKEND_URL || 'http://localhost:5000'}/${normalizedPath}`;
         }
     }
 

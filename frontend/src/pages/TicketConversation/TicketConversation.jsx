@@ -33,7 +33,7 @@ const TicketConversation = () => {
     const fetchTicket = async () => {
         const token = localStorage.getItem('token');
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/tickets/${id}`, {
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/tickets/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setTicket(data.data);
@@ -52,7 +52,7 @@ const TicketConversation = () => {
         setSubmitting(true);
         const token = localStorage.getItem('token');
         try {
-            await axios.put(`http://localhost:5000/api/tickets/${id}/reply`,
+            await axios.put(`${import.meta.env.VITE_API_URL}/api/tickets/${id}/reply`,
                 { message: reply },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

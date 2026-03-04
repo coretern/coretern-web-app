@@ -1,9 +1,11 @@
 import React from 'react';
+import SEO from '../../Components/SEO';
 import '../Terms/Terms.css';
 
 const RefundPolicy = () => {
     return (
         <div className="legal-page container">
+            <SEO title="Refund Policy" />
             <div className="legal-header">
                 <h1 className="outfit gradient-text text-center">Refund Policy</h1>
                 <p className="text-center text-muted">Last updated: {new Date().toLocaleDateString()}</p>

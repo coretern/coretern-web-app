@@ -47,7 +47,7 @@ exports.enroll = asyncHandler(async (req, res, next) => {
             resumePath = req.file.path;
         } else {
             const normalizedPath = req.file.path.replace(/\\/g, '/');
-            resumePath = `http://localhost:5000/${normalizedPath}`;
+            resumePath = `${process.env.BACKEND_URL || 'http://localhost:5000'}/${normalizedPath}`;
         }
     }
 

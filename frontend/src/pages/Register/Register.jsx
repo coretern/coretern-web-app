@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import SEO from '../../Components/SEO';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Mail, Lock, Phone, Loader2, ShieldCheck, RefreshCw } from 'lucide-react';
@@ -26,7 +27,7 @@ const Register = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const { data } = await axios.post('http://localhost:5000/api/auth/register', formData);
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/register`, formData);
             toast.success(data.message || 'OTP sent to your email!');
             setStep(2);
         } catch (err) {
@@ -40,7 +41,7 @@ const Register = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const { data } = await axios.post('http://localhost:5000/api/auth/verify-otp', {
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/verify-otp`, {
                 email: formData.email,
                 otp
             });
@@ -57,7 +58,7 @@ const Register = () => {
     const handleResendOtp = async () => {
         setResending(true);
         try {
-            const { data } = await axios.post('http://localhost:5000/api/auth/resend-otp', {
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/resend-otp`, {
                 email: formData.email
             });
             toast.success(data.message || 'OTP resent successfully');
@@ -71,7 +72,7 @@ const Register = () => {
     const handleGoogleSuccess = async (credentialResponse) => {
         setLoading(true);
         try {
-            const { data } = await axios.post('http://localhost:5000/api/auth/google', {
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/google`, {
                 tokenId: credentialResponse.credential
             });
             localStorage.setItem('token', data.token);

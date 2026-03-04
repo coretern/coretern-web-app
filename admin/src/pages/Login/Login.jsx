@@ -15,10 +15,10 @@ const Login = ({ onLogin }) => {
         e.preventDefault();
         setLoading(true);
         try {
-            const { data } = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, { email, password });
 
             // Check if user is actually an admin
-            const profile = await axios.get('http://localhost:5000/api/auth/me', {
+            const profile = await axios.get(`${import.meta.env.VITE_API_URL}/api/auth/me`, {
                 headers: { Authorization: `Bearer ${data.token}` }
             });
 

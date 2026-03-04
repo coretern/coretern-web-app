@@ -16,7 +16,7 @@ const ManageUsers = () => {
     const fetchUsers = async () => {
         const token = localStorage.getItem('token');
         try {
-            const { data } = await axios.get('http://localhost:5000/api/users', {
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/users`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setUsers(data.data);
@@ -30,7 +30,7 @@ const ManageUsers = () => {
     const handleToggleStatus = async (id, currentStatus) => {
         const token = localStorage.getItem('token');
         try {
-            await axios.put(`http://localhost:5000/api/users/${id}/toggle-status`, {}, {
+            await axios.put(`${import.meta.env.VITE_API_URL}/api/users/${id}/toggle-status`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             toast.success(`Account ${currentStatus === 'active' ? 'Suspended' : 'Activated'}`);
@@ -50,7 +50,7 @@ const ManageUsers = () => {
 
         const token = localStorage.getItem('token');
         try {
-            await axios.delete(`http://localhost:5000/api/users/${id}`, {
+            await axios.delete(`${import.meta.env.VITE_API_URL}/api/users/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             toast.success('User and all associated records deleted');
@@ -63,7 +63,7 @@ const ManageUsers = () => {
     const handleImpersonate = async (id, name) => {
         const token = localStorage.getItem('token');
         try {
-            const { data } = await axios.post(`http://localhost:5000/api/users/${id}/impersonate`, {}, {
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/users/${id}/impersonate`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             // Redirect to frontend with token in query param

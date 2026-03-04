@@ -12,7 +12,7 @@ const InternshipSection = () => {
     useEffect(() => {
         const fetchInternships = async () => {
             try {
-                const { data } = await axios.get('http://localhost:5000/api/internships');
+                const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/internships`);
                 // Only show first 3 for the landing page
                 setInternships(data.data.slice(0, 3));
             } catch (err) {

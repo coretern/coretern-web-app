@@ -125,7 +125,7 @@ const InternshipForm = ({ internship, onClose, onEnrollSuccess }) => {
         }
 
         try {
-            const response = await axios.post('http://localhost:5000/api/enrollments', data, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/enrollments`, data, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${token}`

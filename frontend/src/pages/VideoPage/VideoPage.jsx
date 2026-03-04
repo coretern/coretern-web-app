@@ -22,7 +22,7 @@ const VideoPage = () => {
                 const config = { headers: { Authorization: `Bearer ${token}` } };
 
                 // Fetch internship data (which should now include videos)
-                const res = await axios.get(`http://localhost:5000/api/internships/${id}`, config);
+                const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/internships/${id}`, config);
                 setInternship(res.data.data);
 
                 // Set initial video if available

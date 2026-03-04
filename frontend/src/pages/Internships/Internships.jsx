@@ -6,6 +6,7 @@ import Footer from '../../Components/Footer/Footer';
 import InternshipCard from '../../Components/InternshipCard/InternshipCard';
 import StudentReviews from '../../Components/Reviews/StudentReviews';
 import PageTransition from '../../Components/PageTransition';
+import SEO from '../../Components/SEO';
 import './Internships.css';
 
 const Internships = () => {
@@ -15,7 +16,7 @@ const Internships = () => {
     useEffect(() => {
         const fetchInternships = async () => {
             try {
-                const { data } = await axios.get('http://localhost:5000/api/internships');
+                const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/internships`);
                 setInternships(data.data);
             } catch (err) {
                 console.error('Error fetching internships', err);
@@ -28,6 +29,7 @@ const Internships = () => {
 
     return (
         <PageTransition>
+            <SEO title="Explore Internships" description="Apply for 6-month specialized internships in React, Node.js, Android Development, UI/UX Design, and more." url="/internships" />
             <div className="internships-page">
                 <Navbar />
 

@@ -4,6 +4,7 @@ import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
 import Services from '../../Components/Services/Services';
 import PageTransition from '../../Components/PageTransition';
+import SEO from '../../Components/SEO';
 import './ServicesPage.css';
 
 const ServicesPage = () => {
@@ -14,6 +15,11 @@ const ServicesPage = () => {
 
     return (
         <PageTransition>
+            <SEO
+                title="Our Services"
+                description="Explore TechStart's industry-leading B2B digital solutions including Web Development, Mobile Apps, and AI Integrations tailored to your business needs."
+                url="/services"
+            />
             <div className="services-page">
                 <Navbar />
 

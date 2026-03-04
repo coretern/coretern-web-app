@@ -17,7 +17,7 @@ const ReviewModal = ({ isOpen, onClose, enrollmentId, internshipTitle, onReviewS
 
         setSubmitting(true);
         try {
-            await axios.post(`http://localhost:5000/api/enrollments/${enrollmentId}/review`,
+            await axios.post(`${import.meta.env.VITE_API_URL}/api/enrollments/${enrollmentId}/review`,
                 { reviewText },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

@@ -25,7 +25,7 @@ const StudentReviews = ({ internshipTitle, internshipId }) => {
     const fetchReviews = async () => {
         try {
             const id = internshipId || 'all';
-            const { data } = await axios.get(`http://localhost:5000/api/enrollments/reviews/${id}`);
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/enrollments/reviews/${id}`);
             setReviews(data.data);
         } catch (err) {
             console.error('Error fetching reviews', err);
@@ -36,7 +36,7 @@ const StudentReviews = ({ internshipTitle, internshipId }) => {
 
     const checkEligibility = async () => {
         try {
-            const { data } = await axios.get('http://localhost:5000/api/enrollments/my', {
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/enrollments/my`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             // Find enrollment for THIS internship that is COMPLETED

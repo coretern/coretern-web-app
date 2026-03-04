@@ -1,9 +1,11 @@
 import React from 'react';
+import SEO from '../../Components/SEO';
 import '../Terms/Terms.css'; // Reusing the same CSS to maintain consistency
 
 const Privacy = () => {
     return (
         <div className="legal-page container">
+            <SEO title="Privacy Policy" />
             <div className="legal-header">
                 <h1 className="outfit gradient-text text-center">Privacy Policy</h1>
                 <p className="text-center text-muted">Last updated: {new Date().toLocaleDateString()}</p>

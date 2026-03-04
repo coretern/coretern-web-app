@@ -9,6 +9,7 @@ import 'react-phone-input-2/lib/style.css';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
 import PageTransition from '../../Components/PageTransition';
+import SEO from '../../Components/SEO';
 import './EnrollmentPage.css';
 
 const CustomSelect = ({ label, icon: Icon, name, value, options, onChange, placeholder, required }) => {
@@ -98,7 +99,7 @@ const EnrollmentPage = () => {
         if (!internship) {
             const fetchDetails = async () => {
                 try {
-                    const { data } = await axios.get(`http://localhost:5000/api/internships/${id}`);
+                    const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/internships/${id}`);
                     setInternship(data.data);
                 } catch (err) {
                     console.error('Error fetching details', err);
@@ -175,7 +176,7 @@ const EnrollmentPage = () => {
         }
 
         try {
-            const response = await axios.post('http://localhost:5000/api/enrollments', data, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/enrollments`, data, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${token}`
@@ -222,6 +223,7 @@ const EnrollmentPage = () => {
 
     return (
         <PageTransition>
+            <SEO title={`Apply: ${internship?.title || 'Internship'}`} description={`Enroll now in the ${internship?.title || 'TechStart'} internship and secure your spot.`} />
             <div className="enrollment-page">
                 <Navbar />
 

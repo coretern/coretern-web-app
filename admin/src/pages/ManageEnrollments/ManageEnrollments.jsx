@@ -18,7 +18,7 @@ const ManageEnrollments = () => {
     const fetchEnrollments = async () => {
         const token = localStorage.getItem('token');
         try {
-            const { data } = await axios.get('http://localhost:5000/api/enrollments', {
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/enrollments`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setEnrollments(data.data);
@@ -33,7 +33,7 @@ const ManageEnrollments = () => {
         setIssuingId(enrolId);
         const token = localStorage.getItem('token');
         try {
-            await axios.post('http://localhost:5000/api/certificates', { enrollmentId: enrolId }, {
+            await axios.post(`${import.meta.env.VITE_API_URL}/api/certificates`, { enrollmentId: enrolId }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             toast.success('Certificate Issued Successfully!');

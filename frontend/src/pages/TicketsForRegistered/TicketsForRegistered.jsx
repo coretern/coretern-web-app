@@ -30,7 +30,7 @@ const TicketsForRegistered = () => {
     const fetchMyTickets = async () => {
         const token = localStorage.getItem('token');
         try {
-            const { data } = await axios.get('http://localhost:5000/api/tickets/my', {
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/tickets/my`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setTickets(data.data);
@@ -46,7 +46,7 @@ const TicketsForRegistered = () => {
         setLoading(true);
         const token = localStorage.getItem('token');
         try {
-            const { data } = await axios.post('http://localhost:5000/api/tickets', formData, {
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/tickets`, formData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (data.success) {

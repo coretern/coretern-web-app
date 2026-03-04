@@ -46,7 +46,7 @@ const ManageInternships = () => {
 
     const fetchInternships = async () => {
         try {
-            const { data } = await axios.get('http://localhost:5000/api/internships');
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/internships`);
             setInternships(data.data);
         } catch (err) {
             toast.error('Failed to fetch internships');
@@ -136,10 +136,10 @@ const ManageInternships = () => {
             }
 
             if (editingId) {
-                await axios.put(`http://localhost:5000/api/internships/${editingId}`, payload, config);
+                await axios.put(`${import.meta.env.VITE_API_URL}/api/internships/${editingId}`, payload, config);
                 toast.success('Internship Updated');
             } else {
-                await axios.post('http://localhost:5000/api/internships', payload, config);
+                await axios.post(`${import.meta.env.VITE_API_URL}/api/internships`, payload, config);
                 toast.success('Internship Created');
             }
             setShowModal(false);
@@ -156,7 +156,7 @@ const ManageInternships = () => {
         if (!window.confirm('This will permanently delete the internship. Continue?')) return;
         const token = localStorage.getItem('token');
         try {
-            await axios.delete(`http://localhost:5000/api/internships/${id}`, {
+            await axios.delete(`${import.meta.env.VITE_API_URL}/api/internships/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             toast.success('Internship Deleted');

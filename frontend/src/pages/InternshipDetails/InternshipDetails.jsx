@@ -8,6 +8,7 @@ import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
 import PageTransition from '../../Components/PageTransition';
 import StudentReviews from '../../Components/Reviews/StudentReviews';
+import SEO from '../../Components/SEO';
 import './InternshipDetails.css';
 
 const InternshipDetails = () => {
@@ -19,7 +20,7 @@ const InternshipDetails = () => {
     useEffect(() => {
         const fetchDetails = async () => {
             try {
-                const { data } = await axios.get(`http://localhost:5000/api/internships/${id}`);
+                const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/internships/${id}`);
                 setInternship(data.data);
             } catch (err) {
                 console.error('Error fetching details', err);
@@ -45,6 +46,7 @@ const InternshipDetails = () => {
 
     return (
         <PageTransition>
+            <SEO title={internship?.title ? `${internship.title} Internship` : 'Internship Details'} description={internship?.description} url={`/internships/${id}`} image={internship?.image} />
             <div className="details-page">
                 <Navbar />
 

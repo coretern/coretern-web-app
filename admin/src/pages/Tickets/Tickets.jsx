@@ -18,7 +18,7 @@ const Tickets = () => {
     const fetchTickets = async () => {
         const token = localStorage.getItem('token');
         try {
-            const { data } = await axios.get('http://localhost:5000/api/tickets', {
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/tickets`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setTickets(data.data);
@@ -32,7 +32,7 @@ const Tickets = () => {
     const handleUpdateStatus = async (id, status) => {
         const token = localStorage.getItem('token');
         try {
-            await axios.put(`http://localhost:5000/api/tickets/${id}/status`, { status }, {
+            await axios.put(`${import.meta.env.VITE_API_URL}/api/tickets/${id}/status`, { status }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             toast.success(`Ticket status updated to ${status}`);
@@ -46,7 +46,7 @@ const Tickets = () => {
         if (!window.confirm('Are you sure you want to delete this ticket?')) return;
         const token = localStorage.getItem('token');
         try {
-            await axios.delete(`http://localhost:5000/api/tickets/${id}`, {
+            await axios.delete(`${import.meta.env.VITE_API_URL}/api/tickets/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             toast.success('Ticket deleted');

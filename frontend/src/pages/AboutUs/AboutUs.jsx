@@ -1,9 +1,11 @@
 import React from 'react';
+import SEO from '../../Components/SEO';
 import '../Terms/Terms.css';
 
 const AboutUs = () => {
     return (
         <div className="legal-page container">
+            <SEO title="About Us" description="Learn more about TechStart's mission to bridge the gap between academic learning and industry demands." url="/about" />
             <div className="legal-header">
                 <h1 className="outfit gradient-text text-center">About Us</h1>
                 <p className="text-center text-muted">Empowering the next generation of tech leaders.</p>

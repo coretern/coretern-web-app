@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import SEO from '../../Components/SEO';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, Lock, Loader2 } from 'lucide-react';
@@ -29,7 +30,7 @@ const Login = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const { data } = await axios.post('http://localhost:5000/api/auth/login', formData);
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, formData);
             localStorage.setItem('token', data.token);
             toast.success('Login Successful!');
             navigate('/dashboard');
@@ -55,7 +56,7 @@ const Login = () => {
     const handleGoogleSuccess = async (credentialResponse) => {
         setLoading(true);
         try {
-            const { data } = await axios.post('http://localhost:5000/api/auth/google', {
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/google`, {
                 tokenId: credentialResponse.credential
             });
             localStorage.setItem('token', data.token);

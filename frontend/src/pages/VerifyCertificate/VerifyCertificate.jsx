@@ -6,6 +6,7 @@ import { ShieldCheck, User, Book, Calendar, Loader2, AlertCircle } from 'lucide-
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
 import PageTransition from '../../Components/PageTransition';
+import SEO from '../../Components/SEO';
 import './VerifyCertificate.css';
 
 const VerifyCertificate = () => {
@@ -28,7 +29,7 @@ const VerifyCertificate = () => {
         setError(null);
         setCertificate(null);
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/certificates/verify/${certId}`);
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/certificates/verify/${certId}`);
             setCertificate(data.data);
         } catch (err) {
             setError('Invalid or expired certificate ID');
@@ -46,6 +47,7 @@ const VerifyCertificate = () => {
 
     return (
         <PageTransition>
+            <SEO title="Verify Certificate" description="Instantly verify the authenticity of credentials, certificates, and internships issued by TechStart." url="/verify" />
             <div className="verify-page">
                 <Navbar />
 
@@ -94,7 +96,7 @@ const VerifyCertificate = () => {
                                         <div className="verify-shield-bg" style={{ background: '#ef4444' }}></div>
                                         <AlertCircle className="verify-icon danger" size={80} />
                                     </div>
-                                    <h1 className="verify-title outfit text-danger">Invalid Certificate</h1>
+                                    <h2 className="verify-title outfit text-danger">Invalid Certificate</h2>
                                     <p className="verify-subtitle">No record found for ID: <strong>{urlId || id}</strong>. This certificate may be invalid or officially revoked.</p>
 
                                     <div className="flex flex-col gap-4">
@@ -124,7 +126,7 @@ const VerifyCertificate = () => {
                                         <div className="verify-shield-bg" style={{ background: '#10b981' }}></div>
                                         <ShieldCheck className="verify-icon success" size={80} />
                                     </div>
-                                    <h1 className="verify-title outfit">Verified Authentic</h1>
+                                    <h2 className="verify-title outfit">Verified Authentic</h2>
                                     <p className="verify-subtitle">This document is valid and was officially issued by <strong>TechStart Platforms</strong>.</p>
 
                                     <div className="verify-info-grid">

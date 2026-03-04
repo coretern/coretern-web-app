@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Disallow admin routes if they accidentally end up on the frontend domain
+Disallow: /admin
+Disallow: /dashboard
+
+Sitemap: https://yourdomain.com/sitemap.xml
