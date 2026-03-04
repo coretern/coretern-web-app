@@ -141,6 +141,10 @@ const Login = () => {
                         theme="filled_blue"
                         shape="pill"
                     />
+
+                    <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '10px', textAlign: 'center' }}>
+                        By continuing, you agree to our <Link to="/terms" target="_blank" style={{ color: 'var(--primary)', textDecoration: 'none' }}>Terms</Link> & <Link to="/privacy" target="_blank" style={{ color: 'var(--primary)', textDecoration: 'none' }}>Privacy Policy</Link>.
+                    </p>
                 </div>
 
                 <div className="auth-footer">

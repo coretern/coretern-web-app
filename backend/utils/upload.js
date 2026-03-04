@@ -20,7 +20,7 @@ if (isCloudinaryConfigured) {
     storage = new CloudinaryStorage({
         cloudinary: cloudinary,
         params: {
-            folder: 'tech_startup_internships',
+            folder: 'coretern_uploads',
             allowed_formats: ['jpg', 'png', 'jpeg', 'pdf'],
         },
     });

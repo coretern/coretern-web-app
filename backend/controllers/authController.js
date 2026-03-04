@@ -203,7 +203,9 @@ exports.googleLogin = asyncHandler(async (req, res, next) => {
             email,
             googleId,
             isVerified: true,
-            status: 'active'
+            status: 'active',
+            agreedToTerms: true,
+            agreedToPrivacy: true
         });
     }
 
@@ -236,6 +238,11 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 
     if (!user) {
         return next(new ErrorResponse('There is no user with that email', 404));
+    }
+
+    // Restriction for Admin Panel: Only allow admins to reset if adminOnly flag is sent
+    if (req.body.adminOnly && user.role !== 'admin') {
+        return next(new ErrorResponse('This recovery portal is for administrators only', 403));
     }
 
     // Generate OTP

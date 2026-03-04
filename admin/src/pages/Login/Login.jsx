@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import { Lock, Mail, Loader2, Shield } from 'lucide-react';
+import { Lock, Mail, Loader2, Shield, Sun, Moon } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useTheme } from '../../context/ThemeContext';
 import './Login.css';
 
 const Login = ({ onLogin }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -41,6 +43,9 @@ const Login = ({ onLogin }) => {
 
     return (
         <div className="admin-login-page">
+            <button className="theme-toggle-login glass" onClick={toggleTheme}>
+                {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
             <div className="card admin-login-card glass">
                 <header className="admin-login-header">
                     <div className="admin-shield-icon">

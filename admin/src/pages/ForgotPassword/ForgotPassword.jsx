@@ -19,7 +19,7 @@ const ForgotPassword = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/forgot-password`, { email });
+            await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/forgot-password`, { email, adminOnly: true });
             toast.success('Admin reset OTP sent to your email!');
             setStep(2);
         } catch (err) {
@@ -50,7 +50,7 @@ const ForgotPassword = () => {
     const handleResendOtp = async () => {
         setResending(true);
         try {
-            await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/forgot-password`, { email });
+            await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/forgot-password`, { email, adminOnly: true });
             toast.success('New OTP sent to admin email.');
         } catch (err) {
             toast.error(err.response?.data?.error || 'Failed to resend OTP');

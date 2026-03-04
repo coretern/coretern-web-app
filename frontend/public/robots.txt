@@ -5,4 +5,4 @@ Allow: /
 Disallow: /admin
 Disallow: /dashboard
 
-Sitemap: https://yourdomain.com/sitemap.xml
+Sitemap: https://coretern.com/sitemap.xml
