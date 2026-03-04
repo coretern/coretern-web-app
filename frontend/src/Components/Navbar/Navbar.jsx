@@ -83,7 +83,7 @@ const Navbar = () => {
                     <div className="nav-logo-icon">
                         <Rocket size={20} />
                     </div>
-                    <span className="gradient-text">TechStart</span>
+                    <span className="gradient-text">CoreTern</span>
                 </Link>
 
                 <div className="nav-links">

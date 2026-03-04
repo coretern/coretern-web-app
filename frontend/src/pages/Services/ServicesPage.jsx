@@ -17,7 +17,7 @@ const ServicesPage = () => {
         <PageTransition>
             <SEO
                 title="Our Services"
-                description="Explore TechStart's industry-leading B2B digital solutions including Web Development, Mobile Apps, and AI Integrations tailored to your business needs."
+                description="Explore CoreTern's industry-leading B2B digital solutions including Web Development, Mobile Apps, and AI Integrations tailored to your business needs."
                 url="/services"
             />
             <div className="services-page">

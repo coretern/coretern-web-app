@@ -8,7 +8,7 @@ const Footer = () => {
         <footer className="footer">
             <div className="container footer-grid">
                 <div className="footer-brand">
-                    <h3 className="outfit gradient-text">TechStart</h3>
+                    <h3 className="outfit gradient-text">CoreTern</h3>
                     <p>
                         Empowering the next generation of tech leaders through world-class development services and hands-on internship programs.
                     </p>
@@ -36,7 +36,7 @@ const Footer = () => {
                     <ul className="contact-list">
                         <li className="contact-item">
                             <Mail size={18} />
-                            <span>info@techstart.com</span>
+                            <span>coreterndev@gmail.com</span>
                         </li>
                         <li className="contact-item">
                             <Phone size={18} />
@@ -51,7 +51,7 @@ const Footer = () => {
             </div>
 
             <div className="container footer-bottom">
-                <p>© {new Date().getFullYear()} TechStart Platforms. Designed for Future Innovators.</p>
+                <p>© {new Date().getFullYear()} CoreTern Platforms. Designed for Future Innovators.</p>
                 <div className="footer-legal-links">
                     <Link to="/terms">Terms</Link>
                     <Link to="/privacy">Privacy</Link>

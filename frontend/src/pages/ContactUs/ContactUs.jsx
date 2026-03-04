@@ -37,7 +37,7 @@ const ContactUs = () => {
 
     return (
         <PageTransition>
-            <SEO title="Contact Us" description="Get in touch with the TechStart team. Connect with us for internship inquiries, B2B technical services, or general support." url="/contact" />
+            <SEO title="Contact Us" description="Get in touch with the CoreTern team. Connect with us for internship inquiries, B2B technical services, or general support." url="/contact" />
             <div className="contact-page">
                 <Navbar />
 
@@ -73,7 +73,7 @@ const ContactUs = () => {
                                         <div className="icon-box"><Mail size={24} /></div>
                                         <div>
                                             <h3>Email Us</h3>
-                                            <p>support@techstart.com</p>
+                                            <p>coreterndev@gmail.com</p>
                                         </div>
                                     </div>
                                     <div className="info-item">

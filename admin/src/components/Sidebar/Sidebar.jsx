@@ -20,7 +20,7 @@ const Sidebar = () => {
                 <div className="logo-icon-bg" style={{ background: 'var(--grad-primary)', padding: '8px', borderRadius: '10px', color: 'white' }}>
                     <Rocket size={24} />
                 </div>
-                <span className="outfit">TechStart</span>
+                <span className="outfit">CoreTern</span>
             </div>
 
             <nav className="sidebar-nav">

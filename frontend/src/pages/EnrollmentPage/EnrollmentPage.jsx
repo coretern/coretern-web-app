@@ -223,7 +223,7 @@ const EnrollmentPage = () => {
 
     return (
         <PageTransition>
-            <SEO title={`Apply: ${internship?.title || 'Internship'}`} description={`Enroll now in the ${internship?.title || 'TechStart'} internship and secure your spot.`} />
+            <SEO title={`Apply: ${internship?.title || 'Internship'}`} description={`Enroll now in the ${internship?.title || 'CoreTern'} internship and secure your spot.`} />
             <div className="enrollment-page">
                 <Navbar />
 

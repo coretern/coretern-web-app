@@ -9,7 +9,7 @@ const ClientReviews = () => {
             id: 1,
             name: "Rahul Sharma",
             role: "Software Architect",
-            text: "TechStart helped our team bridge the gap between academic theory and industry reality. Their specialized training modules are top-notch.",
+            text: "CoreTern helped our team bridge the gap between academic theory and industry reality. Their specialized training modules are top-notch.",
             rating: 5,
             image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop"
         },
@@ -17,7 +17,7 @@ const ClientReviews = () => {
             id: 2,
             name: "Anjali Gupta",
             role: "Product Manager",
-            text: "The quality of talent that comes out of TechStart is exceptional. We've hired three interns who are now permanent team leads.",
+            text: "The quality of talent that comes out of CoreTern is exceptional. We've hired three interns who are now permanent team leads.",
             rating: 5,
             image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop"
         },

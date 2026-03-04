@@ -12,7 +12,7 @@ const RefundPolicy = () => {
             </div>
             <div className="legal-content glass">
                 <h2>1. Overview</h2>
-                <p>At TechStart, our goal is to ensure high satisfaction for all users enrolling in our programs. This policy outlines our refund processes and eligibility.</p>
+                <p>At CoreTern, our goal is to ensure high satisfaction for all users enrolling in our programs. This policy outlines our refund processes and eligibility.</p>
 
                 <h2>2. Eligibility for Refunds</h2>
                 <p>A full refund will only be considered if a request is submitted within 7 days of the transaction date, provided no coursework or internship material has been accessed or downloaded.</p>
@@ -21,7 +21,7 @@ const RefundPolicy = () => {
                 <p>Registration fees, processing fees, and completed internship phases or project deliverables are strictly non-refundable under any circumstance.</p>
 
                 <h2>4. Process for Requesting a Refund</h2>
-                <p>To initiate a refund, please contact our support team at info@techstart.com with your enrollment details and reason for the request. We aim to process valid refunds within 7-10 business days.</p>
+                <p>To initiate a refund, please contact our support team at coreterndev@gmail.com with your enrollment details and reason for the request. We aim to process valid refunds within 7-10 business days.</p>
             </div>
         </div>
     );

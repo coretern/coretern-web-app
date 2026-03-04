@@ -47,7 +47,7 @@ const VerifyCertificate = () => {
 
     return (
         <PageTransition>
-            <SEO title="Verify Certificate" description="Instantly verify the authenticity of credentials, certificates, and internships issued by TechStart." url="/verify" />
+            <SEO title="Verify Certificate" description="Instantly verify the authenticity of credentials, certificates, and internships issued by CoreTern." url="/verify" />
             <div className="verify-page">
                 <Navbar />
 
@@ -65,7 +65,7 @@ const VerifyCertificate = () => {
                                         <ShieldCheck className="verify-icon" size={80} />
                                     </div>
                                     <h1 className="verify-title outfit">Verify Credentials</h1>
-                                    <p className="verify-subtitle">Verify the authenticity of TechStart digital certificates by entering the unique ID.</p>
+                                    <p className="verify-subtitle">Verify the authenticity of CoreTern digital certificates by entering the unique ID.</p>
 
                                     <form onSubmit={handleManualSubmit} className="verify-form">
                                         <div className="input-wrapper mb-6">
@@ -127,7 +127,7 @@ const VerifyCertificate = () => {
                                         <ShieldCheck className="verify-icon success" size={80} />
                                     </div>
                                     <h2 className="verify-title outfit">Verified Authentic</h2>
-                                    <p className="verify-subtitle">This document is valid and was officially issued by <strong>TechStart Platforms</strong>.</p>
+                                    <p className="verify-subtitle">This document is valid and was officially issued by <strong>CoreTern Platforms</strong>.</p>
 
                                     <div className="verify-info-grid">
                                         <div className="info-item">

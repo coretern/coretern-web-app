@@ -1,4 +1,4 @@
-# TechStart Learning Platform 🚀
+# CoreTern Learning Platform 🚀
 
 A comprehensive, full-stack educational and service platform built with the MERN stack (MongoDB, Express, React, Node.js). The platform is divided into three main modules: a **Public/Student Frontend**, an **Admin Control Panel**, and a **REST API Backend**. 
 
@@ -9,7 +9,7 @@ A comprehensive, full-stack educational and service platform built with the MERN
 The repository is structured into three primary folders:
 
 ```text
-TechStart/
+CoreTern/
 ├── frontend/               # Public User-facing React Application
 │   ├── public/             # Static public assets
 │   ├── src/                
@@ -147,7 +147,7 @@ A robust, secure, and scalable REST API providing data to both React application
 *   **`Dashboard/`**: Protected route for students to track their enrolled courses, progress, and download certificates.
 *   **`VideoPage/`**: Dedicated streaming view for enrolled students.
 *   **`VerifyCertificate/`**: Public portal to verify the authenticity of certificates using unique dynamically generated IDs.
-*   **`Services/` & `ServiceDetails/`**: Marketing pages for TechStart’s B2B/B2C tech services (Web Dev, App Dev).
+*   **`Services/` & `ServiceDetails/`**: Marketing pages for CoreTern’s B2B/B2C tech services (Web Dev, App Dev).
 *   **`ContactUs/` & `TicketConversation/`**: Support portal allowing users to raise and track support tickets directly with admins.
 
 ### 🛡️ `/admin/src/pages`

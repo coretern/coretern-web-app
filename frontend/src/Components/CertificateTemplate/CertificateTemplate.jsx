@@ -39,7 +39,7 @@ const CertificateTemplate = ({ id, user, internship, enrollment, date, qrCode })
                     <div className="cert-logo-icon">
                         <ShieldCheck size={32} />
                     </div>
-                    <span>TechStart</span>
+                    <span>CoreTern</span>
                 </div>
                 <div className="cert-id-box">
                     <div className="cert-id-label">Certificate ID</div>
@@ -69,7 +69,7 @@ const CertificateTemplate = ({ id, user, internship, enrollment, date, qrCode })
             <footer className="cert-footer">
                 <div className="cert-signature-section">
                     <div className="signature-line"></div>
-                    <h4 className="outfit">TechStart Platforms</h4>
+                    <h4 className="outfit">CoreTern Platforms</h4>
                     <p className="signature-title">Director of Innovation</p>
                     <div className="cert-date">
                         Issued on: {new Date(date).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}

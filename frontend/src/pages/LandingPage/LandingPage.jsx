@@ -21,7 +21,7 @@ const LandingPage = () => {
 
     return (
         <PageTransition>
-            <SEO title="Home - TechStart Internships" description="Get hired faster with TechStart's industry-recognized internships in Web Development, Mobile Apps, and Cloud Computing." />
+            <SEO title="Home - CoreTern Internships" description="Get hired faster with CoreTern's industry-recognized internships in Web Development, Mobile Apps, and Cloud Computing." />
             <div className="landing-page">
                 <Navbar />
 

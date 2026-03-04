@@ -58,7 +58,7 @@ const Login = ({ onLogin }) => {
                                 type="email"
                                 required
                                 className="admin-input"
-                                placeholder="admin@techstart.com"
+                                placeholder="admin@coretern.com"
                                 value={email}
                                 onChange={e => setEmail(e.target.value)}
                             />

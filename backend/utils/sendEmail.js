@@ -11,7 +11,7 @@ const sendEmail = async (options) => {
     });
 
     const message = {
-        from: `TechStart <${process.env.EMAIL_FROM}>`,
+        from: `CoreTern <${process.env.EMAIL_FROM}>`,
         to: options.email,
         subject: options.subject,
         text: options.message,

@@ -104,7 +104,7 @@ const Register = () => {
                     <h1 className="outfit">{step === 1 ? 'Create Account' : 'Verify Email'}</h1>
                     <p className="text-text-muted">
                         {step === 1
-                            ? 'Start your journey with TechStart today'
+                            ? 'Start your journey with CoreTern today'
                             : `We've sent a 6-digit code to ${formData.email}`}
                     </p>
                 </header>
