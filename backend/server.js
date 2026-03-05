@@ -15,11 +15,16 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Enable CORS
+const parseOrigins = (urlStr) => {
+    if (!urlStr) return [];
+    return urlStr.split(',').map(url => url.trim());
+};
+
 const allowedOrigins = [
     'http://localhost:5173',
     'http://localhost:5174',
-    process.env.FRONTEND_URL,
-    process.env.ADMIN_URL
+    ...parseOrigins(process.env.FRONTEND_URL),
+    ...parseOrigins(process.env.ADMIN_URL)
 ].filter(Boolean);
 
 app.use(cors({
