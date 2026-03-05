@@ -174,4 +174,4 @@ A robust, secure, and scalable REST API providing data to both React application
 4.  **Premium Glassmorphism UI**: High-end visual aesthetics using pseudo-elements, dynamic blurs, and Framer Motion spring physics. 
 5.  **Digital Certificate Generation & Verification**: Students receive downloadable certificates that anybody can independently verify on the platform.
 6.  **Real-time Rich Text Editing**: Admins write comprehensive internship descriptions with bolding, lists, and links that dangerously render safely on the frontend.
-7.  **Fully Responsive**: All pages mathematically wrap and stack gracefully for mobile, tablet, and ultra-wide desktops.
+7.  **Fully Responsive**: All pages mathematically wrap and stack gracefully for mobile, tablet, and ultra-wide desktops..
