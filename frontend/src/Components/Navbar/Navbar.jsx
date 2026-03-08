@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Rocket, Sun, Moon, User, LogOut, LayoutDashboard, ChevronDown } from 'lucide-react';
+import { Menu, X, Sun, Moon, User, LogOut, LayoutDashboard, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 import './Navbar.css';
@@ -80,10 +80,12 @@ const Navbar = () => {
         <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
             <div className="container nav-container">
                 <Link to="/" className="nav-brand outfit" onClick={handleLogoClick}>
-                    <div className="nav-logo-icon">
-                        <Rocket size={20} />
-                    </div>
-                    <span className="gradient-text">CoreTern</span>
+                    <img
+                        src={theme === 'dark' ? "/coretern_Navbar_Logo_dark.png" : "/coretern_Navbar_Logo_light.png"}
+                        alt="CoreTern"
+                        className="nav-logo"
+                        style={{ height: '32px', width: 'auto' }}
+                    />
                 </Link>
 
                 <div className="nav-links">

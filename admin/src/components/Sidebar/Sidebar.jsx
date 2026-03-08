@@ -17,10 +17,12 @@ const Sidebar = () => {
     return (
         <aside className="sidebar">
             <div className="sidebar-header">
-                <div className="logo-icon-bg" style={{ background: 'var(--grad-primary)', padding: '8px', borderRadius: '10px', color: 'white' }}>
-                    <Rocket size={24} />
-                </div>
-                <span className="outfit">CoreTern</span>
+                <img
+                    src={theme === 'dark' ? "/coretern_Navbar_Logo_dark.png" : "/coretern_Navbar_Logo_light.png"}
+                    alt="CoreTern"
+                    className="sidebar-logo"
+                    style={{ height: '40px', width: 'auto' }}
+                />
             </div>
 
             <nav className="sidebar-nav">
