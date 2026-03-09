@@ -68,7 +68,7 @@ const ManageUsers = () => {
             });
             // Redirect to frontend with token in query param
             // Note: In production you'd use your actual frontend URL
-            const frontendUrl = 'http://localhost:5173'; // Updated to 5173 as Admin is on 5174
+            const frontendUrl = import.meta.env.VITE_FRONTEND_URL; // Updated to 5173 as Admin is on 5174
             window.open(`${frontendUrl}/login?adminToken=${data.token}`, '_blank');
             toast.success(`Accessing platform as ${name}`);
         } catch (err) {
