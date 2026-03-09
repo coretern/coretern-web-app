@@ -21,7 +21,7 @@ if (isCloudinaryConfigured) {
         cloudinary: cloudinary,
         params: {
             folder: 'coretern_uploads',
-            allowed_formats: ['jpg', 'png', 'jpeg', 'pdf'],
+            allowed_formats: ['jpg', 'png', 'jpeg'],
         },
     });
     console.log('Using Cloudinary for file storage.');

@@ -84,6 +84,7 @@ const EnrollmentPage = () => {
         collegeName: '',
         course: '',
         otherCourse: '',
+        branch: '',
         startDate: '',
         endDate: '',
         whatsappNumber: '',
@@ -166,6 +167,7 @@ const EnrollmentPage = () => {
         data.append('collegeRegNumber', formData.collegeRegNumber);
         data.append('collegeName', formData.collegeName);
         data.append('course', formData.course === 'Other' ? (formData.otherCourse || 'Other') : formData.course);
+        data.append('branch', formData.branch);
         data.append('startDate', formData.startDate);
         data.append('endDate', formData.endDate);
         data.append('whatsappNumber', formData.whatsappNumber);
@@ -339,6 +341,17 @@ const EnrollmentPage = () => {
                                 )}
 
                                 <div className="input-group">
+                                    <label><GraduationCap size={16} /> Branch <span className="label-sub">(Optional)</span></label>
+                                    <input
+                                        type="text"
+                                        name="branch"
+                                        placeholder="e.g. CSE, Mechanical, Finance, etc."
+                                        value={formData.branch}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+
+                                <div className="input-group">
                                     <label><BookOpen size={16} /> College Name <span className="label-sub">(Optional)</span></label>
                                     <input
                                         type="text"
@@ -391,17 +404,17 @@ const EnrollmentPage = () => {
                                 <div className="file-input-group">
                                     <label className="file-label">
                                         <Upload size={20} />
-                                        <span>{formData.resume ? formData.resume.name : 'Upload NOC or Resume (Optional)'}</span>
+                                        <span>{formData.resume ? formData.resume.name : 'Upload NOC or Photo (JPG/PNG)'}</span>
                                         <input
                                             type="file"
-                                            accept=".pdf,.jpg,.jpeg,.png"
+                                            accept=".jpg,.jpeg,.png"
                                             onChange={handleFileChange}
                                             style={{ display: 'none' }}
                                         />
                                     </label>
                                     <div style={{ textAlign: 'center', marginTop: '0.8rem' }}>
                                         <p className="label-sub" style={{ fontSize: '0.7rem' }}>
-                                            Accepted: PDF, JPG, PNG (Max 10MB)
+                                            Accepted: JPG, JPEG, PNG (Max 10MB)
                                         </p>
                                     </div>
                                 </div>

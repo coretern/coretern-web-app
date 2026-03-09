@@ -150,6 +150,12 @@ const VerifyCertificate = () => {
                                                 <div className="value">{certificate.enrollment.course}</div>
                                             </div>
                                         )}
+                                        {certificate.enrollment?.branch && (
+                                            <div className="info-item">
+                                                <div className="label"><Book size={14} /> Branch</div>
+                                                <div className="value">{certificate.enrollment.branch}</div>
+                                            </div>
+                                        )}
                                         <div className="info-item">
                                             <div className="label"><ShieldCheck size={14} /> Certificate ID</div>
                                             <div className="value">{certificate.certificateId}</div>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Search, Award, CheckCircle, Clock, Loader2, FileText, X, ExternalLink, User, Mail, Phone, GraduationCap, Calendar, Hash, UserCircle, ShieldCheck } from 'lucide-react';
+import { Search, Award, CheckCircle, Clock, Loader2, FileText, X, ExternalLink, Download, User, Mail, Phone, GraduationCap, Calendar, Hash, UserCircle, ShieldCheck, FileSpreadsheet as ExcelIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
+import * as XLSX from 'xlsx';
 import './ManageEnrollments.css';
 
 const ManageEnrollments = () => {
@@ -10,6 +11,21 @@ const ManageEnrollments = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [issuingId, setIssuingId] = useState(null);
     const [selectedEnrol, setSelectedEnrol] = useState(null);
+    const [showExportOptions, setShowExportOptions] = useState(false);
+    const [exportColumns, setExportColumns] = useState({
+        'Student Name': true,
+        'Email': true,
+        'WhatsApp/Phone': true,
+        'College Name': true,
+        'Course': true,
+        'Branch': true,
+        'Registration No': true,
+        'Internship Program': true,
+        'Payment Status': true,
+        'Enrollment Status': true,
+        'Enrolled Date': true,
+        'Enrollment Time': true
+    });
 
     useEffect(() => {
         fetchEnrollments();
@@ -29,6 +45,61 @@ const ManageEnrollments = () => {
         }
     };
 
+    const handleDownloadResume = async (url, studentName) => {
+        if (!url) return;
+
+        toast.loading('Preparing download...', { id: 'download' });
+
+        // Cloudinary specific fix: Use fl_attachment to force download and bypass CORS
+        if (url.includes('cloudinary.com')) {
+            try {
+                const parts = url.split('/');
+                const uploadIndex = parts.indexOf('upload');
+                if (uploadIndex !== -1) {
+                    parts.splice(uploadIndex + 1, 0, 'fl_attachment');
+                    const downloadUrl = parts.join('/');
+                    const link = document.createElement('a');
+                    link.href = downloadUrl;
+                    link.download = `NOC_${(studentName || 'Student').replace(/\s+/g, '_')}`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    toast.success('Download started successfully!', { id: 'download' });
+                    return;
+                }
+            } catch (err) {
+                console.error('Cloudinary transformation error', err);
+            }
+        }
+
+        // Fallback for same-origin or other URLs
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Network response was not ok');
+
+            const blob = await response.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = blobUrl;
+
+            const extension = url.split('.').pop().split(/\#|\?/)[0] || (blob.type.includes('pdf') ? 'pdf' : 'jpg');
+            const fileName = `NOC_${(studentName || 'Student').replace(/\s+/g, '_')}.${extension}`;
+
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(blobUrl);
+
+            toast.success('File downloaded successfully!', { id: 'download' });
+        } catch (err) {
+            console.error('Download error:', err);
+            toast.error('Direct download failed. Opening in new tab...', { id: 'download' });
+            window.open(url, '_blank');
+        }
+    };
+
     const handleIssueCertificate = async (enrolId) => {
         setIssuingId(enrolId);
         const token = localStorage.getItem('token');
@@ -43,6 +114,44 @@ const ManageEnrollments = () => {
         } finally {
             setIssuingId(null);
         }
+    };
+
+    const handleExportExcel = () => {
+        if (enrollments.length === 0) return toast.error('No data to export');
+
+        const selectedKeys = Object.keys(exportColumns).filter(key => exportColumns[key]);
+        if (selectedKeys.length === 0) return toast.error('Please select at least one column');
+
+        const dataToExport = enrollments.map(e => {
+            const row = {};
+            if (exportColumns['Student Name']) row['Student Name'] = e.fullName || e.user?.name || 'N/A';
+            if (exportColumns['Email']) row['Email'] = e.email || e.user?.email || 'N/A';
+            if (exportColumns['WhatsApp/Phone']) row['WhatsApp/Phone'] = e.whatsappNumber || e.user?.phone || 'N/A';
+            if (exportColumns['College Name']) row['College Name'] = e.collegeName || 'N/A';
+            if (exportColumns['Course']) row['Course'] = e.course || 'N/A';
+            if (exportColumns['Branch']) row['Branch'] = e.branch || 'N/A';
+            if (exportColumns['Registration No']) row['Registration No'] = e.collegeRegNumber || 'N/A';
+            if (exportColumns['Internship Program']) row['Internship Program'] = e.internship?.title || 'N/A';
+            if (exportColumns['Payment Status']) row['Payment Status'] = e.paymentStatus?.toUpperCase() || 'N/A';
+            if (exportColumns['Enrollment Status']) row['Enrollment Status'] = e.status?.toUpperCase() || 'N/A';
+            if (exportColumns['Enrolled Date']) row['Enrolled Date'] = e.enrolledAt ? new Date(e.enrolledAt).toLocaleDateString() : 'N/A';
+            if (exportColumns['Enrollment Time']) row['Enrollment Time'] = e.enrolledAt ? new Date(e.enrolledAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'N/A';
+            return row;
+        });
+
+        const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Enrollments');
+        XLSX.writeFile(workbook, `CoreTern_Enrollments_${new Date().toISOString().split('T')[0]}.xlsx`);
+        toast.success('Excel file exported successfully!');
+        setShowExportOptions(false);
+    };
+
+    const toggleColumn = (column) => {
+        setExportColumns(prev => ({
+            ...prev,
+            [column]: !prev[column]
+        }));
     };
 
     const filtered = enrollments.filter(e =>
@@ -61,15 +170,47 @@ const ManageEnrollments = () => {
                     <h1 className="outfit">Student Enrollments</h1>
                     <p className="text-text-muted">Monitor registrations and issue certificates</p>
                 </div>
-                <div className="search-container">
-                    <Search className="search-icon" size={18} />
-                    <input
-                        type="text"
-                        placeholder="Search student or course..."
-                        className="search-input"
-                        value={searchTerm}
-                        onChange={e => setSearchTerm(e.target.value)}
-                    />
+                <div className="flex items-center gap-4">
+                    <div className="download-options-wrapper">
+                        <button onClick={() => setShowExportOptions(!showExportOptions)} className="btn-download btn-excel" title="Choose Columns and Export">
+                            <ExcelIcon size={18} />
+                            <span>Export Excel</span>
+                        </button>
+
+                        {showExportOptions && (
+                            <div className="export-column-picker glass">
+                                <div className="picker-header">
+                                    <h4 className="outfit">Select Columns</h4>
+                                    <button onClick={() => setShowExportOptions(false)} className="close-picker"><X size={14} /></button>
+                                </div>
+                                <div className="column-options">
+                                    {Object.keys(exportColumns).map(col => (
+                                        <label key={col} className="column-checkbox">
+                                            <input
+                                                type="checkbox"
+                                                checked={exportColumns[col]}
+                                                onChange={() => toggleColumn(col)}
+                                            />
+                                            <span>{col}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                                <button onClick={handleExportExcel} className="btn-confirm-export">
+                                    Generate Excel ({Object.values(exportColumns).filter(Boolean).length} Selected)
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                    <div className="search-container">
+                        <Search className="search-icon" size={18} />
+                        <input
+                            type="text"
+                            placeholder="Search student or course..."
+                            className="search-input"
+                            value={searchTerm}
+                            onChange={e => setSearchTerm(e.target.value)}
+                        />
+                    </div>
                 </div>
             </header>
 
@@ -238,6 +379,13 @@ const ManageEnrollments = () => {
                                             </div>
                                         </div>
                                         <div className="info-card">
+                                            <div className="card-icon"><GraduationCap size={18} /></div>
+                                            <div className="card-details">
+                                                <label>Branch</label>
+                                                <p>{selectedEnrol.branch || 'N/A'}</p>
+                                            </div>
+                                        </div>
+                                        <div className="info-card">
                                             <div className="card-icon"><Hash size={18} /></div>
                                             <div className="card-details">
                                                 <label>College Reg No.</label>
@@ -276,10 +424,19 @@ const ManageEnrollments = () => {
 
                             {selectedEnrol.resume && (
                                 <div className="modal-footer-action">
-                                    <a href={selectedEnrol.resume} target="_blank" rel="noreferrer" className="resume-link-premium">
-                                        <ExternalLink size={18} />
-                                        <span>View Submitted Documents / Resume</span>
-                                    </a>
+                                    <div className="flex gap-4">
+                                        <a href={selectedEnrol.resume} target="_blank" rel="noreferrer" className="resume-link-premium flex-1">
+                                            <ExternalLink size={18} />
+                                            <span>View in New Tab</span>
+                                        </a>
+                                        <button
+                                            onClick={() => handleDownloadResume(selectedEnrol.resume, selectedEnrol.fullName || selectedEnrol.user?.name)}
+                                            className="download-btn-premium flex-1"
+                                        >
+                                            <Download size={18} />
+                                            <span>Download Document</span>
+                                        </button>
+                                    </div>
                                 </div>
                             )}
                         </div>

@@ -32,7 +32,12 @@ const AppContent = () => {
   return (
     <>
       <ScrollToTop />
-      <Toaster position="top-right" />
+      <Toaster
+        position="bottom-center"
+        containerStyle={{
+          zIndex: 999999,
+        }}
+      />
       <Routes>
         <Route path="/" element={<LandingPage key={location.key} />} />
         <Route path="/internships" element={<Internships key={location.key} />} />

@@ -3,7 +3,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 10000;
+    z-index: 1000;
     /* Increased to ensure absolute dominance */
     /* Absolute priority to prevent any card from overlapping */
     padding: 1.2rem 0;

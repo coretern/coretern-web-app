@@ -27,6 +27,7 @@ const CertificateTemplate = ({ id, user, internship, enrollment, date, qrCode })
 
     const recipientName = enrollment?.fullName || user?.name || 'Valued Learner';
     const courseName = enrollment?.course || 'Technology Program';
+    const branchName = enrollment?.branch ? ` (${enrollment.branch})` : '';
     const collegeName = enrollment?.collegeName ? ` of ${enrollment.collegeName}` : '';
     const regNo = enrollment?.collegeRegNumber ? `, bearing Roll no. ${enrollment.collegeRegNumber}` : '';
 
@@ -55,7 +56,7 @@ const CertificateTemplate = ({ id, user, internship, enrollment, date, qrCode })
                 <div className="cert-underline"></div>
 
                 <p className="cert-text">
-                    student of <strong>{courseName}</strong>{regNo}{collegeName}.
+                    Student of <strong>{courseName}{branchName}</strong>{regNo}{collegeName}.
                     Has successfully completed <strong>{getDurationWeeks()}</strong> ({formatDate(enrollment?.startDate)} to {formatDate(enrollment?.endDate)}) internship on
                     <strong> {internship?.title}</strong>.
                 </p>

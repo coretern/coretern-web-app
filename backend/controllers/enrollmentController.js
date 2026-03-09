@@ -19,6 +19,7 @@ exports.enroll = asyncHandler(async (req, res, next) => {
         endDate,
         whatsappNumber,
         email,
+        branch,
         agreedToRefundPolicy
     } = req.body;
 
@@ -79,6 +80,7 @@ exports.enroll = asyncHandler(async (req, res, next) => {
         endDate,
         whatsappNumber,
         email,
+        branch,
         agreedToRefundPolicy,
         resume: resumePath || (enrollment ? enrollment.resume : undefined)
     };
