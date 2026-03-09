@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import SEO from '../../Components/SEO';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Mail, Lock, Phone, Loader2, ShieldCheck, RefreshCw } from 'lucide-react';
+import { User, Mail, Lock, Phone, Loader2, ShieldCheck, RefreshCw, UserCircle } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -144,14 +144,14 @@ const Register = () => {
                                                 className="auth-input"
                                                 value={formData.gender}
                                                 onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-                                                style={{ appearance: 'none', paddingLeft: '1rem' }}
+                                                style={{ appearance: 'none', paddingLeft: '3.5rem' }}
                                             >
                                                 <option value="" disabled>Select Gender</option>
                                                 <option value="Male">Male</option>
                                                 <option value="Female">Female</option>
                                                 <option value="Other">Other</option>
                                             </select>
-                                            <User className="input-icon" size={18} style={{ pointerEvents: 'none' }} />
+                                            <UserCircle className="input-icon" size={18} style={{ pointerEvents: 'none' }} />
                                         </div>
                                     </div>
                                     <div className="form-group">
