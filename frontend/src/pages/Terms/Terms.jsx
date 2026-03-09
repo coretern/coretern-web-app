@@ -5,7 +5,11 @@ import './Terms.css';
 const Terms = () => {
     return (
         <div className="legal-page container">
-            <SEO title="Terms and Conditions" />
+            <SEO
+                title="Terms and Conditions"
+                description="Read the terms and conditions for using CoreTern Platforms. Information on user responsibilities, intellectual property, and service modifications."
+                url="/terms"
+            />
             <div className="legal-header">
                 <h1 className="outfit gradient-text text-center">Terms of Service</h1>
                 <p className="text-center text-muted">Last updated: {new Date().toLocaleDateString()}</p>

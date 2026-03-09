@@ -110,6 +110,7 @@ const Dashboard = () => {
 
     return (
         <div className="dashboard-page">
+            <SEO title="User Dashboard" noindex={true} />
             <Navbar />
 
             <div className="container">

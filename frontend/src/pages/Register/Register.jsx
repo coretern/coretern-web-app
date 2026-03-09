@@ -87,6 +87,7 @@ const Register = () => {
 
     return (
         <div className="auth-page">
+            <SEO title="Create Account" noindex={true} />
             <Link to="/" className="auth-back-home glass">
                 <motion.div whileHover={{ x: -4 }} className="flex items-center gap-2">
                     <span className="text-xl">←</span> Back to Home

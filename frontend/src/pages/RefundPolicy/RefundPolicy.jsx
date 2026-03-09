@@ -5,7 +5,11 @@ import '../Terms/Terms.css';
 const RefundPolicy = () => {
     return (
         <div className="legal-page container">
-            <SEO title="Refund Policy" />
+            <SEO
+                title="Refund Policy"
+                description="Understand the refund and cancellation policy for CoreTern's internship and digital services."
+                url="/refund-policy"
+            />
             <div className="legal-header">
                 <h1 className="outfit gradient-text text-center">Refund Policy</h1>
                 <p className="text-center text-muted">Last updated: {new Date().toLocaleDateString()}</p>

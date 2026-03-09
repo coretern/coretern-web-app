@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import SEO from '../../Components/SEO';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, ShieldCheck, Lock, Loader2, ArrowLeft, RefreshCw } from 'lucide-react';
@@ -61,6 +62,7 @@ const ForgotPassword = () => {
 
     return (
         <div className="auth-page">
+            <SEO title="Forgot Password" noindex={true} />
             <Link to="/login" className="auth-back-home glass">
                 <motion.div whileHover={{ x: -4 }} className="flex items-center gap-2">
                     <ArrowLeft size={18} /> Back to Login
@@ -115,7 +117,7 @@ const ForgotPassword = () => {
                         <motion.div
                             key="reset-form"
                             initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
+                            animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, x: -20 }}
                         >
                             <form onSubmit={handleResetPassword}>
