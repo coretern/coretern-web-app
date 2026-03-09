@@ -164,9 +164,14 @@ const Dashboard = () => {
                             <p className="text-text-muted mt-3">Manage your learning journey</p>
                         </div>
                     </div>
-                    <button onClick={handleLogout} className="btn btn-outline">
-                        <LogOut size={18} /> Logout
-                    </button>
+                    <div className="header-actions">
+                        <button onClick={() => setActiveTab('settings')} className="btn btn-secondary">
+                            <Settings size={18} /> Edit
+                        </button>
+                        <button onClick={handleLogout} className="btn btn-outline">
+                            <LogOut size={18} /> Logout
+                        </button>
+                    </div>
                 </header>
 
                 <div className="dashboard-grid">
@@ -196,16 +201,6 @@ const Dashboard = () => {
                             </div>
                         </div>
 
-                        <div
-                            className={`stat-card glass clickable ${activeTab === 'settings' ? 'active-tab' : ''}`}
-                            onClick={() => setActiveTab('settings')}
-                        >
-                            <div className="stat-icon primary"><Settings size={24} /></div>
-                            <div className="stat-info">
-                                <h3>Settings</h3>
-                                <p>Profile Details</p>
-                            </div>
-                        </div>
 
                         <Link to="/#services" className="stat-card glass clickable">
                             <div className="stat-icon secondary">
@@ -308,9 +303,6 @@ const Dashboard = () => {
                                     <div className="settings-actions">
                                         <button type="submit" className="btn btn-primary" disabled={loading}>
                                             {loading ? <Loader2 className="animate-spin" /> : 'Save Changes'}
-                                        </button>
-                                        <button type="button" onClick={() => setActiveTab('internships')} className="btn btn-outline">
-                                            Cancel
                                         </button>
                                     </div>
                                 </form>

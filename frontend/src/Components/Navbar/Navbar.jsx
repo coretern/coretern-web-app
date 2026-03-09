@@ -132,10 +132,6 @@ const Navbar = () => {
                                             <LayoutDashboard size={16} />
                                             Dashboard
                                         </Link>
-                                        <Link to="/dashboard" state={{ tab: 'settings' }} onClick={() => setUserMenuOpen(false)} className="dropdown-item">
-                                            <Settings size={16} />
-                                            Settings
-                                        </Link>
                                         <div className="dropdown-divider" />
                                         <button onClick={handleLogout} className="dropdown-item text-danger">
                                             <LogOut size={16} />
@@ -183,9 +179,6 @@ const Navbar = () => {
                                     <>
                                         <Link to="/dashboard" onClick={() => setIsOpen(false)} className="btn btn-outline w-full justify-center">
                                             <LayoutDashboard size={16} /> Dashboard
-                                        </Link>
-                                        <Link to="/dashboard" state={{ tab: 'settings' }} onClick={() => setIsOpen(false)} className="btn btn-outline w-full justify-center">
-                                            <Settings size={16} /> Profile Settings
                                         </Link>
                                         <button onClick={() => { handleLogout(); setIsOpen(false); }} className="btn btn-danger w-full justify-center">
                                             <LogOut size={16} /> Sign Out
