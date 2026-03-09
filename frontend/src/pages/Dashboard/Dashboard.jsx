@@ -7,6 +7,7 @@ import { BookOpen, Award, LogOut, Download, X, Loader2, LifeBuoy, Rocket, Layout
 import toast from 'react-hot-toast';
 import { toPng } from 'html-to-image';
 import download from 'downloadjs';
+import jsPDF from 'jspdf';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
 import CertificateTemplate from '../../Components/CertificateTemplate/CertificateTemplate';
@@ -106,20 +107,32 @@ const Dashboard = () => {
         const node = document.getElementById('certificate-print');
         if (!node) return;
 
-        toast.loading('Generating Certificate...', { id: 'cert' });
+        toast.loading('Generating PDF Certificate...', { id: 'cert' });
         try {
+            // Increase pixelRatio for higher quality PDF
             const dataUrl = await toPng(node, {
                 quality: 1.0,
                 width: 1000,
-                height: 850,
+                height: 707,
+                pixelRatio: 2,
                 style: {
                     transform: 'scale(1)',
                     transformOrigin: 'top left'
                 }
             });
-            download(dataUrl, `Certificate-${selectedCert.certificateId}.png`);
-            toast.success('Downloaded!', { id: 'cert' });
+
+            const pdf = new jsPDF({
+                orientation: 'landscape',
+                unit: 'px',
+                format: [1000, 707]
+            });
+
+            pdf.addImage(dataUrl, 'PNG', 0, 0, 1000, 707);
+            pdf.save(`Certificate-${selectedCert.certificateId}.pdf`);
+
+            toast.success('Downloaded as PDF!', { id: 'cert' });
         } catch (err) {
+            console.error('PDF Generation error:', err);
             toast.error('Generation failed', { id: 'cert' });
         }
     };

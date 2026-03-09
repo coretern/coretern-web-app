@@ -1,6 +1,7 @@
 import React from 'react';
 import { ShieldCheck, Award } from 'lucide-react';
 import './CertificateTemplate.css';
+import certTemplate from '../../assets/CoreTern_internship_Certificate.png';
 
 const CertificateTemplate = ({ id, user, internship, enrollment, date, qrCode }) => {
     const formatDate = (dateString) => {
@@ -32,62 +33,44 @@ const CertificateTemplate = ({ id, user, internship, enrollment, date, qrCode })
     const regNo = enrollment?.collegeRegNumber ? `, bearing Roll no. ${enrollment.collegeRegNumber}` : '';
 
     return (
-        <div id="certificate-print" className="certificate-container">
-            <div className="cert-bg-overlay"></div>
+        <div id="certificate-print" className="certificate-container template-mode">
+            <img src={certTemplate} className="cert-template-bg" alt="Certificate Background" />
 
-            <header className="cert-header">
-                <div className="cert-logo">
-                    <div className="cert-logo-icon">
-                        <ShieldCheck size={32} />
+            <div className="cert-content-overlay">
+                <header className="cert-header">
+                    <div className="cert-id-tag">
+                        <span>CERTIFICATE ID: {id}</span>
                     </div>
-                    <span>CoreTern</span>
-                </div>
-                <div className="cert-id-box">
-                    <div className="cert-id-label">Certificate ID</div>
-                    <div className="cert-id-value">{id}</div>
-                </div>
-            </header>
+                </header>
 
-            <main className="cert-main">
-                <Award size={80} className="cert-medal" />
-                <h1 className="cert-title outfit">Certificate of Excellence</h1>
-                <p className="cert-intro">This is to certify that</p>
-                <h2 className="cert-recipient-name outfit">{recipientName}</h2>
-                <div className="cert-underline"></div>
+                <main className="cert-main">
+                    <h2 className="cert-recipient-name outfit">{recipientName}</h2>
+                    <p className="cert-dynamic-text">
+                        Student of <strong>{courseName}{branchName}</strong>{regNo}{collegeName}.
+                        Has successfully completed <strong>{getDurationWeeks()}</strong> ({formatDate(enrollment?.startDate)} to {formatDate(enrollment?.endDate)}) internship on
+                        <strong> {internship?.title}</strong>.
+                    </p>
+                </main>
 
-                <p className="cert-text">
-                    Student of <strong>{courseName}{branchName}</strong>{regNo}{collegeName}.
-                    Has successfully completed <strong>{getDurationWeeks()}</strong> ({formatDate(enrollment?.startDate)} to {formatDate(enrollment?.endDate)}) internship on
-                    <strong> {internship?.title}</strong>.
-                </p>
-
-                <p className="cert-subtext">
-                    During their internship, we found them active and competent in executing all assigned tasks satisfactorily.
-                    We wish them great success in all their future endeavors.
-                </p>
-            </main>
-
-            <footer className="cert-footer">
-                <div className="cert-signature-section">
-                    <div className="signature-line"></div>
-                    <h4 className="outfit">CoreTern Platforms</h4>
-                    <p className="signature-title">Director of Innovation</p>
-                    <div className="cert-date">
-                        Issued on: {new Date(date).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}
+                <footer className="cert-footer">
+                    <div className="cert-left-bottom">
+                        <div className="cert-issue-date">
+                            Issued on: {new Date(date).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}
+                        </div>
                     </div>
-                </div>
 
-                <div className="cert-qr-box">
-                    <div className="qr-wrapper">
-                        {qrCode ? (
-                            <img src={qrCode} alt="QR Code" className="cert-qr" />
-                        ) : (
-                            <div className="qr-placeholder">QR Code</div>
-                        )}
+                    <div className="cert-right-bottom">
+                        <div className="cert-qr-container">
+                            {qrCode ? (
+                                <img src={qrCode} alt="Verification QR" className="cert-qr-img" />
+                            ) : (
+                                <div className="qr-fallback">QR Code</div>
+                            )}
+                            <div className="cert-id-display">ID: {id}</div>
+                        </div>
                     </div>
-                    <span className="cert-id-label">Scan to Verify</span>
-                </div>
-            </footer>
+                </footer>
+            </div>
         </div>
     );
 };
