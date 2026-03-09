@@ -1,3 +1,6 @@
+const dns = require('dns');
+dns.setServers(['8.8.8.8', '8.8.4.4']);
+
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const path = require('path');
@@ -61,7 +64,7 @@ const createAdmin = async () => {
         console.log('✅ Admin account is ready.');
         process.exit();
     } catch (err) {
-        console.error('❌ Error:', err.message);  
+        console.error('❌ Error:', err.message);
         process.exit(1);
     }
 };
