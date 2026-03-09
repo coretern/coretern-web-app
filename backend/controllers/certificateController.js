@@ -66,6 +66,57 @@ exports.issueCertificate = asyncHandler(async (req, res, next) => {
     });
 });
 
+// @desc    Issue Manual Certificate (Admin only)
+// @route   POST /api/certificates/manual
+// @access  Private/Admin
+exports.issueManualCertificate = asyncHandler(async (req, res, next) => {
+    const { certificateId, recipientName, certType, description } = req.body;
+
+    // Check if certificate already exists
+    let certificate = await Certificate.findOne({ certificateId });
+    if (certificate) {
+        return next(new ErrorResponse('Certificate ID already exists', 400));
+    }
+
+    // Create certificate
+    certificate = new Certificate({
+        certificateId,
+        recipientName,
+        certType,
+        description,
+        isManual: true
+    });
+
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5174';
+    const verificationUrl = `${frontendUrl}/verify/${certificate.certificateId}`;
+
+    // Generate QR Code
+    const qrCodeData = await generateQRCode(verificationUrl);
+
+    certificate.verificationUrl = verificationUrl;
+    certificate.qrCode = qrCodeData;
+
+    await certificate.save();
+
+    res.status(201).json({
+        success: true,
+        data: certificate
+    });
+});
+
+// @desc    Get all manual certificates (Admin only)
+// @route   GET /api/certificates/manual
+// @access  Private/Admin
+exports.getManualCertificates = asyncHandler(async (req, res, next) => {
+    const certificates = await Certificate.find({ isManual: true }).sort({ issueDate: -1 });
+
+    res.status(200).json({
+        success: true,
+        count: certificates.length,
+        data: certificates
+    });
+});
+
 // @desc    Get certificate by ID (Verification)
 // @route   GET /api/certificates/verify/:id
 // @access  Public

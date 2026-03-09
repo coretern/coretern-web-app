@@ -10,24 +10,38 @@ const certificateSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.ObjectId,
         ref: 'User',
-        required: true
+        required: function () { return !this.isManual; }
     },
     internship: {
         type: mongoose.Schema.ObjectId,
         ref: 'Internship',
-        required: true
+        required: function () { return !this.isManual; }
     },
     enrollment: {
         type: mongoose.Schema.ObjectId,
         ref: 'Enrollment',
-        required: true
+        required: function () { return !this.isManual; }
+    },
+    isManual: {
+        type: Boolean,
+        default: false
+    },
+    // New fields for Manual Certificates
+    recipientName: {
+        type: String
+    },
+    certType: {
+        type: String
+    },
+    description: {
+        type: String
     },
     issueDate: {
         type: Date,
         default: Date.now
     },
     qrCode: {
-        type: String // We will store the data URL or Cloudinary URL here
+        type: String
     },
     verificationUrl: {
         type: String
