@@ -508,7 +508,7 @@
     color: var(--text);
     font-size: 0.95rem;
     outline: none;
-    transition: all 0.3s ease;
+    transition: none;
 }
 
 .input-with-icon input:focus,
@@ -761,7 +761,7 @@
     align-items: center;
     justify-content: center;
     border-radius: 6px;
-    transition: all 0.2s;
+    transition: none;
     z-index: 10;
 }
 

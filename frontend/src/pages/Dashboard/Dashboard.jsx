@@ -386,87 +386,82 @@ const Dashboard = () => {
                 </div>
             )}
 
-            <AnimatePresence>
-                {isSettingsModalOpen && (
-                    <div className="modal-overlay" onClick={() => setIsSettingsModalOpen(false)}>
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                            className="modal-content glass settings-modal"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <button className="modal-close" onClick={() => setIsSettingsModalOpen(false)}>
-                                <X size={24} />
-                            </button>
-                            <div className="modal-header">
-                                <h2 className="outfit">Edit Profile</h2>
-                                <p className="text-text-muted">Update your personal information</p>
-                            </div>
-                            <form onSubmit={handleUpdateProfile} className="settings-form">
-                                <div className="settings-section">
-                                    <div className="form-grid">
-                                        <div className="form-group">
-                                            <label>Full Name</label>
-                                            <div className="input-with-icon">
-                                                <UserIcon size={18} />
-                                                <input
-                                                    type="text"
-                                                    value={user?.name || ''}
-                                                    onChange={(e) => setUser({ ...user, name: e.target.value })}
-                                                    placeholder="Enter your full name"
-                                                    required
-                                                />
-                                            </div>
+            {isSettingsModalOpen && (
+                <div className="modal-overlay" onClick={() => setIsSettingsModalOpen(false)}>
+                    <div
+                        className="modal-content glass settings-modal"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button className="modal-close" onClick={() => setIsSettingsModalOpen(false)}>
+                            <X size={24} />
+                        </button>
+                        <div className="modal-header">
+                            <h2 className="outfit">Edit Profile</h2>
+                            <p className="text-text-muted">Update your personal information</p>
+                        </div>
+                        <form onSubmit={handleUpdateProfile} className="settings-form">
+                            <div className="settings-section">
+                                <div className="form-grid">
+                                    <div className="form-group">
+                                        <label>Full Name</label>
+                                        <div className="input-with-icon">
+                                            <UserIcon size={18} />
+                                            <input
+                                                type="text"
+                                                value={user?.name || ''}
+                                                onChange={(e) => setUser({ ...user, name: e.target.value })}
+                                                placeholder="Enter your full name"
+                                                required
+                                            />
                                         </div>
-                                        <div className="form-group">
-                                            <label>Gender</label>
-                                            <div className="input-with-icon">
-                                                <UserCircle size={18} />
-                                                <select
-                                                    value={user?.gender || ''}
-                                                    onChange={(e) => setUser({ ...user, gender: e.target.value })}
-                                                    required
-                                                >
-                                                    <option value="" disabled>Select Gender</option>
-                                                    <option value="Male">Male</option>
-                                                    <option value="Female">Female</option>
-                                                    <option value="Other">Other</option>
-                                                </select>
-                                            </div>
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Gender</label>
+                                        <div className="input-with-icon">
+                                            <UserCircle size={18} />
+                                            <select
+                                                value={user?.gender || ''}
+                                                onChange={(e) => setUser({ ...user, gender: e.target.value })}
+                                                required
+                                            >
+                                                <option value="" disabled>Select Gender</option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                                <option value="Other">Other</option>
+                                            </select>
                                         </div>
-                                        <div className="form-group">
-                                            <label>Phone / WhatsApp</label>
-                                            <div className="input-with-icon">
-                                                <Phone size={18} />
-                                                <input
-                                                    type="text"
-                                                    value={user?.phone || ''}
-                                                    onChange={(e) => setUser({ ...user, phone: e.target.value })}
-                                                    placeholder="Enter phone number"
-                                                    required
-                                                />
-                                            </div>
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Phone / WhatsApp</label>
+                                        <div className="input-with-icon">
+                                            <Phone size={18} />
+                                            <input
+                                                type="text"
+                                                value={user?.phone || ''}
+                                                onChange={(e) => setUser({ ...user, phone: e.target.value })}
+                                                placeholder="Enter phone number"
+                                                required
+                                            />
                                         </div>
-                                        <div className="form-group">
-                                            <label>Email Address</label>
-                                            <div className="input-with-icon disabled">
-                                                <MessageCircle size={18} />
-                                                <input type="email" value={user?.email || ''} disabled />
-                                            </div>
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Email Address</label>
+                                        <div className="input-with-icon disabled">
+                                            <MessageCircle size={18} />
+                                            <input type="email" value={user?.email || ''} disabled />
                                         </div>
                                     </div>
                                 </div>
-                                <div className="settings-actions">
-                                    <button type="submit" className="btn btn-primary w-full" disabled={loading}>
-                                        {loading ? <Loader2 className="animate-spin" /> : 'Save Profile'}
-                                    </button>
-                                </div>
-                            </form>
-                        </motion.div>
+                            </div>
+                            <div className="settings-actions">
+                                <button type="submit" className="btn btn-primary w-full" disabled={loading}>
+                                    {loading ? <Loader2 className="animate-spin" /> : 'Save Profile'}
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                )}
-            </AnimatePresence>
+                </div>
+            )}
 
             <ReviewModal
                 isOpen={isReviewModalOpen}
