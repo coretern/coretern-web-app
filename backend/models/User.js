@@ -35,6 +35,10 @@ const userSchema = new mongoose.Schema({
         enum: ['active', 'suspended'],
         default: 'active'
     },
+    gender: {
+        type: String,
+        enum: ['Male', 'Female', 'Other']
+    },
     phone: String,
     isVerified: {
         type: Boolean,

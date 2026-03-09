@@ -14,6 +14,7 @@ const Register = () => {
         email: '',
         password: '',
         phone: '',
+        gender: '',
         agreedToTerms: false,
         agreedToPrivacy: false
     });
@@ -131,6 +132,26 @@ const Register = () => {
                                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                             />
                                             <User className="input-icon" size={18} />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label className="form-label">Gender</label>
+                                        <div className="input-wrapper">
+                                            <select
+                                                required
+                                                className="auth-input"
+                                                value={formData.gender}
+                                                onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+                                                style={{ appearance: 'none', paddingLeft: '1rem' }}
+                                            >
+                                                <option value="" disabled>Select Gender</option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                            <User className="input-icon" size={18} style={{ pointerEvents: 'none' }} />
                                         </div>
                                     </div>
                                     <div className="form-group">

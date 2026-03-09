@@ -15,7 +15,7 @@ const generateOTP = () => {
 // @route   POST /api/auth/register
 // @access  Public
 exports.register = asyncHandler(async (req, res, next) => {
-    const { name, email, password, role, phone, agreedToTerms, agreedToPrivacy } = req.body;
+    const { name, email, password, role, phone, gender, agreedToTerms, agreedToPrivacy } = req.body;
     console.log(`Registration attempt for: ${email}`);
 
     // Check if user already exists
@@ -33,6 +33,7 @@ exports.register = asyncHandler(async (req, res, next) => {
         user.name = name || user.name;
         user.password = password || user.password;
         user.phone = phone || user.phone;
+        user.gender = gender || user.gender;
         user.role = role || user.role;
         user.agreedToTerms = agreedToTerms || user.agreedToTerms;
         user.agreedToPrivacy = agreedToPrivacy || user.agreedToPrivacy;
@@ -47,6 +48,7 @@ exports.register = asyncHandler(async (req, res, next) => {
             password,
             role,
             phone,
+            gender,
             agreedToTerms,
             agreedToPrivacy,
             otp,
@@ -204,6 +206,7 @@ exports.googleLogin = asyncHandler(async (req, res, next) => {
             googleId,
             isVerified: true,
             status: 'active',
+            gender: 'Other', // Default for Google users
             agreedToTerms: true,
             agreedToPrivacy: true
         });
@@ -304,6 +307,32 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
     await user.save();
 
     sendTokenResponse(user, 200, res);
+});
+
+// @desc    Update user profile
+// @route   PUT /api/auth/update-profile
+// @access  Private
+exports.updateProfile = asyncHandler(async (req, res, next) => {
+    const { name, gender, phone } = req.body;
+
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+        return next(new ErrorResponse('User not found', 404));
+    }
+
+    // Update fields
+    if (name) user.name = name;
+    if (gender) user.gender = gender;
+    if (phone) user.phone = phone;
+
+    await user.save();
+
+    res.status(200).json({
+        success: true,
+        data: user,
+        message: 'Profile updated successfully'
+    });
 });
 
 const sendTokenResponse = (user, statusCode, res) => {

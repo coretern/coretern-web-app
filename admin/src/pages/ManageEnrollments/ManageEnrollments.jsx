@@ -24,7 +24,10 @@ const ManageEnrollments = () => {
         'Payment Status': true,
         'Enrollment Status': true,
         'Enrolled Date': true,
-        'Enrollment Time': true
+        'Enrollment Time': true,
+        'NOC/Resume Link': true,
+        'Profile Gender': true,
+        'Profile Phone': true
     });
 
     useEffect(() => {
@@ -136,6 +139,9 @@ const ManageEnrollments = () => {
             if (exportColumns['Enrollment Status']) row['Enrollment Status'] = e.status?.toUpperCase() || 'N/A';
             if (exportColumns['Enrolled Date']) row['Enrolled Date'] = e.enrolledAt ? new Date(e.enrolledAt).toLocaleDateString() : 'N/A';
             if (exportColumns['Enrollment Time']) row['Enrollment Time'] = e.enrolledAt ? new Date(e.enrolledAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'N/A';
+            if (exportColumns['NOC/Resume Link']) row['NOC/Resume Link'] = e.resume || 'N/A';
+            if (exportColumns['Profile Gender']) row['Profile Gender'] = e.user?.gender || 'N/A';
+            if (exportColumns['Profile Phone']) row['Profile Phone'] = e.user?.phone || 'N/A';
             return row;
         });
 

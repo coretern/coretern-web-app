@@ -112,6 +112,29 @@ const EnrollmentPage = () => {
             fetchDetails();
         }
 
+        // Fetch User profile to pre-fill
+        const fetchUser = async () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                try {
+                    const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/auth/me`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    const userData = data.data;
+                    setFormData(prev => ({
+                        ...prev,
+                        fullName: userData.name || '',
+                        email: userData.email || '',
+                        whatsappNumber: userData.phone || '',
+                        gender: userData.gender || ''
+                    }));
+                } catch (err) {
+                    console.error('Error fetching user', err);
+                }
+            }
+        };
+        fetchUser();
+
         // Load Cashfree SDK
         const script = document.createElement('script');
         script.src = 'https://sdk.cashfree.com/js/v3/cashfree.js';

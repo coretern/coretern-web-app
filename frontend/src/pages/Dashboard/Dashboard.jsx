@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import SEO from '../../Components/SEO';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { BookOpen, Award, LogOut, Download, X, Loader2, LifeBuoy, Rocket, Layout, Play, Calendar, Clock, ArrowLeft, MessageCircle, CheckCircle } from 'lucide-react';
+import { BookOpen, Award, LogOut, Download, X, Loader2, LifeBuoy, Rocket, Layout, Play, Calendar, Clock, ArrowLeft, MessageCircle, CheckCircle, Settings, User as UserIcon, Phone, UserCircle, Users } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { toPng } from 'html-to-image';
 import download from 'downloadjs';
@@ -19,11 +19,12 @@ const Dashboard = () => {
     const [enrollments, setEnrollments] = useState([]);
     const [certificates, setCertificates] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState('internships');
+    const location = useLocation();
+    const navigate = useNavigate();
+    const [activeTab, setActiveTab] = useState(location.state?.tab || 'internships');
     const [selectedCert, setSelectedCert] = useState(null);
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
     const [reviewTarget, setReviewTarget] = useState(null);
-    const navigate = useNavigate();
 
     const fetchDashboard = async () => {
         const token = localStorage.getItem('token');
@@ -78,6 +79,28 @@ const Dashboard = () => {
         fetchDashboard();
     }, [navigate]);
 
+    const handleUpdateProfile = async (e) => {
+        e.preventDefault();
+        const token = localStorage.getItem('token');
+        setLoading(true);
+        try {
+            const { data } = await axios.put(`${import.meta.env.VITE_API_URL}/api/auth/update-profile`, {
+                name: user.name,
+                gender: user.gender,
+                phone: user.phone
+            }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            toast.success(data.message || 'Profile updated successfully');
+            setUser(data.data);
+            setActiveTab('internships');
+        } catch (err) {
+            toast.error(err.response?.data?.error || 'Update failed');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleDownload = async () => {
         const node = document.getElementById('certificate-print');
         if (!node) return;
@@ -124,7 +147,21 @@ const Dashboard = () => {
                                 {user ? `Hello, ${user.name} 👋` : 'Welcome back! 👋'}
                             </h1>
                             {user && <p className="user-email-text">{user.email}</p>}
-                            <p className="text-text-muted">Manage your learning journey</p>
+                            <div className="user-meta-row">
+                                {user && user.gender && (
+                                    <div className="meta-badge">
+                                        <Users size={14} />
+                                        <span>{user.gender}</span>
+                                    </div>
+                                )}
+                                {user && user.phone && (
+                                    <div className="meta-badge">
+                                        <Phone size={14} />
+                                        <span>{user.phone}</span>
+                                    </div>
+                                )}
+                            </div>
+                            <p className="text-text-muted mt-3">Manage your learning journey</p>
                         </div>
                     </div>
                     <button onClick={handleLogout} className="btn btn-outline">
@@ -156,6 +193,17 @@ const Dashboard = () => {
                             <div className="stat-info">
                                 <h3>Support</h3>
                                 <p>Help Center</p>
+                            </div>
+                        </div>
+
+                        <div
+                            className={`stat-card glass clickable ${activeTab === 'settings' ? 'active-tab' : ''}`}
+                            onClick={() => setActiveTab('settings')}
+                        >
+                            <div className="stat-icon primary"><Settings size={24} /></div>
+                            <div className="stat-info">
+                                <h3>Settings</h3>
+                                <p>Profile Details</p>
                             </div>
                         </div>
 
@@ -192,11 +240,82 @@ const Dashboard = () => {
                                 </button>
                             )}
                             <h2 className="outfit m-0">
-                                {activeTab === 'internships' ? 'My Internships' : 'Help & Support'}
+                                {activeTab === 'internships' ? 'My Internships' : activeTab === 'support' ? 'Help & Support' : 'Profile Settings'}
                             </h2>
                         </div>
 
-                        {activeTab === 'support' ? (
+                        {activeTab === 'settings' ? (
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="profile-settings-card glass"
+                            >
+                                <form onSubmit={handleUpdateProfile} className="settings-form">
+                                    <div className="settings-section">
+                                        <h3 className="outfit">Personal Information</h3>
+                                        <div className="form-grid">
+                                            <div className="form-group">
+                                                <label>Full Name</label>
+                                                <div className="input-with-icon">
+                                                    <UserIcon size={18} />
+                                                    <input
+                                                        type="text"
+                                                        value={user?.name || ''}
+                                                        onChange={(e) => setUser({ ...user, name: e.target.value })}
+                                                        placeholder="Enter your full name"
+                                                        required
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="form-group">
+                                                <label>Gender</label>
+                                                <div className="input-with-icon">
+                                                    <UserCircle size={18} />
+                                                    <select
+                                                        value={user?.gender || ''}
+                                                        onChange={(e) => setUser({ ...user, gender: e.target.value })}
+                                                        required
+                                                    >
+                                                        <option value="" disabled>Select Gender</option>
+                                                        <option value="Male">Male</option>
+                                                        <option value="Female">Female</option>
+                                                        <option value="Other">Other</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div className="form-group">
+                                                <label>Phone / WhatsApp</label>
+                                                <div className="input-with-icon">
+                                                    <Phone size={18} />
+                                                    <input
+                                                        type="text"
+                                                        value={user?.phone || ''}
+                                                        onChange={(e) => setUser({ ...user, phone: e.target.value })}
+                                                        placeholder="Enter phone number"
+                                                        required
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="form-group">
+                                                <label>Email Address (Cannot be changed)</label>
+                                                <div className="input-with-icon disabled">
+                                                    <MessageCircle size={18} />
+                                                    <input type="email" value={user?.email || ''} disabled />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="settings-actions">
+                                        <button type="submit" className="btn btn-primary" disabled={loading}>
+                                            {loading ? <Loader2 className="animate-spin" /> : 'Save Changes'}
+                                        </button>
+                                        <button type="button" onClick={() => setActiveTab('internships')} className="btn btn-outline">
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </form>
+                            </motion.div>
+                        ) : activeTab === 'support' ? (
                             <TicketsForRegistered />
                         ) : (
                             enrollments.length === 0 ? (
