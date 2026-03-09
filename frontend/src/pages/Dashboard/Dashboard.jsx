@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import SEO from '../../Components/SEO';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, Award, LogOut, Download, X, Loader2, LifeBuoy, Rocket, Layout, Play, Calendar, Clock, ArrowLeft, MessageCircle, CheckCircle, Settings, User as UserIcon, Phone, UserCircle, Users } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { toPng } from 'html-to-image';
@@ -24,6 +24,7 @@ const Dashboard = () => {
     const [activeTab, setActiveTab] = useState(location.state?.tab || 'internships');
     const [selectedCert, setSelectedCert] = useState(null);
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+    const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
     const [reviewTarget, setReviewTarget] = useState(null);
 
     const fetchDashboard = async () => {
@@ -93,7 +94,7 @@ const Dashboard = () => {
             });
             toast.success(data.message || 'Profile updated successfully');
             setUser(data.data);
-            setActiveTab('internships');
+            setIsSettingsModalOpen(false);
         } catch (err) {
             toast.error(err.response?.data?.error || 'Update failed');
         } finally {
@@ -165,7 +166,7 @@ const Dashboard = () => {
                         </div>
                     </div>
                     <div className="header-actions">
-                        <button onClick={() => setActiveTab('settings')} className="btn btn-secondary">
+                        <button onClick={() => setIsSettingsModalOpen(true)} className="btn btn-secondary">
                             <Settings size={18} /> Edit
                         </button>
                         <button onClick={handleLogout} className="btn btn-outline">
@@ -235,79 +236,11 @@ const Dashboard = () => {
                                 </button>
                             )}
                             <h2 className="outfit m-0">
-                                {activeTab === 'internships' ? 'My Internships' : activeTab === 'support' ? 'Help & Support' : 'Profile Settings'}
+                                {activeTab === 'internships' ? 'My Internships' : 'Help & Support'}
                             </h2>
                         </div>
 
-                        {activeTab === 'settings' ? (
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="profile-settings-card glass"
-                            >
-                                <form onSubmit={handleUpdateProfile} className="settings-form">
-                                    <div className="settings-section">
-                                        <h3 className="outfit">Personal Information</h3>
-                                        <div className="form-grid">
-                                            <div className="form-group">
-                                                <label>Full Name</label>
-                                                <div className="input-with-icon">
-                                                    <UserIcon size={18} />
-                                                    <input
-                                                        type="text"
-                                                        value={user?.name || ''}
-                                                        onChange={(e) => setUser({ ...user, name: e.target.value })}
-                                                        placeholder="Enter your full name"
-                                                        required
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className="form-group">
-                                                <label>Gender</label>
-                                                <div className="input-with-icon">
-                                                    <UserCircle size={18} />
-                                                    <select
-                                                        value={user?.gender || ''}
-                                                        onChange={(e) => setUser({ ...user, gender: e.target.value })}
-                                                        required
-                                                    >
-                                                        <option value="" disabled>Select Gender</option>
-                                                        <option value="Male">Male</option>
-                                                        <option value="Female">Female</option>
-                                                        <option value="Other">Other</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div className="form-group">
-                                                <label>Phone / WhatsApp</label>
-                                                <div className="input-with-icon">
-                                                    <Phone size={18} />
-                                                    <input
-                                                        type="text"
-                                                        value={user?.phone || ''}
-                                                        onChange={(e) => setUser({ ...user, phone: e.target.value })}
-                                                        placeholder="Enter phone number"
-                                                        required
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className="form-group">
-                                                <label>Email Address (Cannot be changed)</label>
-                                                <div className="input-with-icon disabled">
-                                                    <MessageCircle size={18} />
-                                                    <input type="email" value={user?.email || ''} disabled />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="settings-actions">
-                                        <button type="submit" className="btn btn-primary" disabled={loading}>
-                                            {loading ? <Loader2 className="animate-spin" /> : 'Save Changes'}
-                                        </button>
-                                    </div>
-                                </form>
-                            </motion.div>
-                        ) : activeTab === 'support' ? (
+                        {activeTab === 'support' ? (
                             <TicketsForRegistered />
                         ) : (
                             enrollments.length === 0 ? (
@@ -452,6 +385,88 @@ const Dashboard = () => {
                     </div>
                 </div>
             )}
+
+            <AnimatePresence>
+                {isSettingsModalOpen && (
+                    <div className="modal-overlay" onClick={() => setIsSettingsModalOpen(false)}>
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            className="modal-content glass settings-modal"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <button className="modal-close" onClick={() => setIsSettingsModalOpen(false)}>
+                                <X size={24} />
+                            </button>
+                            <div className="modal-header">
+                                <h2 className="outfit">Edit Profile</h2>
+                                <p className="text-text-muted">Update your personal information</p>
+                            </div>
+                            <form onSubmit={handleUpdateProfile} className="settings-form">
+                                <div className="settings-section">
+                                    <div className="form-grid">
+                                        <div className="form-group">
+                                            <label>Full Name</label>
+                                            <div className="input-with-icon">
+                                                <UserIcon size={18} />
+                                                <input
+                                                    type="text"
+                                                    value={user?.name || ''}
+                                                    onChange={(e) => setUser({ ...user, name: e.target.value })}
+                                                    placeholder="Enter your full name"
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Gender</label>
+                                            <div className="input-with-icon">
+                                                <UserCircle size={18} />
+                                                <select
+                                                    value={user?.gender || ''}
+                                                    onChange={(e) => setUser({ ...user, gender: e.target.value })}
+                                                    required
+                                                >
+                                                    <option value="" disabled>Select Gender</option>
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Phone / WhatsApp</label>
+                                            <div className="input-with-icon">
+                                                <Phone size={18} />
+                                                <input
+                                                    type="text"
+                                                    value={user?.phone || ''}
+                                                    onChange={(e) => setUser({ ...user, phone: e.target.value })}
+                                                    placeholder="Enter phone number"
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Email Address</label>
+                                            <div className="input-with-icon disabled">
+                                                <MessageCircle size={18} />
+                                                <input type="email" value={user?.email || ''} disabled />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="settings-actions">
+                                    <button type="submit" className="btn btn-primary w-full" disabled={loading}>
+                                        {loading ? <Loader2 className="animate-spin" /> : 'Save Profile'}
+                                    </button>
+                                </div>
+                            </form>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
 
             <ReviewModal
                 isOpen={isReviewModalOpen}
