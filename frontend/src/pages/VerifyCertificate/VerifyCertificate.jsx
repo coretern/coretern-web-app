@@ -130,21 +130,43 @@ const VerifyCertificate = () => {
                                     <p className="verify-subtitle">This document is valid and was officially issued by <strong>CoreTern Platforms</strong>.</p>
 
                                     <div className="verify-info-grid">
-                                        {/* Name and Type only for standard certificates */}
+                                        {/* Name for BOTH (different fields) */}
+                                        <div className="info-item">
+                                            <div className="label"><User size={14} /> Issued To</div>
+                                            <div className="value">{certificate.isManual ? certificate.recipientName : (certificate.enrollment?.fullName || certificate.user?.name)}</div>
+                                        </div>
+
+                                        {/* Standard Internship Field */}
                                         {!certificate.isManual && (
-                                            <>
-                                                <div className="info-item">
-                                                    <div className="label"><User size={14} /> Issued To</div>
-                                                    <div className="value">{certificate.enrollment?.fullName || certificate.user?.name}</div>
-                                                </div>
-                                                <div className="info-item">
-                                                    <div className="label"><Book size={14} /> Internship</div>
-                                                    <div className="value">{certificate.internship?.title}</div>
-                                                </div>
-                                            </>
+                                            <div className="info-item">
+                                                <div className="label"><Book size={14} /> Internship</div>
+                                                <div className="value">{certificate.internship?.title}</div>
+                                            </div>
                                         )}
 
-                                        {/* Manual Cert Program Details */}
+                                        {/* Shared ID and Date */}
+                                        <div className="info-item">
+                                            <div className="label"><ShieldCheck size={14} /> Certificate ID</div>
+                                            <div className="value">{certificate.certificateId}</div>
+                                        </div>
+                                        <div className="info-item">
+                                            <div className="label"><Calendar size={14} /> Issue Date</div>
+                                            <div className="value">{new Date(certificate.issueDate).toLocaleDateString(undefined, {
+                                                year: 'numeric',
+                                                month: 'long',
+                                                day: 'numeric'
+                                            })}</div>
+                                        </div>
+
+                                        {/* Status for Manual */}
+                                        {certificate.isManual && (
+                                            <div className="info-item">
+                                                <div className="label"><ShieldCheck size={14} /> Status</div>
+                                                <div className="value" style={{ color: '#059669', fontWeight: 'bold' }}>Verified Certificate</div>
+                                            </div>
+                                        )}
+
+                                        {/* Program Details (Description) for Manual - Moved to Bottom */}
                                         {certificate.isManual && certificate.description && (
                                             <div className="info-item description-item" style={{ gridColumn: 'span 2' }}>
                                                 <div className="label"><AlertCircle size={14} /> Program Details</div>
@@ -152,7 +174,7 @@ const VerifyCertificate = () => {
                                             </div>
                                         )}
 
-                                        {/* Standard Cert Details */}
+                                        {/* Standard Extra Details */}
                                         {!certificate.isManual && (
                                             <>
                                                 {certificate.enrollment?.collegeName && (
@@ -174,26 +196,6 @@ const VerifyCertificate = () => {
                                                     </div>
                                                 )}
                                             </>
-                                        )}
-
-                                        <div className="info-item">
-                                            <div className="label"><ShieldCheck size={14} /> Certificate ID</div>
-                                            <div className="value">{certificate.certificateId}</div>
-                                        </div>
-                                        <div className="info-item">
-                                            <div className="label"><Calendar size={14} /> Issue Date</div>
-                                            <div className="value">{new Date(certificate.issueDate).toLocaleDateString(undefined, {
-                                                year: 'numeric',
-                                                month: 'long',
-                                                day: 'numeric'
-                                            })}</div>
-                                        </div>
-
-                                        {certificate.isManual && (
-                                            <div className="info-item" style={{ gridColumn: 'span 2' }}>
-                                                <div className="label"><ShieldCheck size={14} /> Status</div>
-                                                <div className="value" style={{ color: '#059669', fontWeight: 'bold' }}>Verified Certificate</div>
-                                            </div>
                                         )}
                                     </div>
 
