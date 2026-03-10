@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Award, Download, RefreshCw, Type, User, AlignLeft, Hash, QrCode, FileText, Calendar, ChevronRight } from 'lucide-react';
+import { Award, Download, RefreshCw, Type, User, AlignLeft, Hash, QrCode, FileText, Calendar, ChevronRight, Search } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { toPng } from 'html-to-image';
 import jsPDF from 'jspdf';
@@ -12,6 +12,8 @@ const ManualGenerator = () => {
     const [isGenerating, setIsGenerating] = useState(false);
     const [history, setHistory] = useState([]);
     const [loadingHistory, setLoadingHistory] = useState(true);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [downloadingId, setDownloadingId] = useState(null);
 
     const [formData, setFormData] = useState({
         certType: 'OF INTERNSHIP',
@@ -90,6 +92,50 @@ const ManualGenerator = () => {
         }
     };
 
+    const handleHistoryDownload = async (cert) => {
+        setDownloadingId(cert._id);
+        const loadingToast = toast.loading('Preparing Re-download...');
+
+        try {
+            // Load the data into state so the preview template has correct data
+            setFormData({
+                certType: cert.certType,
+                recipientName: cert.recipientName,
+                certificateId: cert.certificateId,
+                description: cert.description
+            });
+
+            // Small delay to ensure React state update + render is complete
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            const node = document.getElementById('manual-certificate-print');
+            if (!node) throw new Error('Preview node not found');
+
+            const dataUrl = await toPng(node, {
+                quality: 1.0,
+                width: 1000,
+                height: 707,
+                pixelRatio: 2,
+            });
+
+            const pdf = new jsPDF({
+                orientation: 'landscape',
+                unit: 'px',
+                format: [1000, 707]
+            });
+
+            pdf.addImage(dataUrl, 'PNG', 0, 0, 1000, 707);
+            pdf.save(`Certificate-${cert.certificateId}.pdf`);
+
+            toast.success('Certificate Re-downloaded!', { id: loadingToast });
+        } catch (err) {
+            console.error('Re-download Error:', err);
+            toast.error('Export failed', { id: loadingToast });
+        } finally {
+            setDownloadingId(null);
+        }
+    };
+
     const loadFromHistory = (cert) => {
         setFormData({
             certType: cert.certType,
@@ -98,8 +144,14 @@ const ManualGenerator = () => {
             description: cert.description
         });
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        toast.success('Loaded from history');
+        toast.success('Loaded for editing');
     };
+
+    const filteredHistory = history.filter(cert =>
+        cert.recipientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        cert.certificateId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        cert.certType.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     // Auto-generate verification link for QR
     const verificationLink = `https://www.coretern.com/verify/${formData.certificateId}`;
@@ -239,23 +291,36 @@ const ManualGenerator = () => {
 
             {/* History Section */}
             <div className="mt-12 history-section">
-                <div className="flex items-center gap-3 mb-6">
-                    <div className="header-icon-box" style={{ padding: '0.5rem' }}>
-                        <FileText size={20} className="text-secondary" />
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <div className="flex items-center gap-3">
+                        <div className="header-icon-box" style={{ padding: '0.5rem' }}>
+                            <FileText size={20} className="text-secondary" />
+                        </div>
+                        <h2 className="text-xl font-bold">Manual Issues History</h2>
                     </div>
-                    <h2 className="text-xl font-bold">Manual Issues History</h2>
+
+                    <div className="search-box relative min-w-[300px]">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" size={18} />
+                        <input
+                            type="text"
+                            className="form-input pl-10 h-10 text-sm"
+                            placeholder="Search by ID, Name or Type..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
                 </div>
 
                 <div className="card shadow-sm overflow-hidden">
                     <div className="overflow-x-auto">
-                        <table className="admin-table w-full text-left">
-                            <thead className="bg-subtle border-b">
+                        <table className="admin-table w-full text-left font-sans">
+                            <thead className="bg-subtle border-b bg-gray-50/50 dark:bg-gray-800/30">
                                 <tr>
-                                    <th className="px-6 py-4 font-semibold">Certificate ID</th>
-                                    <th className="px-6 py-4 font-semibold">Recipient</th>
-                                    <th className="px-6 py-4 font-semibold">Type</th>
-                                    <th className="px-6 py-4 font-semibold">Issue Date</th>
-                                    <th className="px-6 py-4 font-semibold">Action</th>
+                                    <th className="px-6 py-4 font-semibold text-sm">Certificate ID</th>
+                                    <th className="px-6 py-4 font-semibold text-sm">Recipient</th>
+                                    <th className="px-6 py-4 font-semibold text-sm">Type</th>
+                                    <th className="px-6 py-4 font-semibold text-sm">Issue Date</th>
+                                    <th className="px-6 py-4 font-semibold text-sm text-right">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -265,31 +330,51 @@ const ManualGenerator = () => {
                                             <RefreshCw className="animate-spin mx-auto text-primary" size={24} />
                                         </td>
                                     </tr>
-                                ) : history.length === 0 ? (
+                                ) : filteredHistory.length === 0 ? (
                                     <tr>
-                                        <td colSpan="5" className="px-6 py-10 text-center text-muted">
-                                            No manual certificates issued yet.
+                                        <td colSpan="5" className="px-6 py-16 text-center text-muted">
+                                            <div className="flex flex-col items-center gap-2">
+                                                <Search size={32} className="opacity-20" />
+                                                <p>{searchTerm ? `No results found for "${searchTerm}"` : 'No manual certificates issued yet.'}</p>
+                                            </div>
                                         </td>
                                     </tr>
                                 ) : (
-                                    history.map((cert) => (
-                                        <tr key={cert._id} className="border-b hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                                            <td className="px-6 py-4 font-mono text-sm">{cert.certificateId}</td>
+                                    filteredHistory.map((cert) => (
+                                        <tr key={cert._id} className="border-b hover:bg-gray-50 dark:hover:bg-gray-800/20 transition-colors">
+                                            <td className="px-6 py-4 font-mono text-xs">{cert.certificateId}</td>
                                             <td className="px-6 py-4 font-medium">{cert.recipientName}</td>
                                             <td className="px-6 py-4">
-                                                <span className="badge badge-outline">{cert.certType}</span>
+                                                <span className="badge badge-outline text-[10px] uppercase tracking-wider">{cert.certType}</span>
                                             </td>
-                                            <td className="px-6 py-4 text-sm flex items-center gap-2">
-                                                <Calendar size={14} className="opacity-60" />
-                                                {new Date(cert.issueDate).toLocaleDateString()}
+                                            <td className="px-6 py-4 text-xs">
+                                                <div className="flex items-center gap-2">
+                                                    <Calendar size={14} className="opacity-40" />
+                                                    {new Date(cert.issueDate).toLocaleDateString()}
+                                                </div>
                                             </td>
-                                            <td className="px-6 py-4">
-                                                <button
-                                                    className="btn btn-sm btn-ghost flex items-center gap-1 text-primary"
-                                                    onClick={() => loadFromHistory(cert)}
-                                                >
-                                                    View/Load <ChevronRight size={14} />
-                                                </button>
+                                            <td className="px-6 py-4 text-right">
+                                                <div className="flex items-center justify-end gap-2">
+                                                    <button
+                                                        className="btn btn-sm btn-ghost p-2 text-muted hover:text-primary transition-all"
+                                                        title="Load to Editor"
+                                                        onClick={() => loadFromHistory(cert)}
+                                                    >
+                                                        <ChevronRight size={18} />
+                                                    </button>
+                                                    <button
+                                                        className="btn btn-sm btn-primary py-1 px-3 text-xs flex items-center gap-1 shadow-sm"
+                                                        disabled={downloadingId === cert._id}
+                                                        onClick={() => handleHistoryDownload(cert)}
+                                                    >
+                                                        {downloadingId === cert._id ? (
+                                                            <RefreshCw className="animate-spin" size={14} />
+                                                        ) : (
+                                                            <Download size={14} />
+                                                        )}
+                                                        Download
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     ))

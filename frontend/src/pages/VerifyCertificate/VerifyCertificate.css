@@ -142,6 +142,19 @@
     word-break: break-word;
 }
 
+.description-text {
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    color: var(--text-muted) !important;
+    line-height: 1.6 !important;
+    padding-top: 0.5rem;
+}
+
+.description-text strong {
+    color: var(--text);
+    font-weight: 700;
+}
+
 .verify-form {
     max-width: 420px;
     margin: 0 auto;

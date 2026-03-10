@@ -132,25 +132,31 @@ const VerifyCertificate = () => {
                                     <div className="verify-info-grid">
                                         <div className="info-item">
                                             <div className="label"><User size={14} /> Issued To</div>
-                                            <div className="value">{certificate.enrollment?.fullName || certificate.user?.name}</div>
+                                            <div className="value">{certificate.recipientName || certificate.enrollment?.fullName || certificate.user?.name}</div>
                                         </div>
                                         <div className="info-item">
-                                            <div className="label"><Book size={14} /> Internship</div>
-                                            <div className="value">{certificate.internship?.title}</div>
+                                            <div className="label"><Book size={14} /> {certificate.isManual ? 'Certificate Type' : 'Internship'}</div>
+                                            <div className="value">{certificate.certType || certificate.internship?.title}</div>
                                         </div>
-                                        {certificate.enrollment?.collegeName && (
+                                        {certificate.isManual && certificate.description && (
+                                            <div className="info-item description-item" style={{ gridColumn: 'span 2' }}>
+                                                <div className="label"><AlertCircle size={14} /> Program Details</div>
+                                                <div className="value description-text" dangerouslySetInnerHTML={{ __html: certificate.description }}></div>
+                                            </div>
+                                        )}
+                                        {!certificate.isManual && certificate.enrollment?.collegeName && (
                                             <div className="info-item">
                                                 <div className="label"><ShieldCheck size={14} /> Institution</div>
                                                 <div className="value">{certificate.enrollment.collegeName}</div>
                                             </div>
                                         )}
-                                        {certificate.enrollment?.course && (
+                                        {!certificate.isManual && certificate.enrollment?.course && (
                                             <div className="info-item">
                                                 <div className="label"><Book size={14} /> Course</div>
                                                 <div className="value">{certificate.enrollment.course}</div>
                                             </div>
                                         )}
-                                        {certificate.enrollment?.branch && (
+                                        {!certificate.isManual && certificate.enrollment?.branch && (
                                             <div className="info-item">
                                                 <div className="label"><Book size={14} /> Branch</div>
                                                 <div className="value">{certificate.enrollment.branch}</div>
@@ -168,6 +174,12 @@ const VerifyCertificate = () => {
                                                 day: 'numeric'
                                             })}</div>
                                         </div>
+                                        {certificate.isManual && (
+                                            <div className="info-item" style={{ gridColumn: 'span 2' }}>
+                                                <div className="label"><ShieldCheck size={14} /> Status</div>
+                                                <div className="value" style={{ color: '#059669', fontWeight: 'bold' }}>Manual Certificate - Verified Official</div>
+                                            </div>
+                                        )}
                                     </div>
 
                                     <div className="flex flex-col gap-4">
