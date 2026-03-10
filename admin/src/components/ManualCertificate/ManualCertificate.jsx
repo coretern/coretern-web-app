@@ -13,9 +13,9 @@ const ManualCertificate = ({ id, recipientName, certType, description, qrData })
                     {certType || 'OF INTERNSHIP'}
                 </div>
 
-                <main className="cert-main">
-                    <h2 className="cert-recipient-name">{recipientName || 'Recipient Name'}</h2>
+                <h2 className="cert-recipient-name">{recipientName || 'Recipient Name'}</h2>
 
+                <main className="cert-main">
                     {/* Render raw description if it contains HTML or just plain text */}
                     <div className="cert-dynamic-text" dangerouslySetInnerHTML={{ __html: description }} />
                 </main>
