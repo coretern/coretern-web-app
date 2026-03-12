@@ -1,6 +1,37 @@
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('express-async-handler');
 const Internship = require('../models/Internship');
+const fs = require('fs');
+const path = require('path');
+
+const syncInternshipsToFile = async () => {
+    try {
+        const fileInternships = await Internship.find({ storageType: 'file', active: { $ne: false } });
+        const filePathBackend = path.join(__dirname, '../data/localInternships.json');
+        const filePathFrontend = path.join(__dirname, '../../frontend/src/data/localInternships.json');
+
+        const jsonData = JSON.stringify(fileInternships, null, 2);
+
+        // Ensure data directory exists
+        const dataDir = path.join(__dirname, '../data');
+        if (!fs.existsSync(dataDir)) {
+            fs.mkdirSync(dataDir);
+        }
+
+        // Write to backend data folder
+        fs.writeFileSync(filePathBackend, jsonData);
+
+        // Try to write to frontend src/data if it exists (for dev environments)
+        const frontendDataDir = path.join(__dirname, '../../frontend/src/data');
+        if (fs.existsSync(frontendDataDir)) {
+            fs.writeFileSync(filePathFrontend, jsonData);
+        }
+
+        console.log(`Synced ${fileInternships.length} internships to local files.`);
+    } catch (err) {
+        console.error('Failed to sync internships to file:', err.message);
+    }
+};
 
 // @desc    Get all internships
 // @route   GET /api/internships
@@ -76,6 +107,9 @@ exports.createInternship = asyncHandler(async (req, res, next) => {
 
     const internship = await Internship.create(req.body);
 
+    // Sync to file if needed
+    await syncInternshipsToFile();
+
     res.status(201).json({
         success: true,
         data: internship
@@ -141,6 +175,9 @@ exports.updateInternship = asyncHandler(async (req, res, next) => {
 
     await internship.save();
 
+    // Sync to file if needed
+    await syncInternshipsToFile();
+
     console.log('--- SAVED SUCCESSFULLY ---');
     console.log('Field in object:', internship.whatsappGroup);
 
@@ -162,8 +199,14 @@ exports.deleteInternship = asyncHandler(async (req, res, next) => {
 
     await internship.deleteOne();
 
+    // Sync to file if needed
+    await syncInternshipsToFile();
+
     res.status(200).json({
         success: true,
         data: {}
     });
 });
+
+// Sync file on startup
+syncInternshipsToFile();

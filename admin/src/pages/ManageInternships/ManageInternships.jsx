@@ -35,7 +35,8 @@ const ManageInternships = () => {
         curriculum: '',
         details: '',
         videos: '',
-        whatsappGroup: ''
+        whatsappGroup: '',
+        storageType: 'database'
     });
     const [image, setImage] = useState(null);
     const [submitting, setSubmitting] = useState(false);
@@ -67,7 +68,8 @@ const ManageInternships = () => {
                 curriculum: intern.curriculum?.join(', ') || '',
                 details: intern.details || '',
                 videos: intern.videos?.map(v => `${v.title}|${v.url}`).join('\n') || '',
-                whatsappGroup: intern.whatsappGroup || ''
+                whatsappGroup: intern.whatsappGroup || '',
+                storageType: intern.storageType || 'database'
             });
         } else {
             setEditingId(null);
@@ -80,7 +82,8 @@ const ManageInternships = () => {
                 curriculum: '',
                 details: '',
                 videos: '',
-                whatsappGroup: ''
+                whatsappGroup: '',
+                storageType: 'database'
             });
         }
         setShowModal(true);
@@ -249,6 +252,35 @@ const ManageInternships = () => {
                                             onChange={e => setFormData({ ...formData, whatsappGroup: e.target.value })}
                                             placeholder="https://chat.whatsapp.com/..."
                                         />
+                                    </div>
+
+                                    <div className="mb-8">
+                                        <label className="admin-label">Storage Destination</label>
+                                        <div className="flex gap-4">
+                                            <label className="flex items-center gap-2 cursor-pointer">
+                                                <input
+                                                    type="radio"
+                                                    name="storageType"
+                                                    value="database"
+                                                    checked={formData.storageType === 'database'}
+                                                    onChange={e => setFormData({ ...formData, storageType: e.target.value })}
+                                                />
+                                                <span>Database (Cloud)</span>
+                                            </label>
+                                            <label className="flex items-center gap-2 cursor-pointer">
+                                                <input
+                                                    type="radio"
+                                                    name="storageType"
+                                                    value="file"
+                                                    checked={formData.storageType === 'file'}
+                                                    onChange={e => setFormData({ ...formData, storageType: e.target.value })}
+                                                />
+                                                <span>Code File (Local Fast Load)</span>
+                                            </label>
+                                        </div>
+                                        <p className="text-xs text-text-muted mt-1">
+                                            Selecting 'Code File' will also save it to a local JSON for faster loading on the student side.
+                                        </p>
                                     </div>
 
                                     <div>

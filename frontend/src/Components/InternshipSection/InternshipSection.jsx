@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { ArrowRight, Loader2 } from 'lucide-react';
 import InternshipCard from '../InternshipCard/InternshipCard';
+import localInternships from '../../data/localInternships.json';
 import './InternshipSection.css';
 
 const InternshipSection = () => {
-    const [internships, setInternships] = useState([]);
+    const [internships, setInternships] = useState(localInternships?.slice(0, 3) || []);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -14,7 +15,9 @@ const InternshipSection = () => {
             try {
                 const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/internships`);
                 // Only show first 3 for the landing page
-                setInternships(data.data.slice(0, 3));
+                if (data.data && data.data.length > 0) {
+                    setInternships(data.data.slice(0, 3));
+                }
             } catch (err) {
                 console.error('Error fetching internships', err);
             } finally {

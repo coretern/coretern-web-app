@@ -7,19 +7,24 @@ import InternshipCard from '../../Components/InternshipCard/InternshipCard';
 import StudentReviews from '../../Components/Reviews/StudentReviews';
 import PageTransition from '../../Components/PageTransition';
 import SEO from '../../Components/SEO';
+import localInternships from '../../data/localInternships.json';
 import './Internships.css';
 
 const Internships = () => {
-    const [internships, setInternships] = useState([]);
+    const [internships, setInternships] = useState(localInternships || []);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchInternships = async () => {
             try {
                 const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/internships`);
-                setInternships(data.data);
+                // Use API data, but keep local ones if API is empty (though unlikely)
+                if (data.data && data.data.length > 0) {
+                    setInternships(data.data);
+                }
             } catch (err) {
                 console.error('Error fetching internships', err);
+                // If API fails, we already have localInternships in state
             } finally {
                 setLoading(false);
             }

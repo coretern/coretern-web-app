@@ -215,3 +215,15 @@
 .ql-snow .ql-toolbar .ql-picker-item.ql-selected .ql-stroke {
     stroke: var(--primary) !important;
 }
+
+/* Radio Group Styles */
+.admin-modal-body input[type="radio"] {
+    accent-color: var(--primary);
+    width: 18px;
+    height: 18px;
+}
+
+.admin-modal-body p.text-text-muted {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}

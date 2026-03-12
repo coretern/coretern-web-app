@@ -10,6 +10,7 @@ import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
 import PageTransition from '../../Components/PageTransition';
 import SEO from '../../Components/SEO';
+import localInternships from '../../data/localInternships.json';
 import './EnrollmentPage.css';
 
 const CustomSelect = ({ label, icon: Icon, name, value, options, onChange, placeholder, required }) => {
@@ -72,7 +73,7 @@ const EnrollmentPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const [internship, setInternship] = useState(location.state?.internship || null);
+    const [internship, setInternship] = useState(location.state?.internship || localInternships?.find(i => i._id === id) || null);
     const [loadingDetails, setLoadingDetails] = useState(!internship);
     const [cashfree, setCashfree] = useState(null);
     const [submitting, setSubmitting] = useState(false);

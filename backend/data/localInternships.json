@@ -1,0 +1,67 @@
+[
+    {
+        "_id": "local_intern_001",
+        "title": "Full Stack Web Development",
+        "domain": "Summer Internship",
+        "duration": "4 Weeks",
+        "fee": 499,
+        "description": "Master modern web technologies from frontend to backend with industry experts.",
+        "curriculum": [
+            "React.js",
+            "Node.js",
+            "MongoDB",
+            "Express",
+            "API Integration"
+        ],
+        "details": "<p>Join our comprehensive Full Stack Web Development internship program. You will work on real-world projects and learn the latest trends in the MERN stack.</p><ul><li>Hands-on projects</li><li>Mentorship from seniors</li><li>Certification on completion</li></ul>",
+        "image": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=600",
+        "active": true,
+        "storageType": "file",
+        "videos": [
+            {
+                "title": "Introduction to Web Dev",
+                "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+            }
+        ]
+    },
+    {
+        "_id": "local_intern_002",
+        "title": "Artificial Intelligence & ML",
+        "domain": "Summer Internship",
+        "duration": "6 Weeks",
+        "fee": 599,
+        "description": "Explore the future with AI and Machine Learning. Build smart models from scratch.",
+        "curriculum": [
+            "Python",
+            "NumPy",
+            "Pandas",
+            "Scikit-Learn",
+            "Neural Networks"
+        ],
+        "details": "<p>Deep dive into the world of AI. This program covers everything from basic data manipulation to advanced machine learning algorithms.</p>",
+        "image": "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=600",
+        "active": true,
+        "storageType": "file",
+        "videos": []
+    },
+    {
+        "_id": "local_intern_003",
+        "title": "Android App Development",
+        "domain": "Summer Internship",
+        "duration": "4 Weeks",
+        "fee": 449,
+        "description": "Create stunning mobile applications using React Native and Flutter frameworks.",
+        "curriculum": [
+            "React Native",
+            "Expo",
+            "Firebase",
+            "State Management",
+            "Publishing"
+        ],
+        "details": "<p>Our mobile app development program focuses on cross-platform development, allowing you to build apps for both Android and iOS with a single codebase.</p>",
+        "image": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=600",
+        "active": true,
+        "storageType": "file",
+        "videos": []
+    }
+]

@@ -9,13 +9,14 @@ import Footer from '../../Components/Footer/Footer';
 import PageTransition from '../../Components/PageTransition';
 import StudentReviews from '../../Components/Reviews/StudentReviews';
 import SEO from '../../Components/SEO';
+import localInternships from '../../data/localInternships.json';
 import './InternshipDetails.css';
 
 const InternshipDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [internship, setInternship] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [internship, setInternship] = useState(localInternships?.find(i => i._id === id) || null);
+    const [loading, setLoading] = useState(!internship); // Only show loader if we don't have local data
 
     useEffect(() => {
         const fetchDetails = async () => {

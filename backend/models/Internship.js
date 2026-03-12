@@ -50,6 +50,11 @@ const internshipSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
+    storageType: {
+        type: String,
+        enum: ['database', 'file'],
+        default: 'database'
+    },
     createdAt: {
         type: Date,
         default: Date.now
