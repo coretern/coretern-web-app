@@ -22,7 +22,23 @@ const Register = () => {
     const [step, setStep] = useState(1); // 1: Register, 2: OTP
     const [loading, setLoading] = useState(false);
     const [resending, setResending] = useState(false);
+    const [config, setConfig] = useState({ allowEmailAuth: true });
+    const [loadingConfig, setLoadingConfig] = useState(true);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchConfig = async () => {
+            try {
+                const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/config`);
+                setConfig(data.data);
+            } catch (err) {
+                console.error('Config fetch error', err);
+            } finally {
+                setLoadingConfig(false);
+            }
+        };
+        fetchConfig();
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -112,122 +128,130 @@ const Register = () => {
                 </header>
 
                 <AnimatePresence mode='wait'>
-                    {step === 1 ? (
+                    {loadingConfig ? (
+                        <div className="flex justify-center py-10"><Loader2 className="animate-spin text-primary" /></div>
+                    ) : step === 1 ? (
                         <motion.div
                             key="register-form"
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: 20 }}
                         >
-                            <form onSubmit={handleSubmit}>
-                                <div className="form-row">
-                                    <div className="form-group">
-                                        <label className="form-label">Full Name</label>
-                                        <div className="input-wrapper">
-                                            <input
-                                                type="text" required
-                                                className="auth-input"
-                                                placeholder="John Doe"
-                                                value={formData.name}
-                                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                            />
-                                            <User className="input-icon" size={18} />
+                            {config.allowEmailAuth ? (
+                                <form onSubmit={handleSubmit}>
+                                    <div className="form-row">
+                                        <div className="form-group">
+                                            <label className="form-label">Full Name</label>
+                                            <div className="input-wrapper">
+                                                <input
+                                                    type="text" required
+                                                    className="auth-input"
+                                                    placeholder="John Doe"
+                                                    value={formData.name}
+                                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                                />
+                                                <User className="input-icon" size={18} />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="form-row">
+                                    <div className="form-row">
+                                        <div className="form-group">
+                                            <label className="form-label">Gender</label>
+                                            <div className="input-wrapper">
+                                                <select
+                                                    required
+                                                    className="auth-input"
+                                                    value={formData.gender}
+                                                    onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+                                                    style={{ appearance: 'none', paddingLeft: '3.5rem' }}
+                                                >
+                                                    <option value="" disabled>Select Gender</option>
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                                <UserCircle className="input-icon" size={18} style={{ pointerEvents: 'none' }} />
+                                            </div>
+                                        </div>
+                                        <div className="form-group">
+                                            <label className="form-label">Phone Number</label>
+                                            <div className="input-wrapper">
+                                                <input
+                                                    type="text" required
+                                                    className="auth-input"
+                                                    placeholder="+91..."
+                                                    value={formData.phone}
+                                                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                                />
+                                                <Phone className="input-icon" size={18} />
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div className="form-group">
-                                        <label className="form-label">Gender</label>
+                                        <label className="form-label">Email Address</label>
                                         <div className="input-wrapper">
-                                            <select
+                                            <input
+                                                type="email" required
+                                                className="auth-input"
+                                                placeholder="name@example.com"
+                                                value={formData.email}
+                                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                            />
+                                            <Mail className="input-icon" size={18} />
+                                        </div>
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label className="form-label">Password</label>
+                                        <div className="input-wrapper">
+                                            <input
+                                                type="password" required
+                                                className="auth-input"
+                                                placeholder="••••••••"
+                                                value={formData.password}
+                                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                            />
+                                            <Lock className="input-icon" size={18} />
+                                        </div>
+                                    </div>
+
+                                    <div className="legal-checkboxes">
+                                        <div className="checkbox-group">
+                                            <input
+                                                type="checkbox"
+                                                id="agreedToTerms"
                                                 required
-                                                className="auth-input"
-                                                value={formData.gender}
-                                                onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-                                                style={{ appearance: 'none', paddingLeft: '3.5rem' }}
-                                            >
-                                                <option value="" disabled>Select Gender</option>
-                                                <option value="Male">Male</option>
-                                                <option value="Female">Female</option>
-                                                <option value="Other">Other</option>
-                                            </select>
-                                            <UserCircle className="input-icon" size={18} style={{ pointerEvents: 'none' }} />
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <label className="form-label">Phone Number</label>
-                                        <div className="input-wrapper">
-                                            <input
-                                                type="text" required
-                                                className="auth-input"
-                                                placeholder="+91..."
-                                                value={formData.phone}
-                                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                                checked={formData.agreedToTerms}
+                                                onChange={(e) => setFormData({ ...formData, agreedToTerms: e.target.checked })}
                                             />
-                                            <Phone className="input-icon" size={18} />
+                                            <label htmlFor="agreedToTerms">
+                                                I agree to the <Link to="/terms" target="_blank">Terms of Service</Link>
+                                            </label>
+                                        </div>
+                                        <div className="checkbox-group">
+                                            <input
+                                                type="checkbox"
+                                                id="agreedToPrivacy"
+                                                required
+                                                checked={formData.agreedToPrivacy}
+                                                onChange={(e) => setFormData({ ...formData, agreedToPrivacy: e.target.checked })}
+                                            />
+                                            <label htmlFor="agreedToPrivacy">
+                                                I agree to the <Link to="/privacy" target="_blank">Privacy Policy</Link>
+                                            </label>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div className="form-group">
-                                    <label className="form-label">Email Address</label>
-                                    <div className="input-wrapper">
-                                        <input
-                                            type="email" required
-                                            className="auth-input"
-                                            placeholder="name@example.com"
-                                            value={formData.email}
-                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                        />
-                                        <Mail className="input-icon" size={18} />
-                                    </div>
+                                    <button disabled={loading} className="btn btn-primary auth-btn">
+                                        {loading ? <Loader2 className="animate-spin" /> : 'Create Account'}
+                                    </button>
+                                </form>
+                            ) : (
+                                <div className="bg-primary/5 p-4 rounded-xl border border-primary/10 mb-6 flex items-center gap-3">
+                                    <p className="text-sm text-center w-full">Manual registration is currently disabled. Please use Google.</p>
                                 </div>
-
-                                <div className="form-group">
-                                    <label className="form-label">Password</label>
-                                    <div className="input-wrapper">
-                                        <input
-                                            type="password" required
-                                            className="auth-input"
-                                            placeholder="••••••••"
-                                            value={formData.password}
-                                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                        />
-                                        <Lock className="input-icon" size={18} />
-                                    </div>
-                                </div>
-
-                                <div className="legal-checkboxes">
-                                    <div className="checkbox-group">
-                                        <input
-                                            type="checkbox"
-                                            id="agreedToTerms"
-                                            required
-                                            checked={formData.agreedToTerms}
-                                            onChange={(e) => setFormData({ ...formData, agreedToTerms: e.target.checked })}
-                                        />
-                                        <label htmlFor="agreedToTerms">
-                                            I agree to the <Link to="/terms" target="_blank">Terms of Service</Link>
-                                        </label>
-                                    </div>
-                                    <div className="checkbox-group">
-                                        <input
-                                            type="checkbox"
-                                            id="agreedToPrivacy"
-                                            required
-                                            checked={formData.agreedToPrivacy}
-                                            onChange={(e) => setFormData({ ...formData, agreedToPrivacy: e.target.checked })}
-                                        />
-                                        <label htmlFor="agreedToPrivacy">
-                                            I agree to the <Link to="/privacy" target="_blank">Privacy Policy</Link>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <button disabled={loading} className="btn btn-primary auth-btn">
-                                    {loading ? <Loader2 className="animate-spin" /> : 'Create Account'}
-                                </button>
-                            </form>
+                            )}
 
                             <div className="auth-divider">
                                 <span>OR</span>

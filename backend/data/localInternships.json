@@ -1,67 +1,31 @@
 [
-    {
-        "_id": "local_intern_001",
-        "title": "Full Stack Web Development",
-        "domain": "Summer Internship",
-        "duration": "4 Weeks",
-        "fee": 499,
-        "description": "Master modern web technologies from frontend to backend with industry experts.",
-        "curriculum": [
-            "React.js",
-            "Node.js",
-            "MongoDB",
-            "Express",
-            "API Integration"
-        ],
-        "details": "<p>Join our comprehensive Full Stack Web Development internship program. You will work on real-world projects and learn the latest trends in the MERN stack.</p><ul><li>Hands-on projects</li><li>Mentorship from seniors</li><li>Certification on completion</li></ul>",
-        "image": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=600",
-        "active": true,
-        "storageType": "file",
-        "videos": [
-            {
-                "title": "Introduction to Web Dev",
-                "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-            }
-        ]
-    },
-    {
-        "_id": "local_intern_002",
-        "title": "Artificial Intelligence & ML",
-        "domain": "Summer Internship",
-        "duration": "6 Weeks",
-        "fee": 599,
-        "description": "Explore the future with AI and Machine Learning. Build smart models from scratch.",
-        "curriculum": [
-            "Python",
-            "NumPy",
-            "Pandas",
-            "Scikit-Learn",
-            "Neural Networks"
-        ],
-        "details": "<p>Deep dive into the world of AI. This program covers everything from basic data manipulation to advanced machine learning algorithms.</p>",
-        "image": "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=600",
-        "active": true,
-        "storageType": "file",
-        "videos": []
-    },
-    {
-        "_id": "local_intern_003",
-        "title": "Android App Development",
-        "domain": "Summer Internship",
-        "duration": "4 Weeks",
-        "fee": 449,
-        "description": "Create stunning mobile applications using React Native and Flutter frameworks.",
-        "curriculum": [
-            "React Native",
-            "Expo",
-            "Firebase",
-            "State Management",
-            "Publishing"
-        ],
-        "details": "<p>Our mobile app development program focuses on cross-platform development, allowing you to build apps for both Android and iOS with a single codebase.</p>",
-        "image": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=600",
-        "active": true,
-        "storageType": "file",
-        "videos": []
-    }
+  {
+    "_id": "69af183a34e4ba9a1ffb70a4",
+    "title": "C / C++ Programming",
+    "__v": 1,
+    "active": true,
+    "createdAt": "2026-03-09T18:58:02.141Z",
+    "curriculum": [
+      "Data Structures",
+      "Algorithms",
+      "Object Oriented Programming",
+      "Memory Management",
+      "Competitive Programming"
+    ],
+    "description": "Strengthen your fundamentals with C/C++ which powers every modern system.",
+    "details": "<h3>Welcome&nbsp;to&nbsp;CoreTern&nbsp;Internship!</h3><p>Start&nbsp;your&nbsp;journey&nbsp;with&nbsp;us&nbsp;to&nbsp;gain&nbsp;real-world&nbsp;skills&nbsp;and&nbsp;professional&nbsp;experience.&nbsp;Here&nbsp;is&nbsp;everything&nbsp;you&nbsp;need&nbsp;to&nbsp;know&nbsp;about&nbsp;the&nbsp;program:</p><h4>What&nbsp;You&nbsp;Will&nbsp;Get</h4><ul><li><strong>Student&nbsp;Dashboard:</strong>&nbsp;After&nbsp;you&nbsp;enroll,&nbsp;you&nbsp;will&nbsp;get&nbsp;access&nbsp;to&nbsp;a&nbsp;private&nbsp;dashboard&nbsp;to&nbsp;track&nbsp;your&nbsp;work&nbsp;and&nbsp;learn.</li><li><strong>Verified&nbsp;Certificate:</strong>&nbsp;Once&nbsp;you&nbsp;complete&nbsp;your&nbsp;internship,&nbsp;you&nbsp;can&nbsp;download&nbsp;your&nbsp;official&nbsp;certificate&nbsp;directly&nbsp;from&nbsp;your&nbsp;dashboard.</li><li><strong>WhatsApp&nbsp;Community:</strong>&nbsp;You&nbsp;will&nbsp;find&nbsp;a&nbsp;link&nbsp;to&nbsp;an&nbsp;exclusive&nbsp;WhatsApp&nbsp;group&nbsp;in&nbsp;your&nbsp;dashboard.&nbsp;Joining&nbsp;this&nbsp;group&nbsp;is&nbsp;very&nbsp;important&nbsp;for&nbsp;daily&nbsp;updates&nbsp;and&nbsp;guidance.</li><li><strong>Internship&nbsp;Report:</strong>&nbsp;You&nbsp;may&nbsp;also&nbsp;receive&nbsp;a&nbsp;performance&nbsp;report&nbsp;through&nbsp;the&nbsp;WhatsApp&nbsp;group&nbsp;to&nbsp;help&nbsp;you&nbsp;improve&nbsp;and&nbsp;track&nbsp;your&nbsp;progress.</li></ul><h4>Important&nbsp;Instructions</h4><ul><li><strong>Check&nbsp;Your&nbsp;Details:</strong>&nbsp;Please&nbsp;make&nbsp;sure&nbsp;your&nbsp;Full&nbsp;Name&nbsp;and&nbsp;Branch&nbsp;are&nbsp;correct&nbsp;during&nbsp;enrollment.&nbsp;These&nbsp;details&nbsp;will&nbsp;be&nbsp;used&nbsp;exactly&nbsp;as&nbsp;provided&nbsp;for&nbsp;your&nbsp;certificate.</li><li><strong>Need&nbsp;Help?</strong>&nbsp;If&nbsp;you&nbsp;face&nbsp;any&nbsp;issues,&nbsp;you&nbsp;can&nbsp;contact&nbsp;us&nbsp;through&nbsp;the&nbsp;website&nbsp;or&nbsp;message&nbsp;the&nbsp;Admin&nbsp;in&nbsp;your&nbsp;WhatsApp&nbsp;group.</li><li><strong>Share&nbsp;Your&nbsp;Feedback:</strong>&nbsp;Your&nbsp;opinion&nbsp;matters!&nbsp;Don&#39;t&nbsp;forget&nbsp;to&nbsp;rate&nbsp;us&nbsp;after&nbsp;completing&nbsp;your&nbsp;internship&nbsp;so&nbsp;we&nbsp;can&nbsp;keep&nbsp;improving.</li></ul>",
+    "domain": "Summer Internship",
+    "duration": "1,2,3,4,5 weeks",
+    "fee": 799,
+    "image": "https://i.pinimg.com/736x/51/16/39/511639ed8370cb83211f49e0d8f04af2.jpg",
+    "videos": [
+      {
+        "title": "Intro",
+        "url": "https://youtu.be/tVzUXW6siu0?si=iqF7PQx6Zda79SUQ",
+        "_id": "69b349d3da58aeb2744bc429"
+      }
+    ],
+    "whatsappGroup": "https://chat.whatsapp.com/FnOncwIAGzH50AmeCSFCUr?mode=hqctcla",
+    "storageType": "file"
+  }
 ]

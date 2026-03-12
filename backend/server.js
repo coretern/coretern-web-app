@@ -60,6 +60,7 @@ app.use('/api/enrollments', require('./routes/enrollments'));
 app.use('/api/certificates', require('./routes/certificates'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/tickets', require('./routes/tickets'));
+app.use('/api/config', require('./routes/config'));
 
 // Error Handler Middleware
 app.use(require('./middleware/error'));

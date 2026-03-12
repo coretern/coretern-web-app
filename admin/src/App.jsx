@@ -13,6 +13,7 @@ import ManageUsers from './pages/ManageUsers/ManageUsers';
 import Tickets from './pages/Tickets/Tickets';
 import TicketDetail from './pages/Tickets/TicketDetail';
 import ManualGenerator from './pages/ManualCertificateGenerator/ManualGenerator';
+import Settings from './pages/Settings/Settings';
 import Login from './pages/Login/Login';
 import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 
@@ -59,6 +60,10 @@ const AppContent = ({ isAuthenticated, handleLogin }) => {
           <Route
             path="/manual-certificate"
             element={isAuthenticated ? <ManualGenerator key={location.key} /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/settings"
+            element={isAuthenticated ? <Settings key={location.key} /> : <Navigate to="/login" />}
           />
         </Routes>
       </main>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, BookOpen, Users, LogOut, Rocket, Sun, Moon, LifeBuoy, Award } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Users, LogOut, Rocket, Sun, Moon, LifeBuoy, Award, Settings } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useTheme } from '../../context/ThemeContext';
 import './Sidebar.css';
@@ -43,6 +43,9 @@ const Sidebar = () => {
                 </NavLink>
                 <NavLink to="/tickets" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`}>
                     <LifeBuoy size={20} /> <span>Tickets</span>
+                </NavLink>
+                <NavLink to="/settings" className={({ isActive }) => `admin-nav-link ${isActive ? 'active' : ''}`}>
+                    <Settings size={20} /> <span>Settings</span>
                 </NavLink>
             </nav>
 

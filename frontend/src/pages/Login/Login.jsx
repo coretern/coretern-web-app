@@ -14,8 +14,23 @@ const Login = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    const [config, setConfig] = useState({ allowEmailAuth: true });
+    const [loadingConfig, setLoadingConfig] = useState(true);
+
     // Handle Admin Impersonation Token
     useEffect(() => {
+        const fetchConfig = async () => {
+            try {
+                const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/config`);
+                setConfig(data.data);
+            } catch (err) {
+                console.error('Config fetch error', err);
+            } finally {
+                setLoadingConfig(false);
+            }
+        };
+        fetchConfig();
+
         const queryParams = new URLSearchParams(location.search);
         const adminToken = queryParams.get('adminToken');
 
@@ -90,49 +105,59 @@ const Login = () => {
                     <p className="text-text-muted">Access your personalized dashboard</p>
                 </header>
 
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label className="form-label">Email Address</label>
-                        <div className="input-wrapper">
-                            <input
-                                type="email"
-                                required
-                                className="auth-input"
-                                placeholder="name@example.com"
-                                value={formData.email}
-                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                            />
-                            <Mail className="input-icon" size={18} />
+                {loadingConfig ? (
+                    <div className="flex justify-center py-10"><Loader2 className="animate-spin text-primary" /></div>
+                ) : config.allowEmailAuth ? (
+                    <>
+                        <form onSubmit={handleSubmit}>
+                            <div className="form-group">
+                                <label className="form-label">Email Address</label>
+                                <div className="input-wrapper">
+                                    <input
+                                        type="email"
+                                        required
+                                        className="auth-input"
+                                        placeholder="name@example.com"
+                                        value={formData.email}
+                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                    />
+                                    <Mail className="input-icon" size={18} />
+                                </div>
+                            </div>
+
+                            <div className="form-group">
+                                <label className="form-label">Password</label>
+                                <div className="input-wrapper">
+                                    <input
+                                        type="password"
+                                        required
+                                        className="auth-input"
+                                        placeholder="••••••••"
+                                        value={formData.password}
+                                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                    />
+                                    <Lock className="input-icon" size={18} />
+                                </div>
+                            </div>
+
+                            <div className="forgot-password-link">
+                                <Link to="/forgot-password">Forgot Password?</Link>
+                            </div>
+
+                            <button disabled={loading} className="btn btn-primary auth-btn">
+                                {loading ? <Loader2 className="animate-spin" /> : 'Sign In'}
+                            </button>
+                        </form>
+
+                        <div className="auth-divider">
+                            <span>OR</span>
                         </div>
+                    </>
+                ) : (
+                    <div className="bg-primary/5 p-4 rounded-xl border border-primary/10 mb-6 flex items-center gap-3">
+                        <p className="text-sm text-center w-full">Manual login is currently disabled. Please use Google.</p>
                     </div>
-
-                    <div className="form-group">
-                        <label className="form-label">Password</label>
-                        <div className="input-wrapper">
-                            <input
-                                type="password"
-                                required
-                                className="auth-input"
-                                placeholder="••••••••"
-                                value={formData.password}
-                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                            />
-                            <Lock className="input-icon" size={18} />
-                        </div>
-                    </div>
-
-                    <div className="forgot-password-link">
-                        <Link to="/forgot-password">Forgot Password?</Link>
-                    </div>
-
-                    <button disabled={loading} className="btn btn-primary auth-btn">
-                        {loading ? <Loader2 className="animate-spin" /> : 'Sign In'}
-                    </button>
-                </form>
-
-                <div className="auth-divider">
-                    <span>OR</span>
-                </div>
+                )}
 
                 <div className="google-login-container">
                     <GoogleLogin
