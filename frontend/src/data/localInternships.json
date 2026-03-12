@@ -1,5 +1,34 @@
 [
   {
+    "_id": "69af0be0975ea8e316dc360d",
+    "title": "Graphic Design",
+    "description": "Bring your creativity to life with professional graphic design training.",
+    "domain": "Summer Internship",
+    "image": "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&q=80&w=800",
+    "duration": "1,2,3,4,5 weeks",
+    "fee": 799,
+    "curriculum": [
+      "Photoshop",
+      "Illustrator",
+      "Brand Identity",
+      "Motion Graphics",
+      "Typography"
+    ],
+    "details": "<h3>Welcome&nbsp;to&nbsp;CoreTern&nbsp;Internship!</h3><p>Start&nbsp;your&nbsp;journey&nbsp;with&nbsp;us&nbsp;to&nbsp;gain&nbsp;real-world&nbsp;skills&nbsp;and&nbsp;professional&nbsp;experience.&nbsp;Here&nbsp;is&nbsp;everything&nbsp;you&nbsp;need&nbsp;to&nbsp;know&nbsp;about&nbsp;the&nbsp;program:</p><h4>What&nbsp;You&nbsp;Will&nbsp;Get</h4><ul><li><strong>Student&nbsp;Dashboard:</strong>&nbsp;After&nbsp;you&nbsp;enroll,&nbsp;you&nbsp;will&nbsp;get&nbsp;access&nbsp;to&nbsp;a&nbsp;private&nbsp;dashboard&nbsp;to&nbsp;track&nbsp;your&nbsp;work&nbsp;and&nbsp;learn.</li><li><strong>Verified&nbsp;Certificate:</strong>&nbsp;Once&nbsp;you&nbsp;complete&nbsp;your&nbsp;internship,&nbsp;you&nbsp;can&nbsp;download&nbsp;your&nbsp;official&nbsp;certificate&nbsp;directly&nbsp;from&nbsp;your&nbsp;dashboard.</li><li><strong>WhatsApp&nbsp;Community:</strong>&nbsp;You&nbsp;will&nbsp;find&nbsp;a&nbsp;link&nbsp;to&nbsp;an&nbsp;exclusive&nbsp;WhatsApp&nbsp;group&nbsp;in&nbsp;your&nbsp;dashboard.&nbsp;Joining&nbsp;this&nbsp;group&nbsp;is&nbsp;very&nbsp;important&nbsp;for&nbsp;daily&nbsp;updates&nbsp;and&nbsp;guidance.</li><li><strong>Internship&nbsp;Report:</strong>&nbsp;You&nbsp;may&nbsp;also&nbsp;receive&nbsp;a&nbsp;performance&nbsp;report&nbsp;through&nbsp;the&nbsp;WhatsApp&nbsp;group&nbsp;to&nbsp;help&nbsp;you&nbsp;improve&nbsp;and&nbsp;track&nbsp;your&nbsp;progress.</li></ul><h4>Important&nbsp;Instructions</h4><ul><li><strong>Check&nbsp;Your&nbsp;Details:</strong>&nbsp;Please&nbsp;make&nbsp;sure&nbsp;your&nbsp;Full&nbsp;Name&nbsp;and&nbsp;Branch&nbsp;are&nbsp;correct&nbsp;during&nbsp;enrollment.&nbsp;These&nbsp;details&nbsp;will&nbsp;be&nbsp;used&nbsp;exactly&nbsp;as&nbsp;provided&nbsp;for&nbsp;your&nbsp;certificate.</li><li><strong>Need&nbsp;Help?</strong>&nbsp;If&nbsp;you&nbsp;face&nbsp;any&nbsp;issues,&nbsp;you&nbsp;can&nbsp;contact&nbsp;us&nbsp;through&nbsp;the&nbsp;website&nbsp;or&nbsp;message&nbsp;the&nbsp;Admin&nbsp;in&nbsp;your&nbsp;WhatsApp&nbsp;group.</li><li><strong>Share&nbsp;Your&nbsp;Feedback:</strong>&nbsp;Your&nbsp;opinion&nbsp;matters!&nbsp;Don&#39;t&nbsp;forget&nbsp;to&nbsp;rate&nbsp;us&nbsp;after&nbsp;completing&nbsp;your&nbsp;internship&nbsp;so&nbsp;we&nbsp;can&nbsp;keep&nbsp;improving.</li></ul>",
+    "active": true,
+    "videos": [
+      {
+        "title": "Intro",
+        "url": "https://youtu.be/tVzUXW6siu0?si=iqF7PQx6Zda79SUQ",
+        "_id": "69b34a4bda58aeb2744bc51a"
+      }
+    ],
+    "whatsappGroup": "https://chat.whatsapp.com/FnOncwIAGzH50AmeCSFCUr?mode=hqctcla",
+    "createdAt": "2026-03-09T18:05:20.729Z",
+    "__v": 1,
+    "storageType": "file"
+  },
+  {
     "_id": "69af183a34e4ba9a1ffb70a4",
     "title": "C / C++ Programming",
     "__v": 1,
