@@ -69,4 +69,29 @@ const enrollmentSchema = new mongoose.Schema({
     }
 });
 
-export default mongoose.models.Enrollment || mongoose.model('Enrollment', enrollmentSchema);
+export interface IEnrollment extends mongoose.Document {
+    user: mongoose.Types.ObjectId;
+    internship: mongoose.Types.ObjectId;
+    status: 'pending' | 'enrolled' | 'completed';
+    paymentStatus: 'unpaid' | 'paid';
+    cfOrderId?: string;
+    paymentId?: string;
+    fullName: string;
+    gender: 'Male' | 'Female' | 'Other';
+    collegeRegNumber?: string;
+    collegeName?: string;
+    course?: string;
+    branch?: string;
+    startDate: Date;
+    endDate: Date;
+    whatsappNumber: string;
+    email: string;
+    resume?: string;
+    agreedToRefundPolicy: boolean;
+    enrolledAt: Date;
+    reviewText?: string;
+    reviewDate?: Date;
+}
+
+const Enrollment: mongoose.Model<IEnrollment> = mongoose.models.Enrollment || mongoose.model<IEnrollment>('Enrollment', enrollmentSchema);
+export default Enrollment;

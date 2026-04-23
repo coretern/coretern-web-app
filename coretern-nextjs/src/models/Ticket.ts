@@ -58,4 +58,22 @@ const ticketSchema = new mongoose.Schema({
     }
 });
 
-export default mongoose.models.Ticket || mongoose.model('Ticket', ticketSchema);
+export interface ITicket extends mongoose.Document {
+    ticketId: string;
+    user?: mongoose.Types.ObjectId;
+    name: string;
+    email: string;
+    phone: string;
+    subject: string;
+    type: 'registered' | 'guest';
+    conversation: Array<{
+        sender: 'user' | 'admin';
+        message: string;
+        createdAt: Date;
+    }>;
+    status: 'open' | 'pending' | 'resolved' | 'closed';
+    createdAt: Date;
+}
+
+const Ticket: mongoose.Model<ITicket> = mongoose.models.Ticket || mongoose.model<ITicket>('Ticket', ticketSchema);
+export default Ticket;

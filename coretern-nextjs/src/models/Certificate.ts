@@ -55,4 +55,19 @@ certificateSchema.pre('validate', function () {
     }
 });
 
-export default mongoose.models.Certificate || mongoose.model('Certificate', certificateSchema);
+export interface ICertificate extends mongoose.Document {
+    certificateId: string;
+    user?: mongoose.Types.ObjectId;
+    internship?: mongoose.Types.ObjectId;
+    enrollment?: mongoose.Types.ObjectId;
+    isManual: boolean;
+    recipientName?: string;
+    certType?: string;
+    description?: string;
+    issueDate: Date;
+    qrCode?: string;
+    verificationUrl?: string;
+}
+
+const Certificate: mongoose.Model<ICertificate> = mongoose.models.Certificate || mongoose.model<ICertificate>('Certificate', certificateSchema);
+export default Certificate;

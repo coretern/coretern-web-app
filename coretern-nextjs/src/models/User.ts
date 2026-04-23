@@ -80,4 +80,26 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };
 
-export default mongoose.models.User || mongoose.model('User', userSchema);
+export interface IUser extends mongoose.Document {
+    name: string;
+    email: string;
+    password?: string;
+    googleId?: string;
+    role: 'student' | 'admin';
+    status: 'active' | 'suspended';
+    gender?: string;
+    phone?: string;
+    isVerified: boolean;
+    otp?: string;
+    otpExpires?: Date;
+    resetPasswordToken?: string;
+    resetPasswordExpire?: Date;
+    agreedToTerms: boolean;
+    agreedToPrivacy: boolean;
+    tokenVersion: number;
+    createdAt: Date;
+    matchPassword: (password: string) => Promise<boolean>;
+}
+
+const User: mongoose.Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', userSchema);
+export default User;

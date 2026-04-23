@@ -56,4 +56,24 @@ const internshipSchema = new mongoose.Schema({
     }
 });
 
-export default mongoose.models.Internship || mongoose.model('Internship', internshipSchema);
+export interface IInternship extends mongoose.Document {
+    title: string;
+    description?: string;
+    domain: string;
+    image: string;
+    duration: string;
+    fee: number;
+    curriculum: string[];
+    details?: string;
+    active: boolean;
+    videos: Array<{
+        title: string;
+        url: string;
+        duration?: string;
+    }>;
+    whatsappGroup?: string;
+    createdAt: Date;
+}
+
+const Internship: mongoose.Model<IInternship> = mongoose.models.Internship || mongoose.model<IInternship>('Internship', internshipSchema);
+export default Internship;
