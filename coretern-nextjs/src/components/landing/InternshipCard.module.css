@@ -1,0 +1,147 @@
+.internCard {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    width: 100%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.internCard:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-primary-light);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+.internCardImage {
+    position: relative;
+    height: 180px;
+    width: 100%;
+    overflow: hidden;
+    background: #f1f5f9;
+}
+
+.internCardImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.internCard:hover .internCardImage img {
+    transform: scale(1.05);
+}
+
+.internCardBadge {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+    color: white;
+    padding: 0.35rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    z-index: 2;
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.internCardBadge::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: badgeShimmer 3s infinite;
+    pointer-events: none;
+}
+
+@keyframes badgeShimmer {
+    0% { left: -100%; }
+    100% { left: 200%; }
+}
+
+.internCardBody {
+    padding: 1.25rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.internCardTitle {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.internCardDesc {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.internCardContent {
+    flex: 1;
+}
+
+.internCardFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    margin-bottom: 1rem;
+}
+
+.internStatItem {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.internStatLabel {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.internStatLabel svg {
+    color: var(--color-primary-light);
+}
+
+.internStatValue {
+    font-family: var(--font-outfit);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--text);
+}

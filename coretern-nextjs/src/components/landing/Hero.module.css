@@ -1,0 +1,260 @@
+.hero {
+    position: relative;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    padding: 100px 0 60px;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+.heroBackground {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.heroBgGlow {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 900px;
+    height: 600px;
+    background: radial-gradient(ellipse at center,
+            rgba(99, 102, 241, 0.12) 0%,
+            rgba(6, 182, 212, 0.06) 40%,
+            transparent 70%);
+    pointer-events: none;
+}
+
+.heroGrid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(99, 102, 241, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99, 102, 241, 0.04) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+}
+
+.heroOrb1,
+.heroOrb2 {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.2;
+    animation: orbFloat 10s ease-in-out infinite alternate;
+}
+
+.heroOrb1 {
+    width: 500px;
+    height: 500px;
+    background: var(--color-primary);
+    top: -100px;
+    left: -150px;
+}
+
+.heroOrb2 {
+    width: 400px;
+    height: 400px;
+    background: var(--color-secondary);
+    bottom: -50px;
+    right: -100px;
+    animation-delay: -5s;
+}
+
+@keyframes orbFloat {
+    0% { transform: scale(1) translate(0, 0); }
+    100% { transform: scale(1.15) translate(30px, 20px); }
+}
+
+.heroContent {
+    position: relative;
+    z-index: 1;
+}
+
+.heroEyebrowLink {
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 2rem;
+}
+
+.heroEyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.65rem 1.75rem;
+    border-radius: 9999px;
+    background: linear-gradient(90deg,
+            rgba(99, 102, 241, 0.12) 0%,
+            rgba(6, 182, 212, 0.12) 50%,
+            rgba(99, 102, 241, 0.12) 100%);
+    background-size: 200% auto;
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-primary-light);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+    backdrop-filter: blur(12px);
+    position: relative;
+    overflow: hidden;
+    animation: eyebrowShimmer 4s linear infinite, eyebrowFloat 3s ease-in-out infinite;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.1);
+}
+
+@keyframes eyebrowShimmer {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+@keyframes eyebrowFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+.heroEyebrow::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: shimmerSwipe 3s infinite;
+    pointer-events: none;
+}
+
+@keyframes shimmerSwipe {
+    0% { left: -100%; }
+    100% { left: 200%; }
+}
+
+.heroEyebrow:hover {
+    background: rgba(99, 102, 241, 0.2);
+    border-color: var(--color-primary-light);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 15px 30px -10px rgba(99, 102, 241, 0.6);
+}
+
+.eyebrowLine1 {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.eyebrowTextSub {
+    opacity: 0.8;
+}
+
+@media (min-width: 769px) {
+    .heroEyebrow {
+        flex-direction: row;
+        gap: 0.65rem;
+    }
+    .eyebrowTextSub::before {
+        content: '- ';
+        opacity: 0.5;
+    }
+}
+
+.heroEyebrowDot {
+    width: 6px;
+    height: 6px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    animation: pulseDot 2s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+.heroTitle {
+    font-size: clamp(2.8rem, 8vw, 5.5rem);
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 1.75rem;
+    letter-spacing: -0.04em;
+}
+
+.heroDescription {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: var(--text-muted);
+    max-width: 680px;
+    margin: 0 auto 3rem;
+    line-height: 1.75;
+    font-weight: 400;
+}
+
+.heroActions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 4rem;
+}
+
+.heroStats {
+    display: flex;
+    gap: 3rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.heroStat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.heroStatValue {
+    font-family: var(--font-outfit);
+    font-size: 2rem;
+    font-weight: 800;
+    background: var(--grad-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+}
+
+.heroStatLabel {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .hero {
+        min-height: auto;
+        padding: 5rem 0 2rem;
+    }
+    .heroActions {
+        flex-direction: column;
+        align-items: center;
+    }
+    .heroStats {
+        gap: 2rem;
+    }
+    .heroEyebrowLink {
+        margin-top: 2.25rem;
+        margin-bottom: 1.75rem;
+    }
+    .heroEyebrow {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.85rem 1.75rem;
+        border-radius: 18px;
+        font-size: 0.82rem;
+        letter-spacing: 0.04em;
+    }
+}
