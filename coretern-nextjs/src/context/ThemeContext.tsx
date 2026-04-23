@@ -2,9 +2,15 @@
 
 import { createContext, useContext, useState, useEffect } from 'react';
 
-const ThemeContext = createContext();
+interface ThemeContextType {
+    theme: string;
+    toggleTheme: () => void;
+}
 
-export const ThemeProvider = ({ children }) => {
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+
+export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
+
     const [theme, setTheme] = useState('light');
 
     useEffect(() => {
