@@ -1,3 +1,4 @@
+import { NextRequest } from 'next/server';
 import dbConnect from '@/lib/db';
 import User from '@/models/User';
 import { generateToken } from '@/lib/auth';
@@ -7,7 +8,7 @@ import { OAuth2Client } from 'google-auth-library';
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // POST /api/auth/google
-export async function POST(request) {
+export async function POST(request: NextRequest) {
     try {
         await dbConnect();
         const { tokenId } = await request.json();

@@ -96,6 +96,8 @@ export const certificateAPI = {
         fetch(`${API_BASE}/certificates/my`, { headers: getAuthHeaders() }).then(handleResponse),
     verify: (certId: string) =>
         fetch(`${API_BASE}/certificates/verify/${certId}`).then(handleResponse),
+    download: (certId: string) =>
+        fetch(`${API_BASE}/certificates/download/${certId}`).then(handleResponse),
     issueManual: (body: any) =>
         fetch(`${API_BASE}/certificates/manual`, { method: 'POST', headers: getAuthHeaders(), body: JSON.stringify(body) }).then(handleResponse),
     getManual: () =>

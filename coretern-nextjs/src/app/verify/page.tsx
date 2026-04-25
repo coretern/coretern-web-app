@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { ShieldCheck, Loader2, AlertCircle, User, Book, Calendar } from 'lucide-react';
 import Link from 'next/link';
@@ -9,10 +10,34 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 
 export default function VerifyPage() {
-    const [id, setId] = useState('');
+    const searchParams = useSearchParams();
+    const queryId = searchParams.get('id') || '';
+    const [id, setId] = useState(queryId);
     const [certificate, setCertificate] = useState<any>(null);
     const [verifying, setVerifying] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (queryId) {
+            setId(queryId);
+            doVerify(queryId);
+        }
+    }, [queryId]);
+
+    const doVerify = async (certId: string) => {
+        if (!certId.trim()) return;
+        setVerifying(true);
+        setError(null);
+        setCertificate(null);
+        try {
+            const data = await certificateAPI.verify(certId.trim());
+            setCertificate(data.data);
+        } catch {
+            setError('Invalid or expired certificate ID');
+        } finally {
+            setVerifying(false);
+        }
+    };
 
     const handleVerify = async (e?: React.FormEvent) => {
         if (e) e.preventDefault();

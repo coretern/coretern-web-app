@@ -1,9 +1,26 @@
 import mongoose from 'mongoose';
 import dns from 'dns';
+import { Resolver } from 'dns';
 
-// Use Google Public DNS to resolve MongoDB Atlas SRV records
-// (fixes ECONNREFUSED on networks that block SRV DNS lookups)
-dns.setServers(['8.8.8.8', '8.8.4.4']);
+// Force ALL DNS resolution through Google Public DNS
+// This fixes ECONNREFUSED on networks that block SRV DNS lookups
+const resolver = new Resolver();
+resolver.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+
+// Override the global DNS resolver
+dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+
+// Also override dns.resolveSrv to use our custom resolver
+const originalResolveSrv = dns.resolveSrv;
+dns.resolveSrv = function (hostname: string, callback: any) {
+    resolver.resolveSrv(hostname, callback);
+} as typeof dns.resolveSrv;
+
+// Override dns.resolveTxt too (used by mongodb+srv)
+const originalResolveTxt = dns.resolveTxt;
+dns.resolveTxt = function (hostname: string, callback: any) {
+    resolver.resolveTxt(hostname, callback);
+} as typeof dns.resolveTxt;
 
 const MONGO_URI = process.env.MONGO_URI;
 
@@ -11,10 +28,10 @@ if (!MONGO_URI) {
     throw new Error('Please define the MONGO_URI environment variable');
 }
 
-let cached = global.mongoose;
+let cached = (global as any).mongoose;
 
 if (!cached) {
-    cached = global.mongoose = { conn: null, promise: null };
+    cached = (global as any).mongoose = { conn: null, promise: null };
 }
 
 async function dbConnect() {
@@ -25,8 +42,8 @@ async function dbConnect() {
     if (!cached.promise) {
         const opts = {
             bufferCommands: false,
-            serverSelectionTimeoutMS: 10000,  // 10s timeout instead of 30s default
-            connectTimeoutMS: 10000,
+            serverSelectionTimeoutMS: 15000,
+            connectTimeoutMS: 15000,
         };
         cached.promise = mongoose.connect(MONGO_URI!, opts).then((mongoose) => {
             console.log('MongoDB Connected...');

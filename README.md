@@ -174,4 +174,12 @@ A robust, secure, and scalable REST API providing data to both React application
 4.  **Premium Glassmorphism UI**: High-end visual aesthetics using pseudo-elements, dynamic blurs, and Framer Motion spring physics. 
 5.  **Digital Certificate Generation & Verification**: Students receive downloadable certificates that anybody can independently verify on the platform.
 6.  **Real-time Rich Text Editing**: Admins write comprehensive internship descriptions with bolding, lists, and links that dangerously render safely on the frontend.
-7.  **Fully Responsive**: All pages mathematically wrap and stack gracefully for mobile, tablet, and ultra-wide desktops..
+7.  **Fully Responsive**: All pages mathematically wrap and stack gracefully for mobile, tablet, and ultra-wide desktops.
+
+
+
+
+
+i want to tell you that there is a system in my site, that when a new user do enrollment in any intenship program after filling intenship enrollment form then they are supposed to pay for the program, so i have added the payment section in the enrollment form. and when they will enrolled then enrooled intenship will show in there profile. and they will also get a whatsapp grp link, in that enrolleled intenship, (whatapp gorup link will be already set via admin pannel WhatsApp Group Link). and they can join the whatsapp grp. and they will get View Lectures option to see the lectures (this lecture is set by admin from admin pannel for each entenship). so from there user can see the youtube suggested video by admin. and when now admin can issue the certificated to the user after complition of the inteship program. or admin can issue certificate anytime for that user for that enrolled inteship from the admin pannel Enrollments option (here all the enrolled intehsip is visible and at the action there will be a button to issue certificate), when admin will click that btn and issue certificate then a certicate will be generate for that user by taking enrollment deatil of user, which he provided during the enrollment time.  i have also a certificate template CoreTern_internship_Certificate.png where all the detail be printed as shown in the attached image. and there will be also preset QR code in the certificate to verify the certificate (that QR code contain certificate number like  - CERT-466CAB47). and user can download it from there dashboad in pdf format. and that certificate can be verify from this link (www.coretern.com/verify-certificate) 
+ 
+
