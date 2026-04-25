@@ -13,11 +13,11 @@ export default function ServicesPage() {
             <Navbar />
             <section className="min-h-screen pt-28 pb-20">
                 <div className="container">
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-16">
-                        <h1 className="text-[clamp(2.5rem,5vw,3.5rem)] font-extrabold mb-4 font-[family-name:var(--font-outfit)]">
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
+                        <h1 className="text-[clamp(1.75rem,4vw,2.5rem)] font-extrabold mb-3 font-[family-name:var(--font-outfit)]">
                             Our <span className="gradient-text">Services</span>
                         </h1>
-                        <p className="text-[var(--text-muted)] text-lg max-w-[600px] mx-auto">
+                        <p className="text-[var(--text-muted)] text-base max-w-[500px] mx-auto">
                             End-to-end technology solutions for businesses of all sizes
                         </p>
                     </motion.div>

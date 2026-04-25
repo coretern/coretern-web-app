@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, Award, MessageSquare, User, Loader2, ExternalLink, Clock, ArrowRight, LogOut, Settings, Phone, Calendar } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -81,17 +82,17 @@ export default function DashboardPage() {
             
             <div className="pt-32 pb-20 container max-w-7xl">
                 {/* Header Section */}
-                <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-12">
-                    <div className="flex items-center gap-6">
-                        <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-secondary)] flex items-center justify-center text-3xl font-black text-white shadow-lg shadow-[rgba(99,102,241,0.2)] font-[family-name:var(--font-outfit)]">
+                <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '2rem', marginBottom: '3rem', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                        <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: 'linear-gradient(135deg, var(--color-primary), var(--color-secondary))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', fontWeight: 900, color: 'white' }} className="outfit">
                             {user?.name?.[0]}
                         </div>
                         <div>
-                            <h1 className="text-3xl font-black font-[family-name:var(--font-outfit)] leading-tight">
+                            <h1 style={{ fontSize: '1.5rem', fontWeight: 800, lineHeight: 1.2 }} className="outfit">
                                 Hello, {user?.name?.split(' ')[0]} 👋
                             </h1>
-                            <p className="text-[var(--text-muted)] text-lg font-medium">{user?.email}</p>
-                            <div className="flex flex-wrap gap-2 mt-3">
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: 500 }}>{user?.email}</p>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.5rem' }}>
                                 {user?.phone && (
                                     <span className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[var(--surface)] border border-[var(--border)] text-xs font-bold text-[var(--text-muted)]">
                                         <Phone size={12} className="text-[var(--color-primary)]" /> {user.phone}
@@ -103,7 +104,7 @@ export default function DashboardPage() {
                             </div>
                         </div>
                     </div>
-                    <div className="flex gap-3">
+                    <div style={{ display: 'flex', gap: '0.75rem' }}>
                         <button className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-[var(--surface)] border border-[var(--border)] text-[var(--text-muted)] font-bold text-sm hover:text-[var(--text)] hover:border-[var(--color-primary)] transition-all cursor-pointer">
                             <Settings size={18} /> Edit Profile
                         </button>
@@ -116,9 +117,9 @@ export default function DashboardPage() {
                     </div>
                 </header>
 
-                <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-10">
+                <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: '2rem' }} className="dash-grid">
                     {/* Sidebar Stats */}
-                    <aside className="flex flex-col gap-5">
+                    <aside style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                         {[
                             { id: 'enrollments', label: 'Enrollments', value: enrollments.length, icon: BookOpen, color: 'primary' },
                             { id: 'certificates', label: 'Achievements', value: certificates.length, icon: Award, color: 'secondary' },
@@ -127,22 +128,22 @@ export default function DashboardPage() {
                             <button 
                                 key={item.id}
                                 onClick={() => setActiveTab(item.id)}
-                                className={`flex items-center gap-4 p-5 rounded-[2rem] border transition-all duration-300 text-left cursor-pointer group ${activeTab === item.id ? 'bg-[var(--surface)] border-[var(--color-primary)] shadow-xl' : 'bg-transparent border-[var(--border)] hover:border-[var(--color-primary)]'}`}
+                                style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 1.25rem', borderRadius: '1rem', border: activeTab === item.id ? '1px solid var(--color-primary)' : '1px solid var(--border)', background: activeTab === item.id ? 'var(--surface)' : 'transparent', textAlign: 'left', cursor: 'pointer', transition: 'all 0.3s' }}
                             >
-                                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 ${item.color === 'primary' ? 'bg-[#6366f1]/10 text-[#6366f1]' : item.color === 'secondary' ? 'bg-[#ec4899]/10 text-[#ec4899]' : 'bg-[#f59e0b]/10 text-[#f59e0b]'}`}>
-                                    <item.icon size={24} />
+                                <div style={{ width: '40px', height: '40px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: item.color === 'primary' ? 'rgba(99,102,241,0.1)' : item.color === 'secondary' ? 'rgba(236,72,153,0.1)' : 'rgba(245,158,11,0.1)', color: item.color === 'primary' ? '#6366f1' : item.color === 'secondary' ? '#ec4899' : '#f59e0b' }}>
+                                    <item.icon size={20} />
                                 </div>
                                 <div>
-                                    <h3 className="text-sm font-bold text-[var(--text-muted)] uppercase tracking-wider">{item.label}</h3>
-                                    <p className="text-2xl font-black font-[family-name:var(--font-outfit)]">{item.value}</p>
+                                    <h3 style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{item.label}</h3>
+                                    <p style={{ fontSize: '1.5rem', fontWeight: 900 }} className="outfit">{item.value}</p>
                                 </div>
                             </button>
                         ))}
 
-                        <div className="mt-4 p-8 rounded-[2.5rem] bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-secondary)] text-white relative overflow-hidden group cursor-pointer" onClick={() => router.push('/internships')}>
+                        <div style={{ marginTop: '0.5rem', padding: '1.5rem', borderRadius: '1.25rem', background: 'linear-gradient(135deg, var(--color-primary), var(--color-secondary))', color: 'white', position: 'relative', overflow: 'hidden', cursor: 'pointer' }} onClick={() => router.push('/internships')}>
                             <div className="absolute top-0 right-0 w-32 h-32 -mr-8 -mt-8 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
-                            <h4 className="text-xl font-black font-[family-name:var(--font-outfit)] relative z-10">New Programs</h4>
-                            <p className="text-white/80 text-sm font-medium mt-1 relative z-10">Explore latest internships</p>
+                            <h4 style={{ fontSize: '1.1rem', fontWeight: 800, position: 'relative', zIndex: 1 }} className="outfit">New Programs</h4>
+                            <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.85rem', fontWeight: 500, marginTop: '0.25rem', position: 'relative', zIndex: 1 }}>Explore latest internships</p>
                             <ArrowRight size={20} className="mt-6 relative z-10 group-hover:translate-x-2 transition-transform" />
                         </div>
                     </aside>
@@ -159,13 +160,13 @@ export default function DashboardPage() {
                             >
                                 {activeTab === 'enrollments' && (
                                     <div className="flex flex-col gap-6">
-                                        <div className="flex items-center gap-4 mb-2">
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
                                             <h2 className="text-2xl font-black font-[family-name:var(--font-outfit)]">My Internships</h2>
                                             <div className="h-1 flex-1 bg-[var(--border)] rounded-full opacity-30" />
                                         </div>
                                         
                                         {paidEnrollments.length === 0 ? (
-                                            <div className="bg-[var(--surface)] p-16 rounded-[3rem] border-2 border-dashed border-[var(--border)] text-center">
+                                            <div style={{ padding: '4rem 2rem', textAlign: 'center', background: 'var(--surface)', borderRadius: '1.5rem', border: '2px dashed var(--border)' }}>
                                                 <div className="w-20 h-20 bg-[var(--background)] rounded-full flex items-center justify-center mx-auto mb-6 text-[var(--text-muted)]">
                                                     <BookOpen size={40} />
                                                 </div>
@@ -174,9 +175,9 @@ export default function DashboardPage() {
                                             </div>
                                         ) : (
                                             paidEnrollments.map((enrol: any) => (
-                                                <div key={enrol._id} className="group bg-[var(--surface)] p-8 rounded-[2.5rem] border border-[var(--border)] flex flex-col md:flex-row items-center justify-between gap-8 hover:border-[var(--color-primary)] transition-all duration-300 shadow-sm hover:shadow-xl">
-                                                    <div className="flex items-center gap-8 flex-1">
-                                                        <div className="w-24 h-24 rounded-[2rem] bg-[var(--background)] border border-[var(--border)] flex items-center justify-center overflow-hidden shrink-0">
+                                                <div key={enrol._id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1.5rem', padding: '1.5rem', borderRadius: '1.25rem', background: 'var(--surface)', border: '1px solid var(--border)', flexWrap: 'wrap', transition: 'all 0.3s' }}>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', flex: 1 }}>
+                                                        <div style={{ width: '64px', height: '64px', borderRadius: '1rem', background: 'var(--background)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
                                                             {enrol.internship?.image ? (
                                                                 <img src={enrol.internship.image} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                                                             ) : (
@@ -184,13 +185,13 @@ export default function DashboardPage() {
                                                             )}
                                                         </div>
                                                         <div>
-                                                            <div className="flex items-center gap-3 mb-2">
+                                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.25rem' }}>
                                                                 <h3 className="text-xl font-black font-[family-name:var(--font-outfit)]">{enrol.internship?.title}</h3>
                                                                 <span className={`px-3 py-1 rounded-full text-[0.7rem] font-black uppercase tracking-wider ${enrol.status === 'completed' ? 'bg-[#22c55e]/10 text-[#22c55e]' : 'bg-[#6366f1]/10 text-[#6366f1]'}`}>
                                                                     {enrol.status}
                                                                 </span>
                                                             </div>
-                                                            <div className="flex flex-wrap gap-4 text-sm font-bold text-[var(--text-muted)]">
+                                                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)' }}>
                                                                 <span className="flex items-center gap-1.5"><Clock size={16} /> {enrol.internship?.duration}</span>
                                                                 <span className="flex items-center gap-1.5"><Calendar size={16} /> Enrolled {new Date(enrol.enrolledAt).toLocaleDateString()}</span>
                                                             </div>

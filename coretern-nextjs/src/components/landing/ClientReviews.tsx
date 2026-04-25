@@ -9,7 +9,7 @@ const ClientReviews = () => {
             id: 1,
             name: "Rahul Sharma",
             role: "Software Architect",
-            text: "CoreTern helped our team bridge the gap between academic theory and industry reality. Their specialized training modules are top-notch and highly recommended.",
+            text: "CoreTern helped our team bridge the gap between academic theory and industry reality. Their specialized training modules are top-notch.",
             rating: 5,
             image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop"
         },
@@ -17,7 +17,7 @@ const ClientReviews = () => {
             id: 2,
             name: "Anjali Gupta",
             role: "Product Manager",
-            text: "The quality of talent that comes out of CoreTern is exceptional. We've hired three interns who are now permanent team leads within our core engineering group.",
+            text: "The quality of talent that comes out of CoreTern is exceptional. We've hired three interns who are now permanent team leads.",
             rating: 5,
             image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop"
         },
@@ -25,34 +25,35 @@ const ClientReviews = () => {
             id: 3,
             name: "Vikram Malhotra",
             role: "Full Stack Developer",
-            text: "Their cloud infrastructure course was a game changer for my career. The hands-on projects and real-world scenarios were exactly what I needed to level up.",
+            text: "Their cloud infrastructure course was a game changer for my career. The hands-on projects were exactly what I needed.",
             rating: 4,
             image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=200&auto=format&fit=crop"
         }
     ];
 
     return (
-        <section className="py-[120px] relative overflow-hidden bg-[var(--background)]">
-            {/* Background Accents */}
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[rgba(99,102,241,0.05)] rounded-full blur-[120px] -mr-64 -mt-64" />
-            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[rgba(236,72,153,0.05)] rounded-full blur-[120px] -ml-64 -mb-64" />
+        <section style={{
+            padding: '60px 0 120px 0',
+            position: 'relative',
+            background: `radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(168, 85, 247, 0.08) 0%, transparent 40%)`,
+        }}>
+            <div className="container">
+                {/* Header */}
 
-            <div className="container relative z-10">
-                <header className="mb-20 max-w-2xl mx-auto text-center">
-                    <motion.span 
-                        initial={{ opacity: 0, y: 10 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="text-[0.75rem] font-black tracking-[0.3em] uppercase text-[var(--color-primary)] mb-4 block"
-                    >
-                        Testimonials
-                    </motion.span>
+                <header className="reviews-header" style={{ marginBottom: '40px' }}>
                     <motion.h2 
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
                         viewport={{ once: true }}
-                        className="text-[clamp(2.5rem,5vw,3.5rem)] font-black mb-6 font-[family-name:var(--font-outfit)] leading-[1.1] tracking-tight"
+                        className="outfit"
+                        style={{
+                            fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
+                            fontWeight: 800,
+                            marginBottom: '0.5rem',
+                            lineHeight: 1.1,
+                        }}
                     >
                         What Our <span className="gradient-text">Partners Say</span>
                     </motion.h2>
@@ -61,53 +62,76 @@ const ClientReviews = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
                         viewport={{ once: true }}
-                        className="text-[var(--text-muted)] text-lg font-medium leading-relaxed"
+                        style={{
+                            color: 'var(--text-muted)',
+                            fontSize: '1rem',
+                            maxWidth: '500px',
+                            lineHeight: 1.6,
+                        }}
                     >
-                        Join hundreds of successful professionals who have accelerated their careers through our industry-aligned programs.
+                        Join hundreds of successful professionals who elevated their careers with us.
                     </motion.p>
                 </header>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {/* Reviews Grid - exact match: repeat(3, 1fr), gap 40px */}
+                <div className="reviews-grid">
                     {reviews.map((review, index) => (
                         <motion.div
                             key={review.id}
-                            initial={{ opacity: 0, y: 30 }}
+                            initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.15, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                            transition={{ delay: index * 0.1 }}
                             viewport={{ once: true }}
-                            className="group relative bg-[var(--surface)] p-10 rounded-[2.5rem] border border-[var(--border)] transition-all duration-500 hover:border-[var(--color-primary)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:-translate-y-2"
+                            className="review-card glass"
                         >
-                            <div className="absolute top-10 right-10 opacity-10 group-hover:opacity-20 group-hover:scale-110 transition-all duration-500">
-                                <Quote size={60} className="text-[var(--color-primary)]" strokeWidth={1.5} />
+                            {/* Quote Icon - positioned absolutely */}
+                            <div className="review-quote-icon">
+                                <Quote size={24} />
                             </div>
 
                             {/* Stars */}
-                            <div className="flex gap-1 mb-8">
+                            <div style={{ display: 'flex', gap: '6px', marginBottom: '25px' }}>
                                 {[...Array(5)].map((_, i) => (
                                     <Star 
                                         key={i} 
                                         size={16} 
-                                        className={i < review.rating ? "text-[#fbbf24] fill-[#fbbf24]" : "text-[var(--border)]"} 
+                                        fill={i < review.rating ? "var(--color-primary)" : "none"} 
+                                        stroke={i < review.rating ? "var(--color-primary)" : "currentColor"} 
                                     />
                                 ))}
                             </div>
 
-                            <p className="text-[1.1rem] leading-[1.8] text-[var(--text)] mb-10 font-medium opacity-90 italic relative z-10">
+                            {/* Review Text */}
+                            <p style={{
+                                fontSize: '1.15rem',
+                                lineHeight: 1.8,
+                                color: 'var(--text)',
+                                marginBottom: '40px',
+                                fontStyle: 'italic',
+                                opacity: 0.9,
+                                flexGrow: 1,
+                            }}>
                                 &ldquo;{review.text}&rdquo;
                             </p>
 
-                            <div className="flex items-center gap-5 pt-6 border-t border-[rgba(255,255,255,0.05)]">
-                                <div className="relative">
-                                    <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-secondary)] rounded-2xl blur-lg opacity-0 group-hover:opacity-30 transition-all duration-500" />
-                                    <img 
-                                        src={review.image} 
-                                        alt={review.name} 
-                                        className="w-14 h-14 rounded-2xl object-cover border border-[var(--border)] relative z-10" 
-                                    />
-                                </div>
+                            {/* Reviewer Info */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
+                                <img 
+                                    src={review.image} 
+                                    alt={review.name} 
+                                    style={{
+                                        width: '56px',
+                                        height: '56px',
+                                        borderRadius: '16px',
+                                        objectFit: 'cover',
+                                        border: '2px solid rgba(255,255,255,0.1)',
+                                        padding: '2px',
+                                        background: 'white',
+                                    }}
+                                />
                                 <div>
-                                    <h4 className="text-[1.1rem] font-black font-[family-name:var(--font-outfit)] leading-none mb-1.5">{review.name}</h4>
-                                    <p className="text-[0.8rem] text-[var(--text-muted)] font-bold tracking-wide uppercase opacity-70">{review.role}</p>
+                                    <h4 className="outfit" style={{ fontSize: '1.1rem', fontWeight: 700, margin: 0 }}>{review.name}</h4>
+                                    <p style={{ margin: '4px 0 0', fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 500 }}>{review.role}</p>
                                 </div>
                             </div>
                         </motion.div>

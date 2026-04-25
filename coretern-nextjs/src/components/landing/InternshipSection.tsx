@@ -29,14 +29,14 @@ const InternshipSection = () => {
     if (!loading && internships.length === 0) return null;
 
     return (
-        <section className="relative py-20 bg-[var(--background)] overflow-hidden max-md:py-[40px_0_60px]">
+        <section className="relative py-20 bg-[var(--background)] overflow-hidden max-md:py-10">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(99,102,241,0.08)_0%,transparent_70%)] pointer-events-none z-0" />
             <div className="container">
-                <div className="mb-16 flex flex-col items-center text-center relative z-[1]">
-                    <h2 className="text-[clamp(2.5rem,5vw,3.5rem)] font-extrabold mb-6 tracking-[-0.02em] font-[family-name:var(--font-outfit)]">
+                <div className="mb-10 flex flex-col items-center text-center relative z-[1]">
+                    <h2 className="text-[clamp(1.75rem,4vw,2.5rem)] font-extrabold mb-3 tracking-[-0.02em] font-[family-name:var(--font-outfit)]">
                         Summer Internship <span className="text-[var(--color-primary)]">2026</span>
                     </h2>
-                    <p className="max-w-[700px] mx-auto text-[var(--text-muted)] text-[1.15rem] leading-[1.7]">
+                    <p className="max-w-[500px] mx-auto text-[var(--text-muted)] text-base leading-relaxed">
                         Kickstart your career with our industry-led internship programs. Gain practical experience and work on real-world projects.
                     </p>
                 </div>

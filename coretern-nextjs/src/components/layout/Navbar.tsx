@@ -69,14 +69,15 @@ const Navbar = () => {
 
     const navLinks = [
         { name: 'Home', path: '/' },
+        { name: 'Services', path: '/services' },
         { name: 'Internships', path: '/internships' },
         { name: 'Verify', path: '/verify' },
         { name: 'Contact', path: '/contact' },
     ];
 
     return (
-        <nav className={`fixed top-0 left-0 w-full z-[1000] py-[1.2rem] transition-all duration-[0.4s] ease-[cubic-bezier(0.16,1,0.3,1)] isolate ${scrolled ? 'py-[0.8rem] !bg-[var(--background)] backdrop-blur-none border-b border-[var(--border)] shadow-[0_4px_20px_rgba(0,0,0,0.2)]' : ''}`}>
-            <div className="container flex justify-between items-center gap-8">
+        <nav style={{ position: 'fixed', top: 0, left: 0, width: '100%', zIndex: 1000, padding: scrolled ? '0.85rem 0' : '1.2rem 0', transition: 'all 0.4s cubic-bezier(0.16,1,0.3,1)', background: scrolled ? 'var(--background)' : 'transparent', borderBottom: scrolled ? '1px solid var(--border)' : 'none', boxShadow: scrolled ? '0 2px 12px rgba(0,0,0,0.06)' : 'none' }}>
+            <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1.5rem' }}>
                 <Link href="/" className="flex items-center gap-[0.65rem] text-[1.35rem] font-extrabold shrink-0 font-[family-name:var(--font-outfit)]" onClick={handleLogoClick}>
                     <Image
                         src={theme === 'dark' ? "/coretern_Navbar_Logo_dark.png" : "/coretern_Navbar_Logo_light.png"}
@@ -89,12 +90,20 @@ const Navbar = () => {
                 </Link>
 
                 {/* Desktop Nav Links */}
-                <div className="hidden md:flex items-center gap-1.5 flex-1 justify-center">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', flex: 1, justifyContent: 'center' }} className="nav-links-desktop">
                     {navLinks.map((link) => (
                         <Link
                             key={link.name}
                             href={link.path}
-                            className={`px-5 py-2 rounded-full text-[0.95rem] font-semibold transition-all duration-300 ${pathname === link.path ? 'bg-[rgba(99,102,241,0.1)] text-[var(--color-primary)]' : 'text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[rgba(255,255,255,0.05)]'}`}
+                            style={{
+                                padding: '0.5rem 0.9rem',
+                                borderRadius: 'var(--radius-sm)',
+                                fontSize: '0.9rem',
+                                fontWeight: 500,
+                                transition: 'all 0.3s',
+                                color: pathname === link.path ? 'var(--color-primary)' : 'var(--text-muted)',
+                                background: pathname === link.path ? 'rgba(99,102,241,0.1)' : 'transparent',
+                            }}
                             onClick={() => handleNavLinkClick(link.path)}
                         >
                             {link.name}
@@ -102,10 +111,10 @@ const Navbar = () => {
                     ))}
                 </div>
 
-                <div className="flex items-center gap-4 shrink-0">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
                     {/* Theme Toggle */}
                     <button
-                        className="w-10 h-10 bg-transparent border-none text-[var(--text-muted)] cursor-pointer flex items-center justify-center rounded-xl transition-all duration-300 hover:text-[var(--text)] hover:bg-[rgba(255,255,255,0.05)]"
+                        style={{ width: '36px', height: '36px', background: 'var(--surface-1)', border: '1px solid var(--border)', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 'var(--radius-sm)', transition: 'all 0.3s', flexShrink: 0 }}
                         onClick={toggleTheme}
                         aria-label="Toggle Theme"
                     >
@@ -114,16 +123,16 @@ const Navbar = () => {
 
                     {/* Auth / User Menu (Desktop) */}
                     {isLoggedIn ? (
-                        <div className="user-menu-wrapper relative hidden md:block">
+                        <div className="user-menu-wrapper" style={{ position: 'relative' }}>
                             <button
-                                className="flex items-center gap-2.5 bg-[var(--surface-1)] border border-[var(--border)] text-[var(--text)] py-1.5 pr-4 pl-1.5 rounded-full cursor-pointer text-[0.9rem] font-bold transition-all duration-300 hover:border-[var(--color-primary)] hover:shadow-[0_0_15px_rgba(99,102,241,0.15)]"
+                                style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--surface-1)', border: '1px solid var(--border)', color: 'var(--text)', padding: '0.45rem 0.9rem 0.45rem 0.5rem', borderRadius: '999px', cursor: 'pointer', fontSize: '0.875rem', fontWeight: 500, transition: 'all 0.3s' }}
                                 onClick={() => setUserMenuOpen(!userMenuOpen)}
                             >
-                                <div className="w-8 h-8 bg-[var(--color-primary)] rounded-full flex items-center justify-center text-white shrink-0">
-                                    <User size={18} fill="currentColor" />
+                                <div style={{ width: '28px', height: '28px', background: 'var(--color-primary)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', flexShrink: 0 }}>
+                                    <User size={16} fill="currentColor" />
                                 </div>
-                                <span className="font-[family-name:var(--font-outfit)]">My Account</span>
-                                <ChevronDown size={14} className={`text-[var(--text-muted)] transition-transform duration-300 ${userMenuOpen ? 'rotate-180' : ''}`} />
+                                <span className="outfit">My Account</span>
+                                <ChevronDown size={14} style={{ color: 'var(--text-muted)', transition: 'transform 0.3s', transform: userMenuOpen ? 'rotate(180deg)' : 'none' }} />
                             </button>
 
                             <AnimatePresence>
@@ -133,14 +142,16 @@ const Navbar = () => {
                                         animate={{ opacity: 1, y: 0, scale: 1 }}
                                         exit={{ opacity: 0, y: 8, scale: 0.96 }}
                                         transition={{ duration: 0.15 }}
-                                        className="glass absolute top-[calc(100%+0.75rem)] right-0 min-w-[180px] rounded-[var(--radius-md)] border border-[var(--border)] overflow-hidden z-[2000] p-2 shadow-[var(--shadow-lg)]"
+                                        style={{ position: 'absolute', top: 'calc(100% + 0.75rem)', right: 0, minWidth: '180px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)', overflow: 'hidden', zIndex: 2000, padding: '0.5rem', background: 'var(--surface)', boxShadow: '0 20px 50px rgba(0,0,0,0.15)' }}
                                     >
-                                        <Link href="/dashboard" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-3 py-[0.65rem] px-[0.9rem] text-[0.875rem] text-[var(--text-muted)] rounded-[var(--radius-sm)] cursor-pointer transition-all duration-150 font-medium w-full hover:bg-[var(--surface-light)] hover:text-[var(--text)]">
+                                        <Link href="/dashboard" onClick={() => setUserMenuOpen(false)}
+                                            style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.65rem 0.9rem', fontSize: '0.875rem', color: 'var(--text-muted)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', transition: 'all 0.15s', fontWeight: 500 }}>
                                             <LayoutDashboard size={16} />
                                             Dashboard
                                         </Link>
-                                        <div className="h-px bg-[var(--border)] my-[0.4rem]" />
-                                        <button onClick={handleLogout} className="flex items-center gap-3 py-[0.65rem] px-[0.9rem] text-[0.875rem] text-[#ef4444] rounded-[var(--radius-sm)] cursor-pointer transition-all duration-150 font-medium bg-transparent border-none w-full text-left hover:bg-[rgba(239,68,68,0.1)]">
+                                        <div style={{ height: '1px', background: 'var(--border)', margin: '0.4rem 0' }} />
+                                        <button onClick={handleLogout}
+                                            style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.65rem 0.9rem', fontSize: '0.875rem', color: '#ef4444', borderRadius: 'var(--radius-sm)', cursor: 'pointer', transition: 'all 0.15s', fontWeight: 500, background: 'transparent', border: 'none', width: '100%', textAlign: 'left' }}>
                                             <LogOut size={16} />
                                             Sign Out
                                         </button>
@@ -149,17 +160,17 @@ const Navbar = () => {
                             </AnimatePresence>
                         </div>
                     ) : (
-                        <div className="hidden md:flex items-center gap-2">
-                            <Link href="/login" className="px-6 py-2 rounded-full bg-[var(--color-primary)] text-white text-[0.9rem] font-bold transition-all duration-300 hover:shadow-[0_4px_15px_rgba(99,102,241,0.3)] hover:-translate-y-0.5">Login</Link>
+                        <div className="nav-links-desktop" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <Link href="/login" style={{ padding: '0.5rem 1.5rem', borderRadius: '999px', background: 'var(--color-primary)', color: 'white', fontSize: '0.9rem', fontWeight: 600, transition: 'all 0.3s' }}>Login</Link>
                         </div>
                     )}
 
                     {/* Mobile Toggle */}
                     <button
-                        className="flex md:hidden bg-[var(--surface-1)] border border-[var(--border)] text-[var(--text)] cursor-pointer p-2 rounded-[var(--radius-sm)] transition-all duration-150 shrink-0 items-center justify-center hover:border-[var(--color-primary)] hover:bg-[var(--surface-light)]"
+                        className="mobile-toggle-btn"
                         onClick={() => setIsOpen(!isOpen)}
                     >
-                        {isOpen ? <X size={24} /> : <Menu size={24} />}
+                        {isOpen ? <X size={20} /> : <Menu size={20} />}
                     </button>
                 </div>
             </div>
@@ -171,31 +182,41 @@ const Navbar = () => {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="absolute top-full left-0 w-full z-[999] overflow-hidden bg-[var(--background)] border-b border-[var(--border)] backdrop-blur-[20px]"
+                        style={{ position: 'absolute', top: '100%', left: 0, width: '100%', zIndex: 999, overflow: 'hidden', background: 'var(--background)', borderBottom: '1px solid var(--border)' }}
                     >
-                        <div className="flex flex-col gap-2 py-8 px-6">
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '2rem 1.5rem' }}>
                             {navLinks.map((link) => (
                                 <Link
                                     key={link.name}
                                     href={link.path}
                                     onClick={() => handleNavLinkClick(link.path)}
-                                    className={`text-[1.1rem] py-4 px-5 rounded-[var(--radius-md)] bg-[rgba(255,255,255,0.03)] border border-transparent text-[var(--text-muted)] font-medium transition-colors duration-150 hover:text-[var(--text)] ${pathname === link.path ? '!bg-[rgba(99,102,241,0.1)] !border-[rgba(99,102,241,0.2)] !text-[var(--color-primary-light)]' : ''}`}
+                                    style={{
+                                        fontSize: '1.1rem',
+                                        padding: '1rem 1.25rem',
+                                        borderRadius: 'var(--radius-md)',
+                                        background: pathname === link.path ? 'rgba(99,102,241,0.1)' : 'rgba(0,0,0,0.03)',
+                                        border: pathname === link.path ? '1px solid rgba(99,102,241,0.2)' : '1px solid transparent',
+                                        color: pathname === link.path ? 'var(--color-primary)' : 'var(--text-muted)',
+                                        fontWeight: 500,
+                                        transition: 'all 0.15s',
+                                        display: 'block',
+                                    }}
                                 >
                                     {link.name}
                                 </Link>
                             ))}
-                            <div className="flex flex-col gap-4 pt-6 border-t border-[var(--border)] mt-4">
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border)', marginTop: '1rem' }}>
                                 {isLoggedIn ? (
                                     <>
-                                        <Link href="/dashboard" onClick={() => setIsOpen(false)} className="btn btn-outline w-full justify-center">
+                                        <Link href="/dashboard" onClick={() => setIsOpen(false)} className="btn btn-outline" style={{ width: '100%', justifyContent: 'center', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                             <LayoutDashboard size={16} /> Dashboard
                                         </Link>
-                                        <button onClick={() => { handleLogout(); setIsOpen(false); }} className="btn btn-danger w-full justify-center">
+                                        <button onClick={() => { handleLogout(); setIsOpen(false); }} className="btn btn-danger" style={{ width: '100%', justifyContent: 'center', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                             <LogOut size={16} /> Sign Out
                                         </button>
                                     </>
                                 ) : (
-                                    <Link href="/login" onClick={() => setIsOpen(false)} className="btn btn-primary w-full justify-center">Login</Link>
+                                    <Link href="/login" onClick={() => setIsOpen(false)} className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', textAlign: 'center' }}>Login</Link>
                                 )}
                             </div>
                         </div>

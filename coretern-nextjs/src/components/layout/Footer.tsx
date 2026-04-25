@@ -33,74 +33,118 @@ const Footer = () => {
             )
         },
         { 
-            name: 'Github', 
+            name: 'Facebook', 
             href: '#', 
-            svg: <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            svg: <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
         }
     ];
 
     return (
-        <footer className="bg-[var(--surface)] pt-24 pb-8 border-t border-[var(--border)] relative overflow-hidden">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-[image:var(--grad-primary)] opacity-30" />
-            <div className="container grid grid-cols-[1.5fr_1fr_1fr] gap-12 mb-16 max-md:grid-cols-1 max-md:gap-12 max-lg:grid-cols-2">
-                <div className="flex flex-col gap-6">
-                    <h3 className="text-[2rem] font-extrabold font-[family-name:var(--font-outfit)] gradient-text tracking-tight">CoreTern</h3>
-                    <p className="text-[var(--text-muted)] text-[1rem] leading-[1.7] max-w-[360px]">
-                        Empowering the next generation of tech leaders through world-class hands-on internship programs and professional mentorship.
-                    </p>
-                    <div className="flex gap-3">
-                        {socialLinks.map((item, i) => (
-                            <a key={i} href={item.href} className="w-10 h-10 rounded-xl bg-[rgba(255,255,255,0.03)] border border-[var(--border)] flex items-center justify-center text-[var(--text-muted)] transition-all duration-300 hover:bg-[image:var(--grad-primary)] hover:text-white hover:-translate-y-1 hover:border-transparent hover:shadow-[0_8px_20px_rgba(99,102,241,0.3)]">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                                    {item.svg}
-                                </svg>
-                            </a>
-                        ))}
+        <footer style={{
+            background: 'var(--surface)',
+            padding: '6rem 0 2rem',
+            borderTop: '1px solid var(--border)',
+            position: 'relative',
+            overflow: 'hidden',
+        }}>
+            {/* Top gradient line */}
+            <div style={{
+                position: 'absolute',
+                top: 0,
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '100%',
+                height: '1px',
+                background: 'var(--grad-primary)',
+                opacity: 0.3,
+            }} />
+
+            {/* Footer Grid - uses container for width, separate div for grid */}
+            <div className="container">
+                <div className="footer-grid">
+                    {/* Brand */}
+                    <div>
+                        <h3 className="outfit gradient-text" style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '1.5rem' }}>
+                            CoreTern
+                        </h3>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '1rem', lineHeight: 1.7, marginBottom: '2rem', maxWidth: '400px' }}>
+                            Empowering the next generation of tech leaders through world-class hands-on internship programs and professional mentorship.
+                        </p>
+                        <div style={{ display: 'flex', gap: '1rem' }}>
+                            {socialLinks.map((item, i) => (
+                                <a 
+                                    key={i} 
+                                    href={item.href} 
+                                    className="social-icon"
+                                    style={{
+                                        width: '40px',
+                                        height: '40px',
+                                        borderRadius: 'var(--radius-sm)',
+                                        background: 'var(--surface-1)',
+                                        border: '1px solid var(--border)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        color: 'var(--text-muted)',
+                                        transition: 'all 0.25s ease',
+                                    }}
+                                >
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                        {item.svg}
+                                    </svg>
+                                </a>
+                            ))}
+                        </div>
                     </div>
-                </div>
 
-                <div>
-                    <h4 className="text-[1.1rem] font-bold mb-6 text-[var(--text)] font-[family-name:var(--font-outfit)]">Quick Links</h4>
-                    <ul className="flex flex-col gap-3">
-                        {[
-                            { name: 'Home', path: '/' },
-                            { name: 'Summer Internship', path: '/internships' },
-                            { name: 'Verify Certificate', path: '/verify' },
-                            { name: 'Contact Us', path: '/contact' },
-                        ].map((link) => (
-                            <li key={link.name}>
-                                <Link href={link.path} className="text-[var(--text-muted)] text-[0.95rem] transition-colors duration-150 hover:text-[var(--color-primary)] hover:pl-[5px]">
-                                    {link.name}
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                    {/* Quick Links */}
+                    <div>
+                        <h4 className="outfit" style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1.5rem', color: 'var(--text)' }}>Quick Links</h4>
+                        <ul style={{ display: 'flex', flexDirection: 'column' }}>
+                            {[
+                                { name: 'Home', path: '/' },
+                                { name: 'Summer Internship', path: '/internships' },
+                                { name: 'Verify Certificate', path: '/verify' },
+                                { name: 'Contact Us', path: '/contact' },
+                            ].map((link) => (
+                                <li key={link.name} style={{ marginBottom: '0.75rem' }}>
+                                    <Link href={link.path} className="footer-link-item" style={{ color: 'var(--text-muted)', fontSize: '0.95rem', transition: 'color 0.15s ease' }}>
+                                        {link.name}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
 
-                <div>
-                    <h4 className="text-[1.1rem] font-bold mb-6 text-[var(--text)] font-[family-name:var(--font-outfit)]">Contact Us</h4>
-                    <ul className="flex flex-col gap-5">
-                        {[
-                            { icon: Mail, text: 'coreterndev@gmail.com' },
-                            { icon: Phone, text: '+91 98765 43210' },
-                            { icon: MapPin, text: 'Innovation Hub, Bangalore' },
-                        ].map((item, i) => (
-                            <li key={i} className="flex items-start gap-4 text-[var(--text-muted)] text-[0.95rem]">
-                                <item.icon size={18} className="text-[var(--color-primary)] mt-[0.2rem]" />
-                                <span>{item.text}</span>
-                            </li>
-                        ))}
-                    </ul>
+                    {/* Contact */}
+                    <div>
+                        <h4 className="outfit" style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1.5rem', color: 'var(--text)' }}>Contact Us</h4>
+                        <ul style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                            {[
+                                { icon: Mail, text: 'coreterndev@gmail.com' },
+                                { icon: Phone, text: '+91 98765 43210' },
+                                { icon: MapPin, text: 'Innovation Hub, Bangalore' },
+                            ].map((item, i) => (
+                                <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', color: 'var(--text-muted)', fontSize: '0.95rem' }}>
+                                    <item.icon size={18} style={{ color: 'var(--color-primary)', marginTop: '0.2rem', flexShrink: 0 }} />
+                                    <span>{item.text}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 </div>
             </div>
 
-            <div className="container pt-8 border-t border-[var(--border)] flex justify-between items-center text-[var(--text-muted)] text-[0.85rem] max-md:flex-col max-md:gap-4 max-md:text-center">
-                <p>© {new Date().getFullYear()} CoreTern Platforms. Designed for Future Innovators.</p>
-                <div className="flex gap-6 max-md:justify-center max-md:flex-wrap max-md:gap-4">
-                    <Link href="/terms" className="text-[var(--text-muted)] transition-colors duration-150 hover:text-[var(--color-primary)]">Terms</Link>
-                    <Link href="/privacy" className="text-[var(--text-muted)] transition-colors duration-150 hover:text-[var(--color-primary)]">Privacy</Link>
-                    <Link href="/refund-policy" className="text-[var(--text-muted)] transition-colors duration-150 hover:text-[var(--color-primary)]">Refund Policy</Link>
-                    <Link href="/about" className="text-[var(--text-muted)] transition-colors duration-150 hover:text-[var(--color-primary)]">About Us</Link>
+            {/* Footer Bottom */}
+            <div className="container">
+                <div className="footer-bottom">
+                    <p>© {new Date().getFullYear()} CoreTern Platforms. Designed for Future Innovators.</p>
+                    <div className="footer-legal-links">
+                        <Link href="/terms">Terms</Link>
+                        <Link href="/privacy">Privacy</Link>
+                        <Link href="/refund-policy">Refund Policy</Link>
+                        <Link href="/about">About Us</Link>
+                    </div>
                 </div>
             </div>
         </footer>

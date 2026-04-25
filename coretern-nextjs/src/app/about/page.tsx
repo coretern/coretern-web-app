@@ -9,7 +9,7 @@ export default function AboutPage() {
             <Navbar />
             <section className="min-h-screen pt-28 pb-20">
                 <div className="container max-w-[800px]">
-                    <h1 className="text-[clamp(2.5rem,5vw,3.5rem)] font-extrabold mb-8 font-[family-name:var(--font-outfit)]">
+                    <h1 className="text-[clamp(1.75rem,4vw,2.5rem)] font-extrabold mb-6 font-[family-name:var(--font-outfit)]">
                         About <span className="gradient-text">CoreTern</span>
                     </h1>
                     <div className="prose-custom">
