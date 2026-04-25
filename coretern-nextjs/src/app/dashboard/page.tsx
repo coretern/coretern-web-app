@@ -4,11 +4,12 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Award, MessageSquare, User, Loader2, Clock, ArrowRight, LogOut, Phone, Calendar, Mail, UserCircle, Save, Download, ExternalLink } from 'lucide-react';
+import { BookOpen, Award, MessageSquare, User, Loader2, Clock, ArrowRight, LogOut, Phone, Calendar, Mail, UserCircle, Save, Download, ExternalLink, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { authAPI, enrollmentAPI, certificateAPI, ticketAPI } from '@/lib/api';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import jsPDF from 'jspdf';
 
 export default function DashboardPage() {
     const [user, setUser] = useState<any>(null);
@@ -17,6 +18,9 @@ export default function DashboardPage() {
     const [tickets, setTickets] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('enrollments');
+    const [certPreviewUrl, setCertPreviewUrl] = useState<string | null>(null);
+    const [certPreviewData, setCertPreviewData] = useState<any>(null);
+    const [generatingPdf, setGeneratingPdf] = useState(false);
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -74,6 +78,10 @@ export default function DashboardPage() {
             canvas.width = img.width;  // 6250
             canvas.height = img.height; // 4419
             const ctx = canvas.getContext('2d')!;
+            
+            // Fill white background (necessary for JPEG compression)
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(img, 0, 0);
 
             const W = canvas.width;
@@ -127,21 +135,39 @@ export default function DashboardPage() {
                 ctx.drawImage(qrImg, W - 820, H - 720, qrSize, qrSize);
             }
 
-            // ===== Cert ID label below QR =====
-            ctx.font = 'bold 55px Arial, sans-serif';
-            ctx.fillStyle = '#c4973b';
-            ctx.textAlign = 'center';
-            ctx.fillText(`ID: ${d.certificateId}`, W - 610, H - 250);
+            // Set preview data using compressed JPEG for a 1-4MB PDF size
+            setCertPreviewUrl(canvas.toDataURL('image/jpeg', 0.8));
+            setCertPreviewData(d);
 
-            // Download as PNG
-            const link = document.createElement('a');
-            link.download = `${d.certificateId}_Certificate.png`;
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-
-            toast.success('Certificate downloaded!', { id: 'cert-dl' });
+            toast.success('Certificate generated successfully!', { id: 'cert-dl' });
         } catch (err: any) {
-            toast.error(err.message || 'Download failed', { id: 'cert-dl' });
+            toast.error(err.message || 'Failed to generate certificate', { id: 'cert-dl' });
+        }
+    };
+
+    const downloadAsPdf = () => {
+        if (!certPreviewUrl || !certPreviewData) return;
+        setGeneratingPdf(true);
+        try {
+            // Create PDF (landscape, mm, A4 defaults to 297x210)
+            const pdf = new jsPDF({
+                orientation: 'landscape',
+                unit: 'mm',
+                format: 'a4'
+            });
+
+            // A4 dimensions in mm: 297 x 210
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+
+            // Add image to fill the A4 page using JPEG format for optimal size
+            pdf.addImage(certPreviewUrl, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+            pdf.save(`${certPreviewData.certificateId}_Certificate.pdf`);
+            toast.success('Certificate downloaded successfully!');
+        } catch (error) {
+            toast.error('Failed to download PDF');
+        } finally {
+            setGeneratingPdf(false);
         }
     };
 
@@ -331,6 +357,49 @@ export default function DashboardPage() {
                 </div>
             </div>
             <Footer />
+
+            {/* Certificate Preview Modal */}
+            <AnimatePresence>
+                {certPreviewUrl && certPreviewData && (
+                    <div style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.8)', padding: '2rem' }}>
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            style={{ background: 'var(--surface)', borderRadius: '24px', overflow: 'hidden', width: '100%', maxWidth: '1000px', maxHeight: '90vh', display: 'flex', flexDirection: 'column', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)' }}
+                        >
+                            <div style={{ padding: '1.5rem 2rem', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--surface)' }}>
+                                <div>
+                                    <h3 style={{ fontSize: '1.25rem', fontWeight: 800 }} className="outfit">Certificate Preview</h3>
+                                    <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>ID: {certPreviewData.certificateId}</p>
+                                </div>
+                                <button onClick={() => { setCertPreviewUrl(null); setCertPreviewData(null); }} style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(239,68,68,0.1)', color: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', cursor: 'pointer', transition: 'all 0.2s' }}>
+                                    <X size={20} />
+                                </button>
+                            </div>
+                            <div style={{ padding: '2rem', overflowY: 'auto', flex: 1, display: 'flex', justifyContent: 'center', background: 'rgba(0,0,0,0.05)' }}>
+                                <img src={certPreviewUrl} alt="Certificate Preview" style={{ maxWidth: '100%', maxHeight: '60vh', objectFit: 'contain', borderRadius: '8px', boxShadow: '0 10px 25px rgba(0,0,0,0.1)' }} />
+                            </div>
+                            <div style={{ padding: '1.5rem 2rem', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'flex-end', background: 'var(--surface)', gap: '1rem' }}>
+                                <button
+                                    onClick={() => { setCertPreviewUrl(null); setCertPreviewData(null); }}
+                                    style={{ padding: '0.8rem 1.5rem', borderRadius: '12px', border: '1px solid var(--border)', background: 'transparent', color: 'var(--text)', fontWeight: 700, cursor: 'pointer' }}
+                                >
+                                    Close
+                                </button>
+                                <button
+                                    onClick={downloadAsPdf}
+                                    disabled={generatingPdf}
+                                    style={{ padding: '0.8rem 2rem', borderRadius: '12px', border: 'none', background: 'var(--color-secondary)', color: 'white', fontWeight: 700, cursor: generatingPdf ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', opacity: generatingPdf ? 0.7 : 1 }}
+                                >
+                                    {generatingPdf ? <Loader2 size={18} className="animate-spin" /> : <Download size={18} />}
+                                    {generatingPdf ? 'Generating PDF...' : 'Download as PDF'}
+                                </button>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
