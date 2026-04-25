@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { BookOpen, Award, MessageSquare, User, Loader2, ExternalLink, Clock, ArrowRight, LogOut } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { BookOpen, Award, MessageSquare, User, Loader2, ExternalLink, Clock, ArrowRight, LogOut, Settings, Phone, Calendar } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { authAPI, enrollmentAPI, certificateAPI, ticketAPI } from '@/lib/api';
 import Navbar from '@/components/layout/Navbar';
@@ -76,157 +76,213 @@ export default function DashboardPage() {
     const paidEnrollments = enrollments.filter((e: any) => e.paymentStatus === 'paid');
 
     return (
-        <div>
+        <div className="min-h-screen bg-[var(--background)]">
             <Navbar />
-            <section className="min-h-screen pt-24 pb-20 bg-[var(--background)]">
-                <div className="container">
-                    {/* Welcome Header */}
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
-                        <h1 className="text-3xl font-extrabold mb-2 font-[family-name:var(--font-outfit)]">
-                            Welcome back, <span className="gradient-text">{user?.name}</span>
-                        </h1>
-                        <p className="text-[var(--text-muted)]">Manage your internships, certificates, and support tickets</p>
-                    </motion.div>
-
-                    {/* Stats Cards */}
-                    <div className="grid grid-cols-4 gap-4 mb-10 max-md:grid-cols-2 max-sm:grid-cols-1">
-                        {[
-                            { label: 'Enrolled', value: paidEnrollments.length, color: 'var(--color-primary)' },
-                            { label: 'Completed', value: paidEnrollments.filter((e: any) => e.status === 'completed').length, color: 'var(--color-success)' },
-                            { label: 'Certificates', value: certificates.length, color: 'var(--color-secondary)' },
-                            { label: 'Tickets', value: tickets.filter((t: any) => t.status === 'open').length, color: 'var(--color-warning)' },
-                        ].map((stat, i) => (
-                            <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-                                className="glass p-5 rounded-2xl border border-[var(--border)]">
-                                <p className="text-[var(--text-muted)] text-sm mb-1">{stat.label}</p>
-                                <p className="text-3xl font-extrabold font-[family-name:var(--font-outfit)]" style={{ color: stat.color }}>{stat.value}</p>
-                            </motion.div>
-                        ))}
-                    </div>
-
-                    {/* Tabs */}
-                    <div className="flex gap-2 mb-8 overflow-x-auto pb-2">
-                        {tabs.map((tab) => (
-                            <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-                                className={`flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold border transition-all duration-200 whitespace-nowrap cursor-pointer ${activeTab === tab.id ? 'bg-[var(--color-primary)] text-white border-[var(--color-primary)]' : 'bg-[var(--surface)] text-[var(--text-muted)] border-[var(--border)] hover:border-[var(--color-primary)]'}`}>
-                                <tab.icon size={16} />
-                                {tab.label}
-                                {tab.count !== undefined && <span className="bg-[rgba(255,255,255,0.2)] px-2 py-0.5 rounded-full text-xs">{tab.count}</span>}
-                            </button>
-                        ))}
-                    </div>
-
-                    {/* Tab Content */}
-                    {activeTab === 'enrollments' && (
-                        <div className="grid gap-4">
-                            {paidEnrollments.length === 0 ? (
-                                <div className="glass p-12 rounded-2xl border border-[var(--border)] text-center">
-                                    <BookOpen className="mx-auto mb-4 text-[var(--text-muted)]" size={40} />
-                                    <h3 className="text-lg font-bold mb-2">No Enrollments Yet</h3>
-                                    <p className="text-[var(--text-muted)] mb-6">Start your journey by enrolling in an internship</p>
-                                    <button onClick={() => router.push('/internships')} className="btn btn-primary">
-                                        Browse Internships <ArrowRight size={16} />
-                                    </button>
-                                </div>
-                            ) : (
-                                paidEnrollments.map((enrol: any) => (
-                                    <div key={enrol._id} className="glass p-6 rounded-2xl border border-[var(--border)] flex items-center justify-between gap-4 max-md:flex-col max-md:items-start">
-                                        <div className="flex-1">
-                                            <div className="flex items-center gap-3 mb-2">
-                                                <h3 className="font-bold text-lg">{enrol.internship?.title}</h3>
-                                                <span className={`badge ${enrol.status === 'completed' ? 'badge-success' : enrol.status === 'enrolled' ? 'badge-primary' : 'badge-warning'}`}>
-                                                    {enrol.status}
-                                                </span>
-                                            </div>
-                                            <div className="flex gap-6 text-sm text-[var(--text-muted)]">
-                                                <span className="flex items-center gap-1"><Clock size={14} /> {enrol.internship?.duration}</span>
-                                                <span>Enrolled: {new Date(enrol.enrolledAt).toLocaleDateString()}</span>
-                                            </div>
-                                        </div>
-                                        {enrol.internship?.whatsappGroup && (
-                                            <a href={enrol.internship.whatsappGroup} target="_blank" rel="noreferrer" className="btn btn-outline btn-sm">
-                                                <ExternalLink size={14} /> WhatsApp Group
-                                            </a>
-                                        )}
-                                    </div>
-                                ))
-                            )}
+            
+            <div className="pt-32 pb-20 container max-w-7xl">
+                {/* Header Section */}
+                <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-12">
+                    <div className="flex items-center gap-6">
+                        <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-secondary)] flex items-center justify-center text-3xl font-black text-white shadow-lg shadow-[rgba(99,102,241,0.2)] font-[family-name:var(--font-outfit)]">
+                            {user?.name?.[0]}
                         </div>
-                    )}
-
-                    {activeTab === 'certificates' && (
-                        <div className="grid gap-4">
-                            {certificates.length === 0 ? (
-                                <div className="glass p-12 rounded-2xl border border-[var(--border)] text-center">
-                                    <Award className="mx-auto mb-4 text-[var(--text-muted)]" size={40} />
-                                    <h3 className="text-lg font-bold mb-2">No Certificates Yet</h3>
-                                    <p className="text-[var(--text-muted)]">Complete an internship to receive your certificate</p>
-                                </div>
-                            ) : (
-                                certificates.map((cert: any) => (
-                                    <div key={cert._id} className="glass p-6 rounded-2xl border border-[var(--border)] flex items-center justify-between gap-4 max-md:flex-col max-md:items-start">
-                                        <div>
-                                            <h3 className="font-bold text-lg mb-1">{cert.internship?.title}</h3>
-                                            <p className="text-[var(--text-muted)] text-sm">Certificate ID: {cert.certificateId}</p>
-                                            <p className="text-[var(--text-muted)] text-sm">Issued: {new Date(cert.issueDate).toLocaleDateString()}</p>
-                                        </div>
-                                        <button onClick={() => router.push(`/verify?id=${cert.certificateId}`)} className="btn btn-primary btn-sm">
-                                            View Certificate
-                                        </button>
-                                    </div>
-                                ))
-                            )}
-                        </div>
-                    )}
-
-                    {activeTab === 'tickets' && (
-                        <div className="grid gap-4">
-                            {tickets.length === 0 ? (
-                                <div className="glass p-12 rounded-2xl border border-[var(--border)] text-center">
-                                    <MessageSquare className="mx-auto mb-4 text-[var(--text-muted)]" size={40} />
-                                    <h3 className="text-lg font-bold mb-2">No Support Tickets</h3>
-                                    <p className="text-[var(--text-muted)] mb-6">Need help? Create a support ticket</p>
-                                    <button onClick={() => router.push('/contact')} className="btn btn-primary">
-                                        Contact Support <ArrowRight size={16} />
-                                    </button>
-                                </div>
-                            ) : (
-                                tickets.map((ticket: any) => (
-                                    <div key={ticket._id} className="glass p-6 rounded-2xl border border-[var(--border)]">
-                                        <div className="flex items-center justify-between mb-3">
-                                            <h3 className="font-bold">{ticket.subject}</h3>
-                                            <span className={`badge ${ticket.status === 'open' ? 'badge-warning' : ticket.status === 'resolved' ? 'badge-success' : 'badge-primary'}`}>
-                                                {ticket.status}
-                                            </span>
-                                        </div>
-                                        <p className="text-[var(--text-muted)] text-sm">#{ticket.ticketId} • {new Date(ticket.createdAt).toLocaleDateString()}</p>
-                                    </div>
-                                ))
-                            )}
-                        </div>
-                    )}
-
-                    {activeTab === 'profile' && user && (
-                        <div className="glass p-8 rounded-[var(--radius-xl)] border border-[var(--border)] max-w-[600px]">
-                            <h2 className="text-xl font-bold mb-6 font-[family-name:var(--font-outfit)]">Profile Settings</h2>
-                            <div className="grid gap-5">
-                                {[
-                                    { label: 'Name', value: user.name },
-                                    { label: 'Email', value: user.email },
-                                    { label: 'Phone', value: user.phone || 'Not set' },
-                                    { label: 'Gender', value: user.gender || 'Not set' },
-                                    { label: 'Member Since', value: new Date(user.createdAt).toLocaleDateString() },
-                                ].map((item, i) => (
-                                    <div key={i} className="flex justify-between items-center py-3 border-b border-[var(--border)] last:border-none">
-                                        <span className="text-[var(--text-muted)] text-sm font-medium">{item.label}</span>
-                                        <span className="font-semibold">{item.value}</span>
-                                    </div>
-                                ))}
+                        <div>
+                            <h1 className="text-3xl font-black font-[family-name:var(--font-outfit)] leading-tight">
+                                Hello, {user?.name?.split(' ')[0]} 👋
+                            </h1>
+                            <p className="text-[var(--text-muted)] text-lg font-medium">{user?.email}</p>
+                            <div className="flex flex-wrap gap-2 mt-3">
+                                {user?.phone && (
+                                    <span className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[var(--surface)] border border-[var(--border)] text-xs font-bold text-[var(--text-muted)]">
+                                        <Phone size={12} className="text-[var(--color-primary)]" /> {user.phone}
+                                    </span>
+                                )}
+                                <span className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[var(--surface)] border border-[var(--border)] text-xs font-bold text-[var(--text-muted)]">
+                                    <Clock size={12} className="text-[var(--color-secondary)]" /> Joined {new Date(user?.createdAt).toLocaleDateString()}
+                                </span>
                             </div>
                         </div>
-                    )}
+                    </div>
+                    <div className="flex gap-3">
+                        <button className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-[var(--surface)] border border-[var(--border)] text-[var(--text-muted)] font-bold text-sm hover:text-[var(--text)] hover:border-[var(--color-primary)] transition-all cursor-pointer">
+                            <Settings size={18} /> Edit Profile
+                        </button>
+                        <button 
+                            onClick={() => { localStorage.removeItem('token'); router.push('/login'); }}
+                            className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#ef4444]/5 border border-[#ef4444]/10 text-[#ef4444] font-bold text-sm hover:bg-[#ef4444]/10 transition-all cursor-pointer"
+                        >
+                            <LogOut size={18} /> Logout
+                        </button>
+                    </div>
+                </header>
+
+                <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-10">
+                    {/* Sidebar Stats */}
+                    <aside className="flex flex-col gap-5">
+                        {[
+                            { id: 'enrollments', label: 'Enrollments', value: enrollments.length, icon: BookOpen, color: 'primary' },
+                            { id: 'certificates', label: 'Achievements', value: certificates.length, icon: Award, color: 'secondary' },
+                            { id: 'tickets', label: 'Support Tickets', value: tickets.length, icon: MessageSquare, color: 'warning' },
+                        ].map((item) => (
+                            <button 
+                                key={item.id}
+                                onClick={() => setActiveTab(item.id)}
+                                className={`flex items-center gap-4 p-5 rounded-[2rem] border transition-all duration-300 text-left cursor-pointer group ${activeTab === item.id ? 'bg-[var(--surface)] border-[var(--color-primary)] shadow-xl' : 'bg-transparent border-[var(--border)] hover:border-[var(--color-primary)]'}`}
+                            >
+                                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 ${item.color === 'primary' ? 'bg-[#6366f1]/10 text-[#6366f1]' : item.color === 'secondary' ? 'bg-[#ec4899]/10 text-[#ec4899]' : 'bg-[#f59e0b]/10 text-[#f59e0b]'}`}>
+                                    <item.icon size={24} />
+                                </div>
+                                <div>
+                                    <h3 className="text-sm font-bold text-[var(--text-muted)] uppercase tracking-wider">{item.label}</h3>
+                                    <p className="text-2xl font-black font-[family-name:var(--font-outfit)]">{item.value}</p>
+                                </div>
+                            </button>
+                        ))}
+
+                        <div className="mt-4 p-8 rounded-[2.5rem] bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-secondary)] text-white relative overflow-hidden group cursor-pointer" onClick={() => router.push('/internships')}>
+                            <div className="absolute top-0 right-0 w-32 h-32 -mr-8 -mt-8 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
+                            <h4 className="text-xl font-black font-[family-name:var(--font-outfit)] relative z-10">New Programs</h4>
+                            <p className="text-white/80 text-sm font-medium mt-1 relative z-10">Explore latest internships</p>
+                            <ArrowRight size={20} className="mt-6 relative z-10 group-hover:translate-x-2 transition-transform" />
+                        </div>
+                    </aside>
+
+                    {/* Main Content */}
+                    <main>
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={activeTab}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                {activeTab === 'enrollments' && (
+                                    <div className="flex flex-col gap-6">
+                                        <div className="flex items-center gap-4 mb-2">
+                                            <h2 className="text-2xl font-black font-[family-name:var(--font-outfit)]">My Internships</h2>
+                                            <div className="h-1 flex-1 bg-[var(--border)] rounded-full opacity-30" />
+                                        </div>
+                                        
+                                        {paidEnrollments.length === 0 ? (
+                                            <div className="bg-[var(--surface)] p-16 rounded-[3rem] border-2 border-dashed border-[var(--border)] text-center">
+                                                <div className="w-20 h-20 bg-[var(--background)] rounded-full flex items-center justify-center mx-auto mb-6 text-[var(--text-muted)]">
+                                                    <BookOpen size={40} />
+                                                </div>
+                                                <h3 className="text-2xl font-black font-[family-name:var(--font-outfit)] mb-2">No active enrollments</h3>
+                                                <Link href="/internships" className="text-[var(--color-primary)] font-bold text-lg hover:underline">Start your career today →</Link>
+                                            </div>
+                                        ) : (
+                                            paidEnrollments.map((enrol: any) => (
+                                                <div key={enrol._id} className="group bg-[var(--surface)] p-8 rounded-[2.5rem] border border-[var(--border)] flex flex-col md:flex-row items-center justify-between gap-8 hover:border-[var(--color-primary)] transition-all duration-300 shadow-sm hover:shadow-xl">
+                                                    <div className="flex items-center gap-8 flex-1">
+                                                        <div className="w-24 h-24 rounded-[2rem] bg-[var(--background)] border border-[var(--border)] flex items-center justify-center overflow-hidden shrink-0">
+                                                            {enrol.internship?.image ? (
+                                                                <img src={enrol.internship.image} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                                            ) : (
+                                                                <span className="text-3xl font-black text-[var(--color-primary)]">{enrol.internship?.title?.[0]}</span>
+                                                            )}
+                                                        </div>
+                                                        <div>
+                                                            <div className="flex items-center gap-3 mb-2">
+                                                                <h3 className="text-xl font-black font-[family-name:var(--font-outfit)]">{enrol.internship?.title}</h3>
+                                                                <span className={`px-3 py-1 rounded-full text-[0.7rem] font-black uppercase tracking-wider ${enrol.status === 'completed' ? 'bg-[#22c55e]/10 text-[#22c55e]' : 'bg-[#6366f1]/10 text-[#6366f1]'}`}>
+                                                                    {enrol.status}
+                                                                </span>
+                                                            </div>
+                                                            <div className="flex flex-wrap gap-4 text-sm font-bold text-[var(--text-muted)]">
+                                                                <span className="flex items-center gap-1.5"><Clock size={16} /> {enrol.internship?.duration}</span>
+                                                                <span className="flex items-center gap-1.5"><Calendar size={16} /> Enrolled {new Date(enrol.enrolledAt).toLocaleDateString()}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                                                        {enrol.internship?.whatsappGroup && (
+                                                            <a href={enrol.internship.whatsappGroup} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-[#25d366]/10 border border-[#25d366]/20 text-[#25d366] font-bold text-sm hover:bg-[#25d366] hover:text-white transition-all">
+                                                                WhatsApp
+                                                            </a>
+                                                        )}
+                                                        <button className="flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl bg-[var(--color-primary)] text-white font-black text-sm hover:shadow-[0_8px_25px_rgba(99,102,241,0.4)] transition-all">
+                                                            View Lectures
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
+                                )}
+
+                                {activeTab === 'certificates' && (
+                                    <div className="flex flex-col gap-6">
+                                        <div className="flex items-center gap-4 mb-2">
+                                            <h2 className="text-2xl font-black font-[family-name:var(--font-outfit)]">Achievements</h2>
+                                            <div className="h-1 flex-1 bg-[var(--border)] rounded-full opacity-30" />
+                                        </div>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            {certificates.length === 0 ? (
+                                                <div className="col-span-full py-20 text-center bg-[var(--surface)] rounded-[3rem] border border-[var(--border)]">
+                                                    <Award size={60} className="mx-auto mb-6 text-[var(--text-muted)] opacity-30" />
+                                                    <p className="text-xl font-bold text-[var(--text-muted)]">Complete an internship to unlock rewards</p>
+                                                </div>
+                                            ) : (
+                                                certificates.map((cert: any) => (
+                                                    <div key={cert._id} className="bg-[var(--surface)] p-8 rounded-[2.5rem] border border-[var(--border)] group hover:border-[var(--color-secondary)] transition-all">
+                                                        <div className="w-14 h-14 bg-[#ec4899]/10 text-[#ec4899] rounded-2xl flex items-center justify-center mb-6">
+                                                            <Award size={32} />
+                                                        </div>
+                                                        <h3 className="text-xl font-black font-[family-name:var(--font-outfit)] mb-2">{cert.internship?.title}</h3>
+                                                        <p className="text-sm font-bold text-[var(--text-muted)] mb-6 tracking-tight uppercase">ID: {cert.certificateId}</p>
+                                                        <button onClick={() => router.push(`/verify?id=${cert.certificateId}`)} className="w-full py-4 rounded-2xl bg-[var(--color-secondary)] text-white font-black text-sm hover:shadow-[0_8px_25px_rgba(236,72,153,0.4)] transition-all">
+                                                            Verify & Download
+                                                        </button>
+                                                    </div>
+                                                ))
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {activeTab === 'tickets' && (
+                                    <div className="flex flex-col gap-6">
+                                        <div className="flex items-center gap-4 mb-2">
+                                            <h2 className="text-2xl font-black font-[family-name:var(--font-outfit)]">Support Center</h2>
+                                            <div className="h-1 flex-1 bg-[var(--border)] rounded-full opacity-30" />
+                                        </div>
+                                        <div className="grid gap-4">
+                                            {tickets.length === 0 ? (
+                                                <div className="py-20 text-center bg-[var(--surface)] rounded-[3rem] border border-[var(--border)]">
+                                                    <MessageSquare size={60} className="mx-auto mb-6 text-[var(--text-muted)] opacity-30" />
+                                                    <h3 className="text-2xl font-black font-[family-name:var(--font-outfit)] mb-2">Need Help?</h3>
+                                                    <p className="text-[var(--text-muted)] mb-8 font-medium">Create a ticket and our team will get back to you.</p>
+                                                    <button onClick={() => router.push('/contact')} className="px-8 py-4 rounded-2xl bg-[var(--color-primary)] text-white font-black hover:shadow-xl transition-all">New Support Ticket</button>
+                                                </div>
+                                            ) : (
+                                                tickets.map((ticket: any) => (
+                                                    <div key={ticket._id} className="bg-[var(--surface)] p-6 rounded-[2rem] border border-[var(--border)] flex justify-between items-center group hover:border-[var(--color-warning)] transition-all">
+                                                        <div>
+                                                            <div className="flex items-center gap-3 mb-1">
+                                                                <h3 className="text-lg font-black font-[family-name:var(--font-outfit)]">{ticket.subject}</h3>
+                                                                <span className={`px-2 py-0.5 rounded text-[0.65rem] font-black uppercase ${ticket.status === 'open' ? 'bg-[#f59e0b]/10 text-[#f59e0b]' : 'bg-[#22c55e]/10 text-[#22c55e]'}`}>
+                                                                    {ticket.status}
+                                                                </span>
+                                                            </div>
+                                                            <p className="text-xs font-bold text-[var(--text-muted)] opacity-70 tracking-widest uppercase">#{ticket.ticketId} • {new Date(ticket.createdAt).toLocaleDateString()}</p>
+                                                        </div>
+                                                        <div className="w-10 h-10 rounded-xl bg-[var(--background)] border border-[var(--border)] flex items-center justify-center text-[var(--text-muted)] group-hover:text-[var(--color-warning)] group-hover:border-[var(--color-warning)] transition-all">
+                                                            <ArrowRight size={18} />
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+                            </motion.div>
+                        </AnimatePresence>
+                    </main>
                 </div>
-            </section>
+            </div>
+
             <Footer />
         </div>
     );

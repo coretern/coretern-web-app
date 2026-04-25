@@ -45,7 +45,7 @@ const Hero = () => {
                     </h1>
 
                     <p className={styles.heroDescription}>
-                        Cutting-edge software solutions and premium internship programs that bridge the gap between education and industry excellence.
+                        Join premium internship programs designed to bridge the gap between education and industry excellence.
                     </p>
 
                     <div className={styles.heroActions}>
@@ -53,9 +53,6 @@ const Hero = () => {
                             <Code2 size={20} />
                             View Internships
                             <ArrowRight size={18} />
-                        </Link>
-                        <Link href="/services" className="btn btn-outline py-[0.9rem] px-8 text-base">
-                            Explore Services
                         </Link>
                     </div>
 

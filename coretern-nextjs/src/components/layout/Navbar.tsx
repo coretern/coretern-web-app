@@ -69,7 +69,6 @@ const Navbar = () => {
 
     const navLinks = [
         { name: 'Home', path: '/' },
-        { name: 'Services', path: '/services' },
         { name: 'Internships', path: '/internships' },
         { name: 'Verify', path: '/verify' },
         { name: 'Contact', path: '/contact' },
@@ -90,12 +89,12 @@ const Navbar = () => {
                 </Link>
 
                 {/* Desktop Nav Links */}
-                <div className="hidden md:flex items-center gap-1 flex-1 justify-center">
+                <div className="hidden md:flex items-center gap-1.5 flex-1 justify-center">
                     {navLinks.map((link) => (
                         <Link
                             key={link.name}
                             href={link.path}
-                            className={`px-[0.9rem] py-2 rounded-[var(--radius-sm)] text-[0.9rem] font-medium text-[var(--text-muted)] transition-colors duration-150 hover:text-[var(--text)] hover:bg-[var(--surface-light)] ${pathname === link.path ? '!text-[var(--color-primary-light)] bg-[rgba(99,102,241,0.1)]' : ''}`}
+                            className={`px-5 py-2 rounded-full text-[0.95rem] font-semibold transition-all duration-300 ${pathname === link.path ? 'bg-[rgba(99,102,241,0.1)] text-[var(--color-primary)]' : 'text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[rgba(255,255,255,0.05)]'}`}
                             onClick={() => handleNavLinkClick(link.path)}
                         >
                             {link.name}
@@ -103,28 +102,28 @@ const Navbar = () => {
                     ))}
                 </div>
 
-                <div className="flex items-center gap-3 shrink-0">
+                <div className="flex items-center gap-4 shrink-0">
                     {/* Theme Toggle */}
                     <button
-                        className="w-9 h-9 bg-[var(--surface-1)] border border-[var(--border)] text-[var(--text-muted)] cursor-pointer flex items-center justify-center rounded-[var(--radius-sm)] transition-all duration-150 shrink-0 hover:text-[var(--text)] hover:border-[var(--color-primary)] hover:bg-[rgba(99,102,241,0.1)]"
+                        className="w-10 h-10 bg-transparent border-none text-[var(--text-muted)] cursor-pointer flex items-center justify-center rounded-xl transition-all duration-300 hover:text-[var(--text)] hover:bg-[rgba(255,255,255,0.05)]"
                         onClick={toggleTheme}
                         aria-label="Toggle Theme"
                     >
-                        {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                        {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
                     </button>
 
                     {/* Auth / User Menu (Desktop) */}
                     {isLoggedIn ? (
                         <div className="user-menu-wrapper relative hidden md:block">
                             <button
-                                className="flex items-center gap-2 bg-[var(--surface-1)] border border-[var(--border)] text-[var(--text)] py-[0.45rem] pr-[0.9rem] pl-2 rounded-full cursor-pointer text-[0.875rem] font-medium font-[family-name:var(--font-inter)] transition-all duration-150 hover:border-[var(--color-primary)] hover:bg-[var(--surface-light)]"
+                                className="flex items-center gap-2.5 bg-[var(--surface-1)] border border-[var(--border)] text-[var(--text)] py-1.5 pr-4 pl-1.5 rounded-full cursor-pointer text-[0.9rem] font-bold transition-all duration-300 hover:border-[var(--color-primary)] hover:shadow-[0_0_15px_rgba(99,102,241,0.15)]"
                                 onClick={() => setUserMenuOpen(!userMenuOpen)}
                             >
-                                <div className="w-7 h-7 bg-[image:var(--grad-primary)] rounded-full flex items-center justify-center text-white shrink-0">
-                                    <User size={16} />
+                                <div className="w-8 h-8 bg-[var(--color-primary)] rounded-full flex items-center justify-center text-white shrink-0">
+                                    <User size={18} fill="currentColor" />
                                 </div>
-                                <span>My Account</span>
-                                <ChevronDown size={14} className={`text-[var(--text-muted)] transition-transform duration-150 ${userMenuOpen ? 'rotate-180' : ''}`} />
+                                <span className="font-[family-name:var(--font-outfit)]">My Account</span>
+                                <ChevronDown size={14} className={`text-[var(--text-muted)] transition-transform duration-300 ${userMenuOpen ? 'rotate-180' : ''}`} />
                             </button>
 
                             <AnimatePresence>
@@ -151,7 +150,7 @@ const Navbar = () => {
                         </div>
                     ) : (
                         <div className="hidden md:flex items-center gap-2">
-                            <Link href="/login" className="btn btn-primary btn-sm">Login</Link>
+                            <Link href="/login" className="px-6 py-2 rounded-full bg-[var(--color-primary)] text-white text-[0.9rem] font-bold transition-all duration-300 hover:shadow-[0_4px_15px_rgba(99,102,241,0.3)] hover:-translate-y-0.5">Login</Link>
                         </div>
                     )}
 
