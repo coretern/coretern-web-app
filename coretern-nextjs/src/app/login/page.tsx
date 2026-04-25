@@ -4,16 +4,14 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Mail, Lock, ArrowRight, Eye, EyeOff, Loader2, Sparkles } from 'lucide-react';
+import { Mail, Lock, Loader2 } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
 import toast from 'react-hot-toast';
 import { authAPI } from '@/lib/api';
-import Navbar from '@/components/layout/Navbar';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
@@ -46,95 +44,109 @@ export default function LoginPage() {
         }
     };
 
+    const s = {
+        page: { minHeight: '100vh', display: 'flex', flexDirection: 'column' as const, alignItems: 'center', justifyContent: 'center', padding: '2rem 1rem', position: 'relative' as const, overflow: 'hidden' as const, background: 'var(--background)' },
+        backLink: { alignSelf: 'flex-start' as const, padding: '0.55rem 1.1rem', borderRadius: 'var(--radius-md)', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text)', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', transition: 'all 0.3s', background: 'var(--surface)', border: '1px solid var(--border)', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', marginBottom: '1.5rem', textDecoration: 'none' },
+        blob: { position: 'fixed' as const, top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '60vw', height: '60vw', maxWidth: '800px', background: 'radial-gradient(circle, var(--color-primary) 0%, transparent 70%)', filter: 'blur(80px)', opacity: 0.1, zIndex: -1, pointerEvents: 'none' as const },
+        card: { width: '100%', maxWidth: '460px', borderRadius: 'var(--radius-xl)', background: 'var(--surface)', border: '1px solid var(--border)', position: 'relative' as const, zIndex: 10, boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04)' },
+        header: { textAlign: 'center' as const, marginBottom: '2.5rem' },
+        title: { fontSize: 'clamp(1.75rem, 5vw, 2.25rem)', fontWeight: 800, marginBottom: '0.5rem', color: 'var(--text)', letterSpacing: '-0.02em' },
+        subtitle: { fontSize: '0.95rem', color: 'var(--text-muted)' },
+        formGroup: { marginBottom: '1.25rem' },
+        label: { display: 'block', fontSize: '0.8rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.6rem', textTransform: 'uppercase' as const, letterSpacing: '0.03em' },
+        inputWrap: { position: 'relative' as const, display: 'flex', alignItems: 'center' },
+        input: { width: '100%', padding: '0.85rem 1rem 0.85rem 3rem', borderRadius: 'var(--radius-md)', background: 'var(--background)', border: '1px solid var(--border)', color: 'var(--text)', fontSize: '0.95rem', outline: 'none', transition: 'all 0.3s' },
+        inputIcon: { position: 'absolute' as const, left: '1rem', color: 'var(--text-muted)', pointerEvents: 'none' as const },
+        forgotLink: { textAlign: 'right' as const, marginTop: '-0.5rem', marginBottom: '1.5rem' },
+        btn: { width: '100%', padding: '1rem', fontSize: '1rem', fontWeight: 700, borderRadius: 'var(--radius-md)', background: 'linear-gradient(135deg, var(--color-primary), var(--color-secondary))', color: 'white', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', letterSpacing: '0.02em', transition: 'all 0.3s' },
+        divider: { display: 'flex', alignItems: 'center', margin: '1.5rem 0' },
+        dividerLine: { flex: 1, height: '1px', background: 'var(--border)' },
+        dividerText: { padding: '0 1rem', fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 },
+        googleWrap: { display: 'flex', flexDirection: 'column' as const, alignItems: 'center', justifyContent: 'center', width: '100%' },
+        termsText: { fontSize: '11px', color: 'var(--text-muted)', marginTop: '10px', textAlign: 'center' as const },
+        footer: { textAlign: 'center' as const, marginTop: '2.5rem', fontSize: '0.95rem', color: 'var(--text-muted)', paddingTop: '2rem', borderTop: '1px solid var(--border)' },
+    };
+
     return (
-        <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
-            <Navbar />
-            {/* Background effects */}
-            <div className="absolute inset-0 -z-10">
-                <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[radial-gradient(ellipse_at_center,rgba(99,102,241,0.1)_0%,transparent_70%)] pointer-events-none" />
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(99,102,241,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.03)_1px,transparent_1px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_50%,black,transparent)]" />
+        <div style={s.page}>
+            <div style={{ width: '100%', maxWidth: '460px' }}>
+                <Link href="/" style={s.backLink}>
+                    <span style={{ fontSize: '1.1rem' }}>←</span> Back to Home
+                </Link>
             </div>
+            <div style={s.blob} />
 
             <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                className="w-full max-w-[440px] mx-4"
+                transition={{ duration: 0.6 }}
+                style={{ ...s.card, padding: '3rem 2.5rem' }}
+                className="auth-card"
             >
-                <div className="glass rounded-[var(--radius-xl)] p-10 border border-[var(--border)] shadow-[var(--shadow-lg)]">
-                    {/* Header */}
-                    <div className="text-center mb-8">
-                        <div className="w-14 h-14 bg-[image:var(--grad-primary)] rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-[var(--shadow-primary)]">
-                            <Sparkles className="text-white" size={26} />
+                <header style={s.header}>
+                    <h1 style={s.title} className="outfit">Welcome Back</h1>
+                    <p style={s.subtitle}>Access your personalized dashboard</p>
+                </header>
+
+                <form onSubmit={handleSubmit}>
+                    <div style={s.formGroup}>
+                        <label style={s.label}>Email Address</label>
+                        <div style={s.inputWrap}>
+                            <input
+                                type="email" style={s.input} placeholder="name@example.com"
+                                value={email} onChange={(e) => setEmail(e.target.value)} required
+                            />
+                            <Mail style={s.inputIcon} size={18} />
                         </div>
-                        <h1 className="text-[2rem] font-extrabold mb-2 font-[family-name:var(--font-outfit)]">Welcome Back</h1>
-                        <p className="text-[var(--text-muted)] text-[0.95rem]">Sign in to continue your journey</p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-                        <div className="form-group">
-                            <div className="input-wrapper">
-                                <Mail className="input-icon" size={18} />
-                                <input
-                                    type="email" className="auth-input" placeholder="Email address"
-                                    value={email} onChange={(e) => setEmail(e.target.value)} required
-                                />
-                            </div>
+                    <div style={s.formGroup}>
+                        <label style={s.label}>Password</label>
+                        <div style={s.inputWrap}>
+                            <input
+                                type="password" style={s.input} placeholder="••••••••"
+                                value={password} onChange={(e) => setPassword(e.target.value)} required
+                            />
+                            <Lock style={s.inputIcon} size={18} />
                         </div>
-
-                        <div className="form-group">
-                            <div className="input-wrapper">
-                                <Lock className="input-icon" size={18} />
-                                <input
-                                    type={showPassword ? 'text' : 'password'} className="auth-input !pr-12"
-                                    placeholder="Password" value={password}
-                                    onChange={(e) => setPassword(e.target.value)} required
-                                />
-                                <button
-                                    type="button"
-                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] bg-transparent border-none cursor-pointer hover:text-[var(--text)]"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                >
-                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                                </button>
-                            </div>
-                        </div>
-
-                        <div className="flex justify-end -mt-2">
-                            <Link href="/forgot-password" className="text-[0.85rem] text-[var(--color-primary)] font-medium hover:underline">
-                                Forgot password?
-                            </Link>
-                        </div>
-
-                        <button type="submit" disabled={loading} className="btn btn-primary w-full !py-[0.85rem] !text-base">
-                            {loading ? <Loader2 className="animate-spin" size={20} /> : <>Sign In <ArrowRight size={18} /></>}
-                        </button>
-                    </form>
-
-                    {/* Divider */}
-                    <div className="flex items-center gap-4 my-6">
-                        <div className="flex-1 h-px bg-[var(--border)]" />
-                        <span className="text-[var(--text-muted)] text-[0.8rem] font-medium">OR</span>
-                        <div className="flex-1 h-px bg-[var(--border)]" />
                     </div>
 
-                    {/* Google Login */}
-                    <div className="flex justify-center">
-                        <GoogleLogin
-                            onSuccess={handleGoogleSuccess}
-                            onError={() => toast.error('Google login failed')}
-                            theme="filled_black"
-                            shape="pill"
-                            size="large"
-                            width="100%"
-                        />
-                    </div>
-
-                    <p className="text-center text-[var(--text-muted)] text-[0.9rem] mt-8">
-                        Don&apos;t have an account?{' '}
-                        <Link href="/register" className="text-[var(--color-primary)] font-semibold hover:underline">
-                            Create one
+                    <div style={s.forgotLink}>
+                        <Link href="/forgot-password" style={{ fontSize: '0.85rem', color: 'var(--color-primary)', fontWeight: 600 }}>
+                            Forgot Password?
                         </Link>
+                    </div>
+
+                    <button type="submit" disabled={loading} style={{ ...s.btn, opacity: loading ? 0.7 : 1 }}>
+                        {loading ? <Loader2 className="animate-spin" size={20} /> : 'Sign In'}
+                    </button>
+                </form>
+
+                <div style={s.divider}>
+                    <div style={s.dividerLine} />
+                    <span style={s.dividerText}>OR</span>
+                    <div style={s.dividerLine} />
+                </div>
+
+                <div style={s.googleWrap}>
+                    <GoogleLogin
+                        onSuccess={handleGoogleSuccess}
+                        onError={() => toast.error('Google login failed')}
+                        theme="filled_blue"
+                        shape="pill"
+                    />
+                    <p style={s.termsText}>
+                        By continuing, you agree to our{' '}
+                        <Link href="/terms" target="_blank" style={{ color: 'var(--color-primary)', textDecoration: 'none' }}>Terms</Link>
+                        {' '}&{' '}
+                        <Link href="/privacy" target="_blank" style={{ color: 'var(--color-primary)', textDecoration: 'none' }}>Privacy Policy</Link>.
+                    </p>
+                </div>
+
+                <div style={s.footer}>
+                    <p>
+                        Don&apos;t have an account?{' '}
+                        <Link href="/register" style={{ color: 'var(--color-primary)', fontWeight: 700, padding: '0.2rem 0.4rem', borderRadius: '4px' }}>Sign Up</Link>
                     </p>
                 </div>
             </motion.div>

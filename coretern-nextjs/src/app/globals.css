@@ -1175,6 +1175,14 @@ section {
   }
 }
 
+/* ===== AUTH PAGES RESPONSIVE ===== */
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 2rem 1.25rem !important;
+    border-radius: var(--radius-lg) !important;
+  }
+}
+
 /* ===== FADE IN ANIMATION ===== */
 @keyframes fadeIn {
   from {
