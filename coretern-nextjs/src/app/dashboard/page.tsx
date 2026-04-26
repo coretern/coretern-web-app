@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Award, MessageSquare, User, Loader2, Clock, ArrowRight, LogOut, Phone, Calendar, Mail, UserCircle, Save, Download, ExternalLink, X, Shield } from 'lucide-react';
+import { BookOpen, Award, MessageSquare, User, Loader2, Clock, ArrowRight, LogOut, Phone, Calendar, Mail, UserCircle, Save, Download, ExternalLink, X, Shield, Pencil, Lock, Camera } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { authAPI, enrollmentAPI, certificateAPI, ticketAPI } from '@/lib/api';
 import Navbar from '@/components/layout/Navbar';
@@ -22,6 +22,18 @@ export default function DashboardPage() {
     const [certPreviewData, setCertPreviewData] = useState<any>(null);
     const [generatingPdf, setGeneratingPdf] = useState(false);
     const [isAdminViewing, setIsAdminViewing] = useState(false);
+    
+    // Profile Forms
+    const [profileForm, setProfileForm] = useState({ name: '', phone: '', gender: '' });
+    const [passwordForm, setPasswordForm] = useState({ currentPassword: '', newPassword: '', otp: '' });
+    const [updatingProfile, setUpdatingProfile] = useState(false);
+    const [changingPassword, setChangingPassword] = useState(false);
+    const [showProfileModal, setShowProfileModal] = useState(false);
+    const [showPasswordOtp, setShowPasswordOtp] = useState(false);
+    const [avatarFile, setAvatarFile] = useState<File | null>(null);
+    const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -33,6 +45,8 @@ export default function DashboardPage() {
             try {
                 const userData = await authAPI.me();
                 setUser(userData.data);
+                setProfileForm({ name: userData.data.name || '', phone: userData.data.phone || '', gender: userData.data.gender || '' });
+                
                 const [enrolRes, certRes, ticketRes] = await Promise.allSettled([
                     enrollmentAPI.getMy(), certificateAPI.getMy(), ticketAPI.getMy()
                 ]);
@@ -180,11 +194,57 @@ export default function DashboardPage() {
         ));
     };
 
+    const handleUpdateProfile = async () => {
+        setUpdatingProfile(true);
+        try {
+            let res;
+            if (avatarFile) {
+                const formData = new FormData();
+                formData.append('name', profileForm.name);
+                formData.append('phone', profileForm.phone);
+                formData.append('gender', profileForm.gender);
+                formData.append('avatar', avatarFile);
+                res = await authAPI.updateProfile(formData);
+            } else {
+                res = await authAPI.updateProfile(profileForm);
+            }
+            setUser(res.data);
+            setAvatarFile(null);
+            setAvatarPreview(null);
+            toast.success('Profile updated successfully!');
+        } catch (err: any) { toast.error(err.message || 'Failed to update profile'); }
+        finally { setUpdatingProfile(false); }
+    };
+
+    const handleRequestPasswordOtp = async () => {
+        setChangingPassword(true);
+        try {
+            await authAPI.requestSetPasswordOtp();
+            toast.success('OTP sent to your email!');
+            setShowPasswordOtp(true);
+        } catch (err: any) { toast.error(err.message || 'Failed to send OTP'); }
+        finally { setChangingPassword(false); }
+    };
+
+    const handleChangePassword = async () => {
+        setChangingPassword(true);
+        try {
+            const res = await authAPI.changePassword(passwordForm);
+            if (res.token) {
+                localStorage.setItem('token', res.token);
+            }
+            toast.success(user?.hasPassword ? 'Password changed successfully!' : 'Password set successfully!');
+            setPasswordForm({ currentPassword: '', newPassword: '', otp: '' });
+            setShowPasswordOtp(false);
+            setUser({ ...user, hasPassword: true });
+        } catch (err: any) { toast.error(err.message || 'Failed to save password'); }
+        finally { setChangingPassword(false); }
+    };
+
     const sidebarItems = [
         { id: 'enrollments', label: 'Enrollments', value: displayEnrollments.length, icon: BookOpen, bg: 'rgba(99,102,241,0.1)', color: '#6366f1', border: 'rgba(99,102,241,0.2)', clickable: true },
         { id: 'achievements', label: 'Achievements', value: certificates.length, icon: Award, bg: 'rgba(6,182,212,0.1)', color: '#06b6d4', border: 'rgba(6,182,212,0.2)', clickable: false },
         { id: 'tickets', label: 'Support Tickets', value: tickets.length, icon: MessageSquare, bg: 'rgba(245,158,11,0.1)', color: '#f59e0b', border: 'rgba(245,158,11,0.2)', clickable: true },
-        { id: 'profile', label: 'Profile', value: null, icon: User, bg: 'rgba(99,102,241,0.1)', color: '#6366f1', border: 'rgba(99,102,241,0.2)', clickable: true },
     ];
 
     return (
@@ -214,12 +274,15 @@ export default function DashboardPage() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '0 0 2.5rem', padding: '1.5rem 2rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '20px', position: 'relative', overflow: 'hidden', flexWrap: 'wrap', gap: '1.5rem' }}>
                     <div style={{ position: 'absolute', top: '-50%', right: '-10%', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', position: 'relative', zIndex: 1 }}>
-                        <div style={{ width: '60px', height: '60px', borderRadius: '18px', background: 'linear-gradient(135deg, var(--color-primary), var(--color-secondary))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', fontWeight: 800, color: 'white', boxShadow: '0 12px 24px rgba(99,102,241,0.3)', flexShrink: 0 }} className="outfit">
-                            {user?.name?.[0]}
+                        <div style={{ width: '60px', height: '60px', borderRadius: '18px', background: 'linear-gradient(135deg, var(--color-primary), var(--color-secondary))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', fontWeight: 800, color: 'white', boxShadow: '0 12px 24px rgba(99,102,241,0.3)', flexShrink: 0, overflow: 'hidden' }} className="outfit">
+                            {user?.avatar ? <img src={user.avatar} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : user?.name?.[0]}
                         </div>
                         <div>
-                            <h1 style={{ fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', fontWeight: 700, marginBottom: '0.2rem' }} className="outfit">
-                                Hello, {user?.name?.split(' ')[0]} 👋
+                            <h1 style={{ fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', fontWeight: 700, marginBottom: '0.2rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }} className="outfit">
+                                {user?.name?.split(' ')[0]}
+                                <button onClick={() => setShowProfileModal(true)} title="Edit Profile" style={{ background: 'var(--color-primary)', color: 'white', border: 'none', borderRadius: '50%', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: '0.2s', boxShadow: '0 4px 10px rgba(99,102,241,0.3)' }}>
+                                    <Pencil size={14} />
+                                </button>
                             </h1>
                             <span style={{ color: 'var(--color-primary)', fontWeight: 600, fontSize: '0.95rem' }}>{user?.email}</span>
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.5rem' }}>
@@ -374,36 +437,7 @@ export default function DashboardPage() {
                                         ))}
                                     </div>
                                 )}
-
-                                {activeTab === 'profile' && (
-                                    <div>
-                                        <h2 style={{ fontSize: '1.35rem', fontWeight: 700, marginBottom: '1.5rem' }} className="outfit">Profile Settings</h2>
-                                        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '20px', padding: '2rem' }}>
-                                            <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--color-primary)', marginBottom: '1.25rem', paddingBottom: '0.75rem', borderBottom: '1px solid var(--border)' }} className="outfit">Personal Information</h3>
-                                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.25rem' }}>
-                                                {[
-                                                    { label: 'Full Name', value: user?.name, icon: User, disabled: false },
-                                                    { label: 'Email', value: user?.email, icon: Mail, disabled: true },
-                                                    { label: 'Phone', value: user?.phone || '', icon: Phone, disabled: false },
-                                                    { label: 'Gender', value: user?.gender || '', icon: UserCircle, disabled: true },
-                                                ].map((field) => (
-                                                    <div key={field.label}>
-                                                        <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.4rem', display: 'block' }}>{field.label}</label>
-                                                        <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                                                            <field.icon size={16} style={{ position: 'absolute', left: '0.85rem', color: 'var(--color-primary)', opacity: 0.6, pointerEvents: 'none' }} />
-                                                            <input type="text" defaultValue={field.value} disabled={field.disabled}
-                                                                style={{ width: '100%', padding: '0.7rem 1rem 0.7rem 2.75rem', background: field.disabled ? 'var(--border)' : 'var(--background)', border: '1px solid var(--border)', borderRadius: '10px', color: 'var(--text)', fontSize: '0.9rem', outline: 'none', opacity: field.disabled ? 0.7 : 1 }} />
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                            <div style={{ display: 'flex', gap: '1rem', paddingTop: '1.5rem', marginTop: '1.5rem', borderTop: '1px solid var(--border)' }}>
-                                                <button style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.7rem 1.5rem', borderRadius: '12px', background: 'var(--color-primary)', color: 'white', fontWeight: 700, fontSize: '0.85rem', border: 'none', cursor: 'pointer' }}><Save size={16} /> Save Changes</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-
+                                {/* Removed profile tab content - moved to modal below */}
                             </motion.div>
                         </AnimatePresence>
                     </main>
@@ -456,6 +490,166 @@ export default function DashboardPage() {
 
             {/* Cashfree SDK Script */}
             <script src="https://sdk.cashfree.com/js/v3/cashfree.js" async />
+
+            {/* Profile Modal */}
+            <AnimatePresence>
+                {showProfileModal && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)', zIndex: 1000, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '5rem 1rem 2rem', overflowY: 'auto' }}
+                        onClick={() => setShowProfileModal(false)}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.95, y: 20 }}
+                            animate={{ scale: 1, y: 0 }}
+                            exit={{ scale: 0.95, y: 20 }}
+                            onClick={(e) => e.stopPropagation()}
+                            style={{ background: 'var(--background)', width: '100%', maxWidth: '600px', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 24px 48px rgba(0,0,0,0.2)', display: 'flex', flexDirection: 'column', margin: 'auto' }}
+                        >
+                            <div style={{ padding: '1.5rem 2rem', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--surface)', position: 'sticky', top: 0, zIndex: 10 }}>
+                                <h2 style={{ fontSize: '1.35rem', fontWeight: 700 }} className="outfit">Profile Settings</h2>
+                                <button onClick={() => { setShowProfileModal(false); setAvatarPreview(null); setAvatarFile(null); }} style={{ background: 'var(--border)', border: 'none', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text)' }}>
+                                    <X size={16} />
+                                </button>
+                            </div>
+                            
+                            <div style={{ padding: '2rem', overflowY: 'auto' }}>
+                                <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--color-primary)', marginBottom: '1.25rem', paddingBottom: '0.75rem', borderBottom: '1px solid var(--border)' }} className="outfit">Personal Information</h3>
+                                
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '2rem' }}>
+                                    <div style={{ position: 'relative', width: '80px', height: '80px', borderRadius: '24px', background: 'linear-gradient(135deg, var(--color-primary), var(--color-secondary))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', fontWeight: 800, color: 'white', boxShadow: '0 12px 24px rgba(99,102,241,0.2)', flexShrink: 0, overflow: 'hidden' }}>
+                                        {(avatarPreview || user?.avatar) ? <img src={avatarPreview || user?.avatar} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : user?.name?.[0]}
+                                        <button onClick={() => fileInputRef.current?.click()} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, border: 'none', color: 'white', cursor: 'pointer', transition: 'opacity 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.opacity = '1'} onMouseLeave={(e) => e.currentTarget.style.opacity = '0'}>
+                                            <Camera size={24} />
+                                        </button>
+                                        <input type="file" ref={fileInputRef} hidden accept="image/jpeg, image/png, .jpg, .jpeg, .png" onChange={(e) => {
+                                            const file = e.target.files?.[0];
+                                            if (file) {
+                                                if (file.size > 3 * 1024 * 1024) {
+                                                    toast.error('Image must be less than 3MB');
+                                                    return;
+                                                }
+                                                if (!['image/jpeg', 'image/png'].includes(file.type)) {
+                                                    toast.error('Only JPG and PNG images are allowed');
+                                                    return;
+                                                }
+                                                setAvatarFile(file);
+                                                setAvatarPreview(URL.createObjectURL(file));
+                                            }
+                                        }} />
+                                    </div>
+                                    <div>
+                                        <h4 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '0.2rem' }} className="outfit">Profile Picture</h4>
+                                        <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Click the image to upload a new one. (Max 3MB, JPG/PNG)</p>
+                                    </div>
+                                </div>
+
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.25rem' }}>
+                                    <div>
+                                        <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.4rem', display: 'block' }}>Full Name</label>
+                                        <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                                            <User size={16} style={{ position: 'absolute', left: '0.85rem', color: 'var(--color-primary)', opacity: 0.6, pointerEvents: 'none' }} />
+                                            <input type="text" value={profileForm.name} onChange={(e) => setProfileForm({...profileForm, name: e.target.value})} style={{ width: '100%', padding: '0.7rem 1rem 0.7rem 2.75rem', background: 'var(--background)', border: '1px solid var(--border)', borderRadius: '10px', color: 'var(--text)', fontSize: '0.9rem', outline: 'none', transition: 'all 0.2s' }} />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.4rem', display: 'block' }}>Email</label>
+                                        <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                                            <Mail size={16} style={{ position: 'absolute', left: '0.85rem', color: 'var(--color-primary)', opacity: 0.6, pointerEvents: 'none' }} />
+                                            <input type="text" value={user?.email || ''} disabled style={{ width: '100%', padding: '0.7rem 1rem 0.7rem 2.75rem', background: 'var(--border)', border: '1px solid var(--border)', borderRadius: '10px', color: 'var(--text)', fontSize: '0.9rem', outline: 'none', opacity: 0.7 }} />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.4rem', display: 'block' }}>Phone Number</label>
+                                        <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                                            <Phone size={16} style={{ position: 'absolute', left: '0.85rem', color: 'var(--color-primary)', opacity: 0.6, pointerEvents: 'none' }} />
+                                            <input type="tel" maxLength={10} value={profileForm.phone} onChange={(e) => setProfileForm({...profileForm, phone: e.target.value.replace(/\D/g, '')})} style={{ width: '100%', padding: '0.7rem 1rem 0.7rem 2.75rem', background: 'var(--background)', border: '1px solid var(--border)', borderRadius: '10px', color: 'var(--text)', fontSize: '0.9rem', outline: 'none', transition: 'all 0.2s' }} />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.4rem', display: 'block' }}>Gender</label>
+                                        <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                                            <UserCircle size={16} style={{ position: 'absolute', left: '0.85rem', color: 'var(--color-primary)', opacity: 0.6, pointerEvents: 'none' }} />
+                                            <select value={profileForm.gender} onChange={(e) => setProfileForm({...profileForm, gender: e.target.value})} style={{ width: '100%', padding: '0.7rem 1rem 0.7rem 2.75rem', background: 'var(--background)', border: '1px solid var(--border)', borderRadius: '10px', color: 'var(--text)', fontSize: '0.9rem', outline: 'none', appearance: 'none', transition: 'all 0.2s' }}>
+                                                <option value="" disabled>Select Gender</option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style={{ display: 'flex', gap: '1rem', paddingTop: '1.25rem', marginTop: '1.25rem', borderTop: '1px solid var(--border)' }}>
+                                    <button onClick={handleUpdateProfile} disabled={updatingProfile} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.7rem 1.5rem', borderRadius: '12px', background: 'var(--color-primary)', color: 'white', fontWeight: 700, fontSize: '0.85rem', border: 'none', cursor: 'pointer', transition: 'all 0.2s', opacity: updatingProfile ? 0.7 : 1 }}>
+                                        {updatingProfile ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />} Save Changes
+                                    </button>
+                                </div>
+
+                                <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--color-primary)', marginBottom: '1.25rem', marginTop: '2.5rem', paddingBottom: '0.75rem', borderBottom: '1px solid var(--border)' }} className="outfit">Security Settings</h3>
+                                {user?.hasPassword ? (
+                                    <>
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.25rem' }}>
+                                            <div>
+                                                <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.4rem', display: 'block' }}>Current Password</label>
+                                                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                                                    <Lock size={16} style={{ position: 'absolute', left: '0.85rem', color: 'var(--color-primary)', opacity: 0.6, pointerEvents: 'none' }} />
+                                                    <input type="password" placeholder="••••••••" value={passwordForm.currentPassword} onChange={(e) => setPasswordForm({...passwordForm, currentPassword: e.target.value})} style={{ width: '100%', padding: '0.7rem 1rem 0.7rem 2.75rem', background: 'var(--background)', border: '1px solid var(--border)', borderRadius: '10px', color: 'var(--text)', fontSize: '0.9rem', outline: 'none' }} />
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.4rem', display: 'block' }}>New Password</label>
+                                                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                                                    <Lock size={16} style={{ position: 'absolute', left: '0.85rem', color: 'var(--color-primary)', opacity: 0.6, pointerEvents: 'none' }} />
+                                                    <input type="password" placeholder="••••••••" minLength={6} value={passwordForm.newPassword} onChange={(e) => setPasswordForm({...passwordForm, newPassword: e.target.value})} style={{ width: '100%', padding: '0.7rem 1rem 0.7rem 2.75rem', background: 'var(--background)', border: '1px solid var(--border)', borderRadius: '10px', color: 'var(--text)', fontSize: '0.9rem', outline: 'none' }} />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style={{ display: 'flex', gap: '1rem', paddingTop: '1.25rem', marginTop: '1.25rem', borderTop: '1px solid var(--border)' }}>
+                                            <button onClick={handleChangePassword} disabled={changingPassword || !passwordForm.newPassword || !passwordForm.currentPassword} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.7rem 1.5rem', borderRadius: '12px', background: 'var(--color-primary)', color: 'white', fontWeight: 700, fontSize: '0.85rem', border: 'none', cursor: 'pointer', transition: 'all 0.2s', opacity: changingPassword || !passwordForm.newPassword || !passwordForm.currentPassword ? 0.7 : 1 }}>
+                                                {changingPassword ? <Loader2 size={16} className="animate-spin" /> : <Lock size={16} />} Update Password
+                                            </button>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.25rem' }}>
+                                            <div>
+                                                <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.4rem', display: 'block' }}>New Password</label>
+                                                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                                                    <Lock size={16} style={{ position: 'absolute', left: '0.85rem', color: 'var(--color-primary)', opacity: 0.6, pointerEvents: 'none' }} />
+                                                    <input type="password" placeholder="••••••••" minLength={6} value={passwordForm.newPassword} onChange={(e) => setPasswordForm({...passwordForm, newPassword: e.target.value})} disabled={showPasswordOtp} style={{ width: '100%', padding: '0.7rem 1rem 0.7rem 2.75rem', background: 'var(--background)', border: '1px solid var(--border)', borderRadius: '10px', color: 'var(--text)', fontSize: '0.9rem', outline: 'none', opacity: showPasswordOtp ? 0.7 : 1 }} />
+                                                </div>
+                                            </div>
+                                            {showPasswordOtp && (
+                                                <div>
+                                                    <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.4rem', display: 'block' }}>Verification OTP</label>
+                                                    <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                                                        <Shield size={16} style={{ position: 'absolute', left: '0.85rem', color: 'var(--color-primary)', opacity: 0.6, pointerEvents: 'none' }} />
+                                                        <input type="text" placeholder="6-digit OTP" maxLength={6} value={passwordForm.otp} onChange={(e) => setPasswordForm({...passwordForm, otp: e.target.value.replace(/\D/g, '')})} style={{ width: '100%', padding: '0.7rem 1rem 0.7rem 2.75rem', background: 'var(--background)', border: '1px solid var(--border)', borderRadius: '10px', color: 'var(--text)', fontSize: '0.9rem', outline: 'none', letterSpacing: '0.2rem' }} />
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div style={{ display: 'flex', gap: '1rem', paddingTop: '1.25rem', marginTop: '1.25rem', borderTop: '1px solid var(--border)' }}>
+                                            {!showPasswordOtp ? (
+                                                <button onClick={handleRequestPasswordOtp} disabled={changingPassword || passwordForm.newPassword.length < 6} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.7rem 1.5rem', borderRadius: '12px', background: 'var(--color-primary)', color: 'white', fontWeight: 700, fontSize: '0.85rem', border: 'none', cursor: 'pointer', transition: 'all 0.2s', opacity: changingPassword || passwordForm.newPassword.length < 6 ? 0.7 : 1 }}>
+                                                    {changingPassword ? <Loader2 size={16} className="animate-spin" /> : <Lock size={16} />} Request OTP to Set Password
+                                                </button>
+                                            ) : (
+                                                <button onClick={handleChangePassword} disabled={changingPassword || passwordForm.otp.length !== 6} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.7rem 1.5rem', borderRadius: '12px', background: 'var(--color-primary)', color: 'white', fontWeight: 700, fontSize: '0.85rem', border: 'none', cursor: 'pointer', transition: 'all 0.2s', opacity: changingPassword || passwordForm.otp.length !== 6 ? 0.7 : 1 }}>
+                                                    {changingPassword ? <Loader2 size={16} className="animate-spin" /> : <Shield size={16} />} Verify & Set Password
+                                                </button>
+                                            )}
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }

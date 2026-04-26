@@ -13,6 +13,7 @@ const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [user, setUser] = useState<any>(null);
     const pathname = usePathname();
     const router = useRouter();
     const { theme, toggleTheme } = useTheme();
@@ -30,6 +31,22 @@ const Navbar = () => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         setIsLoggedIn(!!token);
+        
+        if (token) {
+            import('@/lib/api').then(({ authAPI }) => {
+                authAPI.me()
+                    .then(res => setUser(res.data))
+                    .catch(() => {
+                        // Silently handle if token is invalid or expired
+                        localStorage.removeItem('token');
+                        setIsLoggedIn(false);
+                        setUser(null);
+                    });
+            });
+        } else {
+            setUser(null);
+        }
+
         if (pathname !== '/') {
             setScrolled(true);
         } else {
@@ -127,10 +144,16 @@ const Navbar = () => {
                                 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--surface-1)', border: '1px solid var(--border)', color: 'var(--text)', padding: '0.45rem 0.9rem 0.45rem 0.5rem', borderRadius: '999px', cursor: 'pointer', fontSize: '0.875rem', fontWeight: 500, transition: 'all 0.3s' }}
                                 onClick={() => setUserMenuOpen(!userMenuOpen)}
                             >
-                                <div style={{ width: '28px', height: '28px', background: 'var(--color-primary)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', flexShrink: 0 }}>
-                                    <User size={16} fill="currentColor" />
+                                <div style={{ width: '28px', height: '28px', background: 'var(--color-primary)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', flexShrink: 0, overflow: 'hidden', fontWeight: 'bold' }}>
+                                    {user?.avatar ? (
+                                        <img src={user.avatar} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    ) : user?.name ? (
+                                        user.name[0]
+                                    ) : (
+                                        <User size={16} fill="currentColor" />
+                                    )}
                                 </div>
-                                <span className="outfit">My Account</span>
+                                <span className="outfit">{user?.name ? user.name.split(' ')[0] : 'My Account'}</span>
                                 <ChevronDown size={14} style={{ color: 'var(--text-muted)', transition: 'transform 0.3s', transform: userMenuOpen ? 'rotate(180deg)' : 'none' }} />
                             </button>
 

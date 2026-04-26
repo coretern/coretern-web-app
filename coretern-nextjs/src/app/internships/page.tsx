@@ -6,6 +6,7 @@ import { Search, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { internshipAPI } from '@/lib/api';
 import InternshipCard from '@/components/landing/InternshipCard';
+import SkeletonCard from '@/components/ui/SkeletonCard';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 
@@ -71,8 +72,10 @@ export default function InternshipsPage() {
                     </div>
 
                     {loading ? (
-                        <div className="flex justify-center py-20">
-                            <Loader2 className="animate-spin text-[var(--color-primary)]" size={40} />
+                        <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-8 max-md:grid-cols-1 max-md:max-w-[450px] max-md:mx-auto">
+                            {[1, 2, 3, 4, 5, 6].map((i) => (
+                                <SkeletonCard key={i} />
+                            ))}
                         </div>
                     ) : filtered.length === 0 ? (
                         <div className="text-center py-20 text-[var(--text-muted)]">

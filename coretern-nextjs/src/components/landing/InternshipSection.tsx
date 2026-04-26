@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Loader2 } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import InternshipCard from './InternshipCard';
+import SkeletonCard from '../ui/SkeletonCard';
 
 const InternshipSection = () => {
     const [internships, setInternships] = useState([]);
@@ -42,8 +43,10 @@ const InternshipSection = () => {
                 </div>
 
                 {loading ? (
-                    <div className="flex justify-center items-center py-20">
-                        <Loader2 className="animate-spin text-[var(--color-primary)]" size={40} />
+                    <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-10 mb-16 relative z-[1] max-md:grid-cols-1 max-md:gap-8 max-md:max-w-[450px] max-md:mx-auto">
+                        {[1, 2, 3].map((i) => (
+                            <SkeletonCard key={i} />
+                        ))}
                     </div>
                 ) : (
                     <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-10 mb-16 relative z-[1] max-md:grid-cols-1 max-md:gap-8 max-md:max-w-[450px] max-md:mx-auto">

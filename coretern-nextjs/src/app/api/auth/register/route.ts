@@ -41,17 +41,18 @@ export async function POST(request) {
         }
 
         try {
-            await sendEmail({
+            // Fire and forget email to prevent hanging the response
+            sendEmail({
                 email: user.email,
                 subject: 'Email Verification OTP',
                 message: `Your verification OTP is: ${otp}. It will expire in 10 minutes.`,
                 html: `<h3>Email Verification</h3><p>Your verification OTP is: <strong>${otp}</strong></p><p>It will expire in 10 minutes.</p>`
-            });
+            }).catch(err => console.error('Email send error:', err));
 
             return successResponse({ message: 'OTP sent to email. Please verify to complete registration.' });
         } catch (err) {
-            console.error('Email send error:', err);
-            return errorResponse('Email could not be sent', 500);
+            console.error('Registration success response error:', err);
+            return errorResponse('Something went wrong after saving user', 500);
         }
     } catch (err) {
         return handleApiError(err);

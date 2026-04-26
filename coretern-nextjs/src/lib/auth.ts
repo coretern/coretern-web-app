@@ -27,9 +27,15 @@ export async function getAuthUser(request) {
 
         if (!user) return null;
 
-        // Check token version
+        // Check token version (gracefully handle old tokens without version)
         const currentVersion = user.tokenVersion || 0;
-        if (decoded.version !== currentVersion) {
+        const decodedVersion = decoded.version || 0;
+        if (decodedVersion !== currentVersion) {
+            return null;
+        }
+
+        // Check if user is suspended
+        if (user.status === 'suspended') {
             return null;
         }
 
@@ -90,7 +96,14 @@ export async function identifyUser(request) {
     try {
         await dbConnect();
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        return await User.findById(decoded.id);
+        const user = await User.findById(decoded.id);
+        if (!user || user.status === 'suspended') return null;
+        
+        const currentVersion = user.tokenVersion || 0;
+        const decodedVersion = decoded.version || 0;
+        if (decodedVersion !== currentVersion) return null;
+
+        return user;
     } catch (err) {
         return null;
     }

@@ -62,7 +62,14 @@ export default function AdminUsers() {
                         <tbody>
                             {filtered.map((u: any) => (
                                 <tr key={u._id}>
-                                    <td className="font-semibold">{u.name}</td>
+                                    <td className="font-semibold">
+                                        <div className="flex items-center gap-3">
+                                            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--color-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', overflow: 'hidden', flexShrink: 0 }}>
+                                                {u.avatar ? <img src={u.avatar} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : u.name?.[0]}
+                                            </div>
+                                            {u.name}
+                                        </div>
+                                    </td>
                                     <td className="text-[var(--text-muted)]">{u.email}</td>
                                     <td><span className={`badge ${u.role === 'admin' ? 'badge-primary' : 'badge-success'}`}>{u.role}</span></td>
                                     <td><span className={`badge ${u.status === 'active' ? 'badge-success' : 'badge-warning'}`}>{u.status}</span></td>

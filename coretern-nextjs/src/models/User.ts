@@ -56,6 +56,10 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    avatar: {
+        type: String,
+        default: ''
+    },
     tokenVersion: {
         type: Number,
         default: 0
@@ -89,6 +93,7 @@ export interface IUser extends mongoose.Document {
     status: 'active' | 'suspended';
     gender?: string;
     phone?: string;
+    avatar?: string;
     isVerified: boolean;
     otp?: string;
     otpExpires?: Date;

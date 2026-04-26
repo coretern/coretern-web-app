@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Mail, Lock, ArrowRight, Loader2, ShieldCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -91,6 +92,15 @@ export default function ForgotPasswordPage() {
                             </button>
                         </form>
                     )}
+
+                    <div className="text-center mt-6 pt-5 border-t border-[var(--border)]">
+                        <p className="text-[var(--text-muted)] text-[0.95rem]">
+                            Don't have an account?{' '}
+                            <Link href="/register" className="text-[var(--color-primary)] font-bold hover:underline">
+                                Sign Up
+                            </Link>
+                        </p>
+                    </div>
                 </div>
             </motion.div>
         </div>

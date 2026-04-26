@@ -27,19 +27,18 @@ export async function POST(request) {
         await user.save({ validateBeforeSave: false });
 
         try {
-            await sendEmail({
+            // Fire and forget email to prevent hanging the response
+            sendEmail({
                 email: user.email,
                 subject: 'Password Reset OTP',
                 message: `Your password reset OTP is: ${resetOtp}. It will expire in 10 minutes.`,
                 html: `<h3>Password Reset</h3><p>Your password reset OTP is: <strong>${resetOtp}</strong></p><p>It will expire in 10 minutes.</p>`
-            });
+            }).catch(err => console.error('Email send error:', err));
 
             return successResponse({ data: 'Password reset OTP sent to email' });
         } catch (err) {
-            user.resetPasswordToken = undefined;
-            user.resetPasswordExpire = undefined;
-            await user.save({ validateBeforeSave: false });
-            return errorResponse('Email could not be sent', 500);
+            console.error('Password reset success response error:', err);
+            return errorResponse('Something went wrong after generating OTP', 500);
         }
     } catch (err) {
         return handleApiError(err);

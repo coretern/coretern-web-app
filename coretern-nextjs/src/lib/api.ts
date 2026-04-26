@@ -21,8 +21,17 @@ function getAuthHeadersMultipart(): HeadersInit {
 }
 
 async function handleResponse(res: Response) {
-    const data = await res.json();
+    const data = await res.json().catch(() => ({}));
     if (!res.ok) {
+        if (res.status === 401 && typeof window !== 'undefined') {
+            localStorage.removeItem('token');
+            localStorage.removeItem('admin_token');
+            // Check if we are not already on the login page to avoid infinite loops
+            if (window.location.pathname !== '/login') {
+                window.location.href = '/login?msg=Session expired or account suspended.';
+            }
+        }
+        
         // For server errors (DB down, etc.), log quietly and throw
         // The calling code's try/catch will handle this
         const msg = data.error || 'Something went wrong';
@@ -52,8 +61,18 @@ export const authAPI = {
         fetch(`${API_BASE}/auth/forgot-password`, { method: 'POST', headers: getAuthHeaders(), body: JSON.stringify(body) }).then(handleResponse),
     resetPassword: (body: any) =>
         fetch(`${API_BASE}/auth/reset-password`, { method: 'PUT', headers: getAuthHeaders(), body: JSON.stringify(body) }).then(handleResponse),
-    updateProfile: (body: any) =>
-        fetch(`${API_BASE}/auth/update-profile`, { method: 'PUT', headers: getAuthHeaders(), body: JSON.stringify(body) }).then(handleResponse),
+    updateProfile: (body: any) => {
+        const isFormData = body instanceof FormData;
+        return fetch(`${API_BASE}/auth/update-profile`, { 
+            method: 'PUT', 
+            headers: isFormData ? getAuthHeadersMultipart() : getAuthHeaders(), 
+            body: isFormData ? body : JSON.stringify(body) 
+        }).then(handleResponse);
+    },
+    changePassword: (body: any) =>
+        fetch(`${API_BASE}/auth/change-password`, { method: 'PUT', headers: getAuthHeaders(), body: JSON.stringify(body) }).then(handleResponse),
+    requestSetPasswordOtp: () =>
+        fetch(`${API_BASE}/auth/request-set-password-otp`, { method: 'POST', headers: getAuthHeaders() }).then(handleResponse),
 };
 
 // ========== INTERNSHIPS ==========
