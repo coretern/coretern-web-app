@@ -30,14 +30,14 @@ const InternshipSection = () => {
     if (!loading && internships.length === 0) return null;
 
     return (
-        <section className="relative py-20 bg-[var(--background)] overflow-hidden max-md:py-10">
+        <section className="relative pt-4 pb-20 bg-[var(--background)] overflow-hidden max-md:pt-4 max-md:pb-10">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(99,102,241,0.08)_0%,transparent_70%)] pointer-events-none z-0" />
             <div className="container">
-                <div className="mb-10 flex flex-col items-center text-center relative z-[1]">
+                <div className="-mt-6 mb-16 flex flex-col items-center text-center relative z-[1]">
                     <h2 className="text-[clamp(1.75rem,4vw,2.5rem)] font-extrabold mb-3 tracking-[-0.02em] font-[family-name:var(--font-outfit)]">
                         Summer Internship <span className="text-[var(--color-primary)]">2026</span>
                     </h2>
-                    <p className="max-w-[500px] mx-auto text-[var(--text-muted)] text-base leading-relaxed">
+                    <p className="max-w-[500px] mx-auto text-[var(--text-muted)] text-base leading-relaxed" style={{ marginTop: '5px', marginBottom: '25px' }}>
                         Kickstart your career with our industry-led internship programs. Gain practical experience and work on real-world projects.
                     </p>
                 </div>
@@ -56,7 +56,7 @@ const InternshipSection = () => {
                     </div>
                 )}
 
-                <div className="flex justify-center relative z-[1]">
+                <div className="flex justify-center relative z-[1] mt-8">
                     <Link href="/internships" className="btn btn-outline">
                         View All Opportunities <ArrowRight size={18} />
                     </Link>

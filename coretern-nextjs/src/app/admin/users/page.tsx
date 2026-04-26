@@ -35,6 +35,20 @@ export default function AdminUsers() {
         } catch (err: any) { toast.error(err.message); }
     };
 
+    const handleImpersonate = async (u: any) => {
+        try {
+            const res = await userAPI.impersonate(u._id);
+            const token = res.data?.token || res.token;
+            if (token) {
+                const adminToken = localStorage.getItem('token');
+                if (adminToken) localStorage.setItem('admin_token', adminToken);
+                localStorage.setItem('token', token);
+                toast.success(`Viewing dashboard as ${u.name}`);
+                window.location.href = '/dashboard';
+            }
+        } catch (err: any) { toast.error('Failed to open user dashboard'); }
+    };
+
     const filtered = users.filter((u: any) =>
         u.name?.toLowerCase().includes(search.toLowerCase()) || u.email?.toLowerCase().includes(search.toLowerCase())
     );
@@ -63,11 +77,15 @@ export default function AdminUsers() {
                             {filtered.map((u: any) => (
                                 <tr key={u._id}>
                                     <td className="font-semibold">
-                                        <div className="flex items-center gap-3">
-                                            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--color-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', overflow: 'hidden', flexShrink: 0 }}>
+                                        <div 
+                                            onClick={() => handleImpersonate(u)}
+                                            className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+                                            title={`View ${u.name}'s Dashboard`}
+                                        >
+                                            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--color-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', overflow: 'hidden', flexShrink: 0, border: '2px solid transparent' }} className="hover:border-[var(--color-primary)] transition-all">
                                                 {u.avatar ? <img src={u.avatar} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : u.name?.[0]}
                                             </div>
-                                            {u.name}
+                                            <span className="hover:text-[var(--color-primary)] transition-colors">{u.name}</span>
                                         </div>
                                     </td>
                                     <td className="text-[var(--text-muted)]">{u.email}</td>
@@ -76,21 +94,6 @@ export default function AdminUsers() {
                                     <td className="text-[var(--text-muted)] text-sm">{new Date(u.createdAt).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true }).toUpperCase()}</td>
                                     <td>
                                         <div className="flex gap-2">
-                                            <button onClick={async () => {
-                                                try {
-                                                    const res = await userAPI.impersonate(u._id);
-                                                    const token = res.data?.token || res.token;
-                                                    if (token) {
-                                                        const adminToken = localStorage.getItem('token');
-                                                        if (adminToken) localStorage.setItem('admin_token', adminToken);
-                                                        localStorage.setItem('token', token);
-                                                        toast.success(`Viewing dashboard as ${u.name}`);
-                                                        window.location.href = '/dashboard';
-                                                    }
-                                                } catch (err: any) { toast.error('Failed to open user dashboard'); }
-                                            }} className="btn btn-outline btn-sm" title="View Dashboard">
-                                                <Eye size={14} />
-                                            </button>
                                             <button onClick={() => handleToggleStatus(u._id)} className="btn btn-outline btn-sm" title={u.status === 'active' ? 'Suspend' : 'Activate'}>
                                                 {u.status === 'active' ? <ShieldOff size={14} /> : <Shield size={14} />}
                                             </button>
@@ -99,6 +102,7 @@ export default function AdminUsers() {
                                             )}
                                         </div>
                                     </td>
+
                                 </tr>
                             ))}
                             {filtered.length === 0 && <tr><td colSpan={6} className="text-center py-8 text-[var(--text-muted)]">No users found</td></tr>}
