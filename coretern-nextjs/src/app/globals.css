@@ -1450,3 +1450,73 @@ input[type="radio"] {
     margin: 0.5rem;
   }
 }
+
+/* ===== DASHBOARD ENROLLMENT CARDS ===== */
+.enrollment-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.5rem 1.75rem;
+  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  transition: all 0.3s;
+}
+
+.enrollment-info {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.enrollment-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .enrollment-card {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 1.25rem !important;
+    padding: 1.25rem !important;
+  }
+  
+  .enrollment-info {
+    align-items: flex-start !important;
+  }
+  
+  .enrollment-actions {
+    width: 100%;
+    display: grid !important;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  
+  .enrollment-actions a,
+  .enrollment-actions button {
+    width: 100%;
+    justify-content: center;
+    padding: 0.75rem !important;
+  }
+}
+
+.enrollment-detail-item {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  align-items: center;
+}
+
+@media (max-width: 480px) {
+  .enrollment-detail-item {
+    grid-template-columns: 1fr !important;
+    align-items: flex-start !important;
+    gap: 0.25rem !important;
+  }
+}

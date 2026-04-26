@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Award, MessageSquare, User, Loader2, Clock, ArrowRight, LogOut, Phone, Calendar, Mail, UserCircle, Save, Download, ExternalLink, X, Shield, Pencil, Lock, Camera } from 'lucide-react';
+import { BookOpen, Award, MessageSquare, User, Loader2, Clock, ArrowRight, LogOut, Phone, Calendar, Mail, UserCircle, Save, Download, ExternalLink, X, Shield, Pencil, Lock, Camera, ChevronDown, ChevronUp, Info } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { authAPI, enrollmentAPI, certificateAPI, ticketAPI } from '@/lib/api';
 import Navbar from '@/components/layout/Navbar';
@@ -22,6 +22,14 @@ export default function DashboardPage() {
     const [certPreviewData, setCertPreviewData] = useState<any>(null);
     const [generatingPdf, setGeneratingPdf] = useState(false);
     const [isAdminViewing, setIsAdminViewing] = useState(false);
+    const [mobileView, setMobileView] = useState<'profile' | 'internships'>('profile');
+    
+    // Accordion State
+    const [expandedCards, setExpandedCards] = useState<string[]>([]);
+    const toggleCard = (id: string) => setExpandedCards(prev => prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]);
+    
+    // Enrollment Details Modal
+    const [selectedEnrollmentDetails, setSelectedEnrollmentDetails] = useState<any>(null);
     
     // Ticket Modals
     const [showCreateTicket, setShowCreateTicket] = useState(false);
@@ -345,72 +353,103 @@ export default function DashboardPage() {
                                                 <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem' }} className="outfit">No active enrollments</h3>
                                                 <Link href="/internships" style={{ color: 'var(--color-primary)', fontWeight: 700, fontSize: '1rem' }}>Start your career today →</Link>
                                             </div>
-                                        ) : displayEnrollments.map((enrol: any) => (
-                                            <div key={enrol._id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1.25rem', padding: '1.5rem 1.75rem', borderRadius: '20px', background: 'var(--surface)', border: '1px solid var(--border)', marginBottom: '1rem', flexWrap: 'wrap', transition: 'all 0.3s' }}>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', flex: 1, minWidth: 0 }}>
-                                                    <div style={{ width: '56px', height: '56px', borderRadius: '14px', background: 'var(--background)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
-                                                        {enrol.internship?.image ? (
-                                                            <img src={enrol.internship.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                                        ) : (
-                                                            <span style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-primary)' }}>{enrol.internship?.title?.[0]}</span>
-                                                        )}
-                                                    </div>
-                                                    <div style={{ minWidth: 0 }}>
-                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.3rem', flexWrap: 'wrap' }}>
-                                                            <h3 style={{ fontSize: '1.05rem', fontWeight: 700 }} className="outfit">{enrol.internship?.title}</h3>
-                                                            {enrol.paymentStatus === 'paid' ? (
-                                                                <span style={{ padding: '0.2rem 0.6rem', borderRadius: '999px', fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', background: enrol.status === 'completed' ? 'rgba(34,197,94,0.1)' : 'rgba(99,102,241,0.1)', color: enrol.status === 'completed' ? '#22c55e' : '#6366f1', border: `1px solid ${enrol.status === 'completed' ? 'rgba(34,197,94,0.3)' : 'rgba(99,102,241,0.3)'}` }}>
-                                                                    {enrol.status}
-                                                                </span>
+                                        ) : displayEnrollments.map((enrol: any) => {
+                                            const isExpanded = expandedCards.includes(enrol._id);
+                                            return (
+                                            <div key={enrol._id} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '20px', marginBottom: '1rem', overflow: 'hidden', transition: 'all 0.3s' }}>
+                                                <div 
+                                                    onClick={() => toggleCard(enrol._id)}
+                                                    style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem 1.5rem', cursor: 'pointer', gap: '1rem' }}
+                                                >
+                                                    <div className="enrollment-info">
+                                                        <div style={{ width: '56px', height: '56px', borderRadius: '14px', background: 'var(--background)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
+                                                            {enrol.internship?.image ? (
+                                                                <img src={enrol.internship.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                                             ) : (
-                                                                <span style={{ padding: '0.2rem 0.6rem', borderRadius: '999px', fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', background: 'rgba(245,158,11,0.1)', color: '#f59e0b', border: '1px solid rgba(245,158,11,0.3)' }}>
-                                                                    Payment Pending
-                                                                </span>
+                                                                <span style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-primary)' }}>{enrol.internship?.title?.[0]}</span>
                                                             )}
                                                         </div>
-                                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-muted)' }}>
-                                                            <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}><Clock size={14} /> {enrol.internship?.duration}</span>
-                                                            <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}><Calendar size={14} /> Enrolled {new Date(enrol.enrolledAt).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true }).toUpperCase()}</span>
+                                                        <div style={{ minWidth: 0 }}>
+                                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.2rem', flexWrap: 'wrap' }}>
+                                                                <h3 style={{ fontSize: '1.05rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem' }} className="outfit">
+                                                                    <span>{enrol.internship?.title}</span>
+                                                                    <button onClick={(e) => { e.stopPropagation(); setSelectedEnrollmentDetails(enrol); }} style={{ background: 'var(--color-primary)', color: 'white', border: 'none', width: '20px', height: '20px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }} title="View details filled during enrollment">
+                                                                        <Info size={12} />
+                                                                    </button>
+                                                                </h3>
+                                                            </div>
+                                                            <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
+                                                                <span>Enrolled {new Date(enrol.enrolledAt).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true }).toUpperCase()}</span>
+                                                            </div>
+                                                            <div>
+                                                                {enrol.paymentStatus === 'paid' ? (
+                                                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', padding: '0.25rem 0.75rem', borderRadius: '999px', fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', background: enrol.status === 'completed' ? 'rgba(34,197,94,0.1)' : 'rgba(99,102,241,0.1)', color: enrol.status === 'completed' ? '#22c55e' : '#6366f1', border: `1px solid ${enrol.status === 'completed' ? 'rgba(34,197,94,0.3)' : 'rgba(99,102,241,0.3)'}` }}>
+                                                                        {enrol.status}
+                                                                    </span>
+                                                                ) : (
+                                                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', padding: '0.25rem 0.75rem', borderRadius: '999px', fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', background: 'rgba(245,158,11,0.1)', color: '#f59e0b', border: '1px solid rgba(245,158,11,0.3)' }}>
+                                                                        Payment Pending
+                                                                    </span>
+                                                                )}
+                                                            </div>
                                                         </div>
                                                     </div>
+                                                    <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--background)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: 'var(--text-muted)' }}>
+                                                        {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                                                    </div>
                                                 </div>
-                                                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                                                    {enrol.paymentStatus === 'paid' ? (
-                                                        <>
-                                                            {enrol.internship?.whatsappGroup && (
-                                                                <a href={enrol.internship.whatsappGroup} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.55rem 1rem', borderRadius: '10px', background: 'rgba(37,211,102,0.1)', border: '1px solid rgba(37,211,102,0.2)', color: '#25d366', fontWeight: 700, fontSize: '0.8rem', textDecoration: 'none' }}>WhatsApp</a>
-                                                            )}
-                                                            <button onClick={() => router.push(`/lectures/${enrol.internship?._id}`)} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.55rem 1.25rem', borderRadius: '10px', background: 'var(--color-primary)', color: 'white', fontWeight: 700, fontSize: '0.8rem', border: 'none', cursor: 'pointer' }}>View Lectures</button>
-                                                            {(() => { const cert = getCertForEnrollment(enrol); return cert ? (
-                                                                <button onClick={() => downloadCertificate(cert.certificateId)} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.55rem 1.25rem', borderRadius: '10px', background: 'var(--color-secondary)', color: 'white', fontWeight: 700, fontSize: '0.8rem', border: 'none', cursor: 'pointer' }}><Download size={14} /> Certificate</button>
-                                                            ) : null; })()}
-                                                        </>
-                                                    ) : (
-                                                        <button onClick={async () => {
-                                                            toast.loading('Loading payment gateway...', { id: 'retry-pay' });
-                                                            try {
-                                                                const token = localStorage.getItem('token');
-                                                                const res = await fetch(`/api/enrollments/${enrol._id}/retry`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
-                                                                const data = await res.json();
-                                                                if (!data.success) throw new Error(data.error);
-                                                                
-                                                                const cashfree = (window as any).Cashfree?.({ mode: process.env.NEXT_PUBLIC_CASHFREE_ENV === 'production' ? 'production' : 'sandbox' });
-                                                                if (cashfree) {
-                                                                    toast.dismiss('retry-pay');
-                                                                    cashfree.checkout({ paymentSessionId: data.data?.payment_session_id || data.payment_session_id, redirectTarget: '_self' });
-                                                                } else {
-                                                                    throw new Error('Payment gateway not loaded');
-                                                                }
-                                                            } catch (err: any) {
-                                                                toast.error(err.message || 'Failed to initialize payment', { id: 'retry-pay' });
-                                                            }
-                                                        }} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.55rem 1.25rem', borderRadius: '10px', background: '#f59e0b', color: 'white', fontWeight: 700, fontSize: '0.8rem', border: 'none', cursor: 'pointer' }}>
-                                                            Pay Now (₹{enrol.internship?.fee})
-                                                        </button>
+
+                                                <AnimatePresence>
+                                                    {isExpanded && (
+                                                        <motion.div
+                                                            initial={{ height: 0, opacity: 0 }}
+                                                            animate={{ height: 'auto', opacity: 1 }}
+                                                            exit={{ height: 0, opacity: 0 }}
+                                                            style={{ overflow: 'hidden' }}
+                                                        >
+                                                            <div style={{ padding: '0 1.5rem 1.25rem' }}>
+                                                                <div style={{ height: '1px', background: 'var(--border)', marginBottom: '1.25rem' }} />
+                                                                <div className="enrollment-actions">
+                                                                    {enrol.paymentStatus === 'paid' ? (
+                                                                        <>
+                                                                            {enrol.internship?.whatsappGroup && (
+                                                                                <a href={enrol.internship.whatsappGroup} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.65rem 1.25rem', borderRadius: '12px', background: 'rgba(37,211,102,0.1)', border: '1px solid rgba(37,211,102,0.2)', color: '#25d366', fontWeight: 700, fontSize: '0.85rem', textDecoration: 'none' }}>WhatsApp</a>
+                                                                            )}
+                                                                            <button onClick={() => router.push(`/lectures/${enrol.internship?._id}`)} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.65rem 1.25rem', borderRadius: '12px', background: 'var(--color-primary)', color: 'white', fontWeight: 700, fontSize: '0.85rem', border: 'none', cursor: 'pointer' }}>View Lectures</button>
+                                                                            {(() => { const cert = getCertForEnrollment(enrol); return cert ? (
+                                                                                <button onClick={() => downloadCertificate(cert.certificateId)} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.65rem 1.25rem', borderRadius: '12px', background: 'var(--color-secondary)', color: 'white', fontWeight: 700, fontSize: '0.85rem', border: 'none', cursor: 'pointer' }}><Download size={14} /> Certificate</button>
+                                                                            ) : null; })()}
+                                                                        </>
+                                                                    ) : (
+                                                                        <button onClick={async () => {
+                                                                            toast.loading('Loading payment gateway...', { id: 'retry-pay' });
+                                                                            try {
+                                                                                const token = localStorage.getItem('token');
+                                                                                const res = await fetch(`/api/enrollments/${enrol._id}/retry`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
+                                                                                const data = await res.json();
+                                                                                if (!data.success) throw new Error(data.error);
+                                                                                
+                                                                                const cashfree = (window as any).Cashfree?.({ mode: process.env.NEXT_PUBLIC_CASHFREE_ENV === 'production' ? 'production' : 'sandbox' });
+                                                                                if (cashfree) {
+                                                                                    toast.dismiss('retry-pay');
+                                                                                    cashfree.checkout({ paymentSessionId: data.data?.payment_session_id || data.payment_session_id, redirectTarget: '_self' });
+                                                                                } else {
+                                                                                    throw new Error('Payment gateway not loaded');
+                                                                                }
+                                                                            } catch (err: any) {
+                                                                                toast.error(err.message || 'Failed to initialize payment', { id: 'retry-pay' });
+                                                                            }
+                                                                        }} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.65rem 1.25rem', borderRadius: '12px', background: '#f59e0b', color: 'white', fontWeight: 700, fontSize: '0.85rem', border: 'none', cursor: 'pointer', width: '100%', justifyContent: 'center' }}>
+                                                                            Pay Now (₹{enrol.internship?.fee})
+                                                                        </button>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </motion.div>
                                                     )}
-                                                </div>
+                                                </AnimatePresence>
                                             </div>
-                                        ))}
+                                        )})}
                                     </div>
                                 )}
                             </motion.div>
@@ -663,6 +702,57 @@ export default function DashboardPage() {
                             </form>
                         </motion.div>
                     </motion.div>
+                )}
+            </AnimatePresence>
+
+
+            {/* Enrollment Details Modal */}
+            <AnimatePresence>
+                {selectedEnrollmentDetails && (
+                    <div style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.8)', padding: '1.5rem' }}>
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            style={{ width: '100%', maxWidth: '500px', background: 'var(--surface)', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)' }}
+                        >
+                            <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--surface-1)' }}>
+                                <h3 style={{ fontSize: '1.1rem', fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }} className="outfit">
+                                    <Info size={18} style={{ color: 'var(--color-primary)' }} /> Enrollment Details
+                                </h3>
+                                <button onClick={() => setSelectedEnrollmentDetails(null)} style={{ background: 'var(--background)', border: '1px solid var(--border)', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', cursor: 'pointer' }}>
+                                    <X size={16} />
+                                </button>
+                            </div>
+                            <div style={{ padding: '1.5rem', maxHeight: '70vh', overflowY: 'auto' }}>
+                                <div style={{ padding: '1rem', background: 'rgba(99, 102, 241, 0.1)', border: '1px solid rgba(99, 102, 241, 0.2)', borderRadius: '12px', marginBottom: '1.25rem' }}>
+                                    <p style={{ margin: 0, fontSize: '0.8rem', color: '#6366f1', lineHeight: 1.5, fontWeight: 600 }}>
+                                        <span style={{ fontWeight: 800 }}>Note:</span> Your internship certificate will be issued after the end date or you can contact the admin. The certificate download button will be available once the internship is completed.
+                                    </p>
+                                </div>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.75rem' }}>
+                                    {[
+                                        { label: 'Full Name', value: selectedEnrollmentDetails.fullName },
+                                        { label: 'Email', value: selectedEnrollmentDetails.email },
+                                        { label: 'WhatsApp Number', value: selectedEnrollmentDetails.whatsappNumber },
+                                        { label: 'Gender', value: selectedEnrollmentDetails.gender },
+                                        { label: 'Transaction ID', value: selectedEnrollmentDetails.paymentId || selectedEnrollmentDetails.cfOrderId },
+                                        { label: 'College', value: selectedEnrollmentDetails.collegeName },
+                                        { label: 'Registration No.', value: selectedEnrollmentDetails.collegeRegNumber },
+                                        { label: 'Course', value: selectedEnrollmentDetails.course },
+                                        { label: 'Branch', value: selectedEnrollmentDetails.branch },
+                                        { label: 'Start Date', value: selectedEnrollmentDetails.startDate ? new Date(selectedEnrollmentDetails.startDate).toLocaleDateString() : '' },
+                                        { label: 'End Date', value: selectedEnrollmentDetails.endDate ? new Date(selectedEnrollmentDetails.endDate).toLocaleDateString() : '' }
+                                    ].filter(item => item.value).map((item, i) => (
+                                        <div key={i} style={{ background: 'var(--background)', padding: '0.85rem 1.25rem', borderRadius: '12px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                                            <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.05em', opacity: 0.95 }}>{item.label}:</span>
+                                            <span style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-muted)', opacity: 0.8, wordBreak: 'break-word' }}>{item.value}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </motion.div>
+                    </div>
                 )}
             </AnimatePresence>
 
