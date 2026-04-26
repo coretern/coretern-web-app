@@ -9,6 +9,7 @@ export default function AdminTickets() {
     const [tickets, setTickets] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
+    const [typeFilter, setTypeFilter] = useState('all');
     const [viewTicket, setViewTicket] = useState<any>(null);
 
     useEffect(() => { fetchTickets(); }, []);
@@ -29,9 +30,11 @@ export default function AdminTickets() {
         catch (err: any) { toast.error(err.message); }
     };
 
-    const filtered = tickets.filter((t: any) =>
-        t.name?.toLowerCase().includes(search.toLowerCase()) || t.subject?.toLowerCase().includes(search.toLowerCase())
-    );
+    const filtered = tickets.filter((t: any) => {
+        const matchesSearch = t.name?.toLowerCase().includes(search.toLowerCase()) || t.subject?.toLowerCase().includes(search.toLowerCase());
+        const matchesType = typeFilter === 'all' || t.type === typeFilter;
+        return matchesSearch && matchesType;
+    });
 
     const getStatusStyle = (status: string) => {
         switch (status) {
@@ -49,10 +52,21 @@ export default function AdminTickets() {
         <div>
             <div className="flex items-center justify-between mb-8 max-md:flex-col max-md:gap-4">
                 <h1 className="text-2xl font-extrabold font-[family-name:var(--font-outfit)]">Tickets ({tickets.length})</h1>
-                <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" size={16} />
-                    <input type="text" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)}
-                        className="pl-10 pr-4 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] focus:outline-none focus:border-[var(--color-primary)]" />
+                <div className="flex gap-3 relative w-full max-w-md">
+                    <select 
+                        value={typeFilter} 
+                        onChange={(e) => setTypeFilter(e.target.value)}
+                        className="px-4 py-2 bg-[var(--surface)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] focus:outline-none focus:border-[var(--color-primary)] min-w-[120px] font-semibold cursor-pointer"
+                    >
+                        <option value="all">All Types</option>
+                        <option value="registered">Registered</option>
+                        <option value="guest">Guest</option>
+                    </select>
+                    <div className="relative flex-1">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" size={16} />
+                        <input type="text" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)}
+                            className="pl-10 pr-4 py-2 w-full bg-[var(--surface)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] focus:outline-none focus:border-[var(--color-primary)]" />
+                    </div>
                 </div>
             </div>
             <div className="glass rounded-2xl border border-[var(--border)] overflow-hidden">
@@ -63,7 +77,15 @@ export default function AdminTickets() {
                             {filtered.map((t: any) => (
                                 <tr key={t._id}>
                                     <td className="font-mono text-sm">{t.ticketId}</td>
-                                    <td>{t.name}<br/><span className="text-[var(--text-muted)] text-xs">{t.email}</span></td>
+                                    <td>
+                                        <div className="flex items-center gap-2">
+                                            <span>{t.name}</span>
+                                            <span className={`text-[0.6rem] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider ${t.type === 'guest' ? 'bg-purple-100 text-purple-700 dark:bg-purple-500/10 dark:text-purple-400 border border-purple-200 dark:border-purple-500/20' : 'bg-blue-100 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400 border border-blue-200 dark:border-blue-500/20'}`}>
+                                                {t.type}
+                                            </span>
+                                        </div>
+                                        <span className="text-[var(--text-muted)] text-xs">{t.email}</span>
+                                    </td>
                                     <td>{t.subject}</td>
                                     <td>
                                         <select value={t.status} onChange={(e) => handleStatus(t._id, e.target.value)}

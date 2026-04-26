@@ -120,28 +120,28 @@ export default function ContactPage() {
                             <form onSubmit={handleSubmit}>
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem', marginBottom: '1.25rem' }} className="contact-form-row">
                                     <div>
-                                        <label style={labelStyle}>Full Name</label>
+                                        <label style={labelStyle}>Full Name <span style={{ color: 'red' }}>*</span></label>
                                         <input type="text" placeholder="John Doe" required style={inputStyle}
                                             value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
                                     </div>
                                     <div>
-                                        <label style={labelStyle}>Phone Number</label>
-                                        <input type="tel" placeholder="+91 XXXXX XXXXX" required style={inputStyle}
-                                            value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} />
+                                        <label style={labelStyle}>Phone Number <span style={{ color: 'red' }}>*</span></label>
+                                        <input type="tel" placeholder="10-digit number" required maxLength={10} style={inputStyle}
+                                            value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value.replace(/\D/g, '') })} />
                                     </div>
                                 </div>
                                 <div style={{ marginBottom: '1.25rem' }}>
-                                    <label style={labelStyle}>Email Address</label>
+                                    <label style={labelStyle}>Email Address <span style={{ color: 'red' }}>*</span></label>
                                     <input type="email" placeholder="john@example.com" required style={inputStyle}
                                         value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
                                 </div>
                                 <div style={{ marginBottom: '1.25rem' }}>
-                                    <label style={labelStyle}>Subject</label>
+                                    <label style={labelStyle}>Subject <span style={{ color: 'red' }}>*</span></label>
                                     <input type="text" placeholder="e.g., Website, App Development" required style={inputStyle}
                                         value={form.subject} onChange={e => setForm({ ...form, subject: e.target.value })} />
                                 </div>
                                 <div style={{ marginBottom: '1.25rem' }}>
-                                    <label style={labelStyle}>Your Message</label>
+                                    <label style={labelStyle}>Your Message <span style={{ color: 'red' }}>*</span></label>
                                     <textarea rows={5} placeholder="Write your message here..." required
                                         style={{ ...inputStyle, resize: 'vertical', minHeight: '120px' }}
                                         value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} />
