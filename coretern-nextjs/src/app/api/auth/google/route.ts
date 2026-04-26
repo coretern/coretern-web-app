@@ -23,14 +23,22 @@ export async function POST(request: NextRequest) {
         let user = await User.findOne({ email });
 
         if (user) {
+            let isUpdated = false;
             if (!user.googleId) {
                 user.googleId = googleId;
                 user.isVerified = true;
+                isUpdated = true;
+            }
+            if (!user.avatar && picture) {
+                user.avatar = picture;
+                isUpdated = true;
+            }
+            if (isUpdated) {
                 await user.save();
             }
         } else {
             user = await User.create({
-                name, email, googleId,
+                name, email, googleId, avatar: picture,
                 isVerified: true, status: 'active',
                 gender: 'Other', agreedToTerms: true, agreedToPrivacy: true
             });

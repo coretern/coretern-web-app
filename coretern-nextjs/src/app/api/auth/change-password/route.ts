@@ -1,6 +1,6 @@
 import dbConnect from '@/lib/db';
 import User from '@/models/User';
-import { requireAuth } from '@/lib/auth';
+import { requireAuth, generateToken } from '@/lib/auth';
 import { successResponse, errorResponse, handleApiError } from '@/lib/apiResponse';
 import bcrypt from 'bcryptjs';
 
@@ -34,7 +34,8 @@ export async function PUT(request) {
         user.tokenVersion = (user.tokenVersion || 0) + 1;
         await user.save();
 
-        const { generateToken } = require('@/lib/auth');
+        // Optional: you can choose not to send a token if you want the frontend to forcefully logout, 
+        // but since we want to give frontend the choice, we return it.
         const token = generateToken(user);
 
         return successResponse({ message: 'Password changed successfully', token });

@@ -23,6 +23,10 @@ export default function DashboardPage() {
     const [generatingPdf, setGeneratingPdf] = useState(false);
     const [isAdminViewing, setIsAdminViewing] = useState(false);
     
+    // Ticket Modals
+    const [viewTicket, setViewTicket] = useState<any>(null);
+    const [showCreateTicket, setShowCreateTicket] = useState(false);
+    
     // Profile Forms
     const [profileForm, setProfileForm] = useState({ name: '', phone: '', gender: '' });
     const [passwordForm, setPasswordForm] = useState({ currentPassword: '', newPassword: '', otp: '' });
@@ -230,13 +234,9 @@ export default function DashboardPage() {
         setChangingPassword(true);
         try {
             const res = await authAPI.changePassword(passwordForm);
-            if (res.token) {
-                localStorage.setItem('token', res.token);
-            }
-            toast.success(user?.hasPassword ? 'Password changed successfully!' : 'Password set successfully!');
-            setPasswordForm({ currentPassword: '', newPassword: '', otp: '' });
-            setShowPasswordOtp(false);
-            setUser({ ...user, hasPassword: true });
+            toast.success('Password updated successfully! Please log in again.');
+            localStorage.removeItem('token');
+            window.location.href = '/login';
         } catch (err: any) { toast.error(err.message || 'Failed to save password'); }
         finally { setChangingPassword(false); }
     };
@@ -413,20 +413,27 @@ export default function DashboardPage() {
 
                                 {activeTab === 'tickets' && (
                                     <div>
-                                        <h2 style={{ fontSize: '1.35rem', fontWeight: 700, marginBottom: '1.5rem' }} className="outfit">Support Center</h2>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                                            <h2 style={{ fontSize: '1.35rem', fontWeight: 700, margin: 0 }} className="outfit">Support Center</h2>
+                                            {tickets.length > 0 && (
+                                                <button onClick={() => setShowCreateTicket(true)} className="btn btn-outline" style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }}>
+                                                    + New Ticket
+                                                </button>
+                                            )}
+                                        </div>
                                         {tickets.length === 0 ? (
                                             <div style={{ padding: '4rem 2rem', textAlign: 'center', background: 'var(--surface)', borderRadius: '20px', border: '1px solid var(--border)' }}>
                                                 <MessageSquare size={48} style={{ margin: '0 auto 1.5rem', color: 'var(--text-muted)', opacity: 0.3, display: 'block' }} />
                                                 <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem' }} className="outfit">Need Help?</h3>
                                                 <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontWeight: 500 }}>Create a ticket and our team will respond.</p>
-                                                <button onClick={() => router.push('/contact')} style={{ padding: '0.7rem 2rem', borderRadius: '12px', background: 'var(--color-primary)', color: 'white', fontWeight: 700, border: 'none', cursor: 'pointer' }}>New Support Ticket</button>
+                                                <button onClick={() => setShowCreateTicket(true)} style={{ padding: '0.7rem 2rem', borderRadius: '12px', background: 'var(--color-primary)', color: 'white', fontWeight: 700, border: 'none', cursor: 'pointer' }}>New Support Ticket</button>
                                             </div>
                                         ) : tickets.map((ticket: any) => (
-                                            <div key={ticket._id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--surface)', padding: '1.25rem 1.5rem', borderRadius: '16px', border: '1px solid var(--border)', marginBottom: '0.75rem', transition: 'all 0.3s' }}>
+                                            <div key={ticket._id} onClick={() => setViewTicket(ticket)} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--surface)', padding: '1.25rem 1.5rem', borderRadius: '16px', border: '1px solid var(--border)', marginBottom: '0.75rem', cursor: 'pointer', transition: 'all 0.3s' }}>
                                                 <div>
                                                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.25rem' }}>
                                                         <h3 style={{ fontSize: '1rem', fontWeight: 700 }} className="outfit">{ticket.subject}</h3>
-                                                        <span style={{ padding: '0.15rem 0.5rem', borderRadius: '6px', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', background: ticket.status === 'open' ? 'rgba(245,158,11,0.1)' : 'rgba(34,197,94,0.1)', color: ticket.status === 'open' ? '#f59e0b' : '#22c55e' }}>{ticket.status}</span>
+                                                        <span style={{ padding: '0.15rem 0.5rem', borderRadius: '6px', fontSize: '0.6rem', fontWeight: 700, textTransform: 'uppercase', background: ticket.status === 'open' ? 'rgba(245,158,11,0.1)' : ticket.status === 'pending' ? 'rgba(59,130,246,0.1)' : 'rgba(34,197,94,0.1)', color: ticket.status === 'open' ? '#f59e0b' : ticket.status === 'pending' ? '#3b82f6' : '#22c55e' }}>{ticket.status}</span>
                                                     </div>
                                                     <p style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-muted)', letterSpacing: '0.04em', textTransform: 'uppercase' }}>#{ticket.ticketId} • {new Date(ticket.createdAt).toLocaleDateString()}</p>
                                                 </div>
@@ -644,6 +651,122 @@ export default function DashboardPage() {
                                             )}
                                         </div>
                                     </>
+                                )}
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Create Ticket Modal */}
+            <AnimatePresence>
+                {showCreateTicket && (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.6)', padding: '1.5rem', backdropFilter: 'blur(5px)' }}>
+                        <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} style={{ background: 'var(--surface)', width: '100%', maxWidth: '500px', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)', border: '1px solid var(--border)' }}>
+                            <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--surface-1)' }}>
+                                <h3 style={{ fontSize: '1.1rem', fontWeight: 800, margin: 0 }} className="outfit">Create Support Ticket</h3>
+                                <button onClick={() => setShowCreateTicket(false)} style={{ background: 'var(--background)', border: '1px solid var(--border)', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-muted)' }}><X size={16} /></button>
+                            </div>
+                            <form onSubmit={async (e: any) => {
+                                e.preventDefault();
+                                toast.loading('Creating ticket...', { id: 'create-t' });
+                                try {
+                                    await ticketAPI.create({
+                                        subject: e.target.subject.value,
+                                        message: e.target.message.value
+                                    });
+                                    toast.success('Ticket created successfully!', { id: 'create-t' });
+                                    setShowCreateTicket(false);
+                                    const refreshed = await ticketAPI.getMy();
+                                    setTickets(refreshed.data || []);
+                                } catch (err: any) {
+                                    toast.error(err.message || 'Failed to create ticket', { id: 'create-t' });
+                                }
+                            }} style={{ padding: '1.5rem' }}>
+                                <div style={{ marginBottom: '1rem' }}>
+                                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Subject</label>
+                                    <input type="text" name="subject" required placeholder="e.g., Certificate Issue" style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', background: 'var(--background)', border: '1px solid var(--border)', color: 'var(--text)', outline: 'none' }} />
+                                </div>
+                                <div style={{ marginBottom: '1.5rem' }}>
+                                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Message</label>
+                                    <textarea name="message" required placeholder="Provide details about your problem..." rows={5} style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '12px', background: 'var(--background)', border: '1px solid var(--border)', color: 'var(--text)', outline: 'none', resize: 'vertical' }}></textarea>
+                                </div>
+                                <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '0.8rem' }}>Submit Ticket</button>
+                            </form>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* View Ticket Chat Modal */}
+            <AnimatePresence>
+                {viewTicket && (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.6)', padding: '1.5rem', backdropFilter: 'blur(5px)' }}>
+                        <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} style={{ background: 'var(--surface)', width: '100%', maxWidth: '600px', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', maxHeight: '85vh' }}>
+                            <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--surface-1)' }}>
+                                <div>
+                                    <h3 style={{ fontSize: '1.1rem', fontWeight: 800, margin: 0 }} className="outfit">{viewTicket.subject}</h3>
+                                    <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600, marginTop: '2px' }}>Ticket #{viewTicket.ticketId} • Status: <span style={{ textTransform: 'uppercase', color: viewTicket.status === 'open' ? '#f59e0b' : viewTicket.status === 'pending' ? '#3b82f6' : '#22c55e' }}>{viewTicket.status}</span></p>
+                                </div>
+                                <button onClick={() => setViewTicket(null)} style={{ background: 'var(--background)', border: '1px solid var(--border)', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-muted)' }}><X size={16} /></button>
+                            </div>
+                            
+                            <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', background: 'var(--background)' }}>
+                                {viewTicket.conversation?.map((msg: any, i: number) => {
+                                    const isUser = msg.sender === 'user';
+                                    return (
+                                        <div key={i} style={{ display: 'flex', flexDirection: 'column', alignSelf: isUser ? 'flex-end' : 'flex-start', maxWidth: '80%' }}>
+                                            <div style={{ padding: '0.8rem 1.2rem', borderRadius: '16px', borderTopLeftRadius: !isUser ? '4px' : '16px', borderTopRightRadius: isUser ? '4px' : '16px', background: isUser ? 'var(--color-primary)' : 'var(--surface-1)', color: isUser ? 'white' : 'var(--text)', border: isUser ? 'none' : '1px solid var(--border)', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
+                                                <p style={{ margin: 0, whiteSpace: 'pre-wrap', fontSize: '0.95rem', lineHeight: 1.5 }}>{msg.message}</p>
+                                            </div>
+                                            <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: '4px', alignSelf: isUser ? 'flex-end' : 'flex-start', fontWeight: 700 }}>
+                                                {new Date(msg.createdAt).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}
+                                            </span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            <div style={{ padding: '1.25rem', borderTop: '1px solid var(--border)', background: 'var(--surface)' }}>
+                                {viewTicket.status === 'closed' ? (
+                                    <div style={{ padding: '0.75rem', textAlign: 'center', background: 'var(--background)', borderRadius: '12px', border: '1px solid var(--border)', color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 600 }}>
+                                        This ticket is closed. Replies are disabled.
+                                    </div>
+                                ) : viewTicket.status === 'resolved' ? (
+                                    <div style={{ padding: '0.85rem', textAlign: 'center', background: 'rgba(34,197,94,0.1)', borderRadius: '12px', border: '1px solid rgba(34,197,94,0.2)' }}>
+                                        <p style={{ color: '#16a34a', fontSize: '0.85rem', fontWeight: 700, margin: '0 0 0.5rem 0' }}>Your issue has been resolved.</p>
+                                        <button onClick={async () => {
+                                            try {
+                                                const res = await ticketAPI.updateStatus(viewTicket._id, { status: 'open' });
+                                                setViewTicket(res.data);
+                                                const refreshed = await ticketAPI.getMy();
+                                                setTickets(refreshed.data || []);
+                                                toast.success('Ticket reopened!');
+                                            } catch (err: any) {
+                                                toast.error(err.message || 'Failed to reopen ticket');
+                                            }
+                                        }} className="btn btn-outline" style={{ padding: '0.4rem 1rem', fontSize: '0.75rem', color: 'var(--text)', borderColor: 'var(--border)' }}>
+                                            Still need help? Reopen Ticket
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <form onSubmit={async (e: any) => {
+                                        e.preventDefault();
+                                        const message = e.target.message.value;
+                                        if (!message) return;
+                                        try {
+                                            const res = await ticketAPI.reply(viewTicket._id, { message });
+                                            setViewTicket(res.data);
+                                            e.target.message.value = '';
+                                            const refreshed = await ticketAPI.getMy();
+                                            setTickets(refreshed.data || []);
+                                        } catch (err: any) {
+                                            toast.error(err.message || 'Failed to send reply');
+                                        }
+                                    }} style={{ display: 'flex', gap: '0.75rem' }}>
+                                        <input type="text" name="message" placeholder="Type your message..." required style={{ flex: 1, padding: '0.75rem 1rem', borderRadius: '14px', background: 'var(--background)', border: '1px solid var(--border)', color: 'var(--text)', outline: 'none' }} />
+                                        <button type="submit" className="btn btn-primary" style={{ padding: '0 1.5rem', borderRadius: '14px', fontWeight: 700 }}>Send</button>
+                                    </form>
                                 )}
                             </div>
                         </motion.div>

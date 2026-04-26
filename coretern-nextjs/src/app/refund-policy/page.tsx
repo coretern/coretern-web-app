@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 
@@ -26,7 +27,7 @@ export default function RefundPolicyPage() {
                         </ul>
 
                         <h2>3. How to Request a Refund</h2>
-                        <p>To request a refund, raise a support ticket via the <a href="/contact">Contact page</a> or email <a href="mailto:coreterndev@gmail.com">coreterndev@gmail.com</a> with your order ID and reason for the refund.</p>
+                        <p>To request a refund, raise a support ticket via the <Link href="/contact" style={{color: 'var(--color-primary)'}}>Contact page</Link> or email <a href="mailto:coreterndev@gmail.com">coreterndev@gmail.com</a> with your order ID and reason for the refund.</p>
 
                         <h2>4. Processing Time</h2>
                         <p>Approved refunds will be processed within <strong>7-10 business days</strong> via the original payment method.</p>

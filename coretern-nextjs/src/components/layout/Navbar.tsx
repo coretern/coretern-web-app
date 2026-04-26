@@ -111,6 +111,7 @@ const Navbar = () => {
                         <Link
                             key={link.name}
                             href={link.path}
+                            prefetch={true}
                             style={{
                                 padding: '0.5rem 0.9rem',
                                 borderRadius: 'var(--radius-sm)',
@@ -211,6 +212,7 @@ const Navbar = () => {
                                 <Link
                                     key={link.name}
                                     href={link.path}
+                                    prefetch={true}
                                     onClick={() => handleNavLinkClick(link.path)}
                                     style={{
                                         fontSize: '1.1rem',
@@ -231,7 +233,14 @@ const Navbar = () => {
                                 {isLoggedIn ? (
                                     <>
                                         <Link href="/dashboard" onClick={() => setIsOpen(false)} className="btn btn-outline" style={{ width: '100%', justifyContent: 'center', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                            <LayoutDashboard size={16} /> Dashboard
+                                            {user?.avatar ? (
+                                                <div style={{ width: '20px', height: '20px', borderRadius: '50%', overflow: 'hidden', flexShrink: 0 }}>
+                                                    <img src={user.avatar} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                </div>
+                                            ) : (
+                                                <LayoutDashboard size={16} />
+                                            )}
+                                            Dashboard
                                         </Link>
                                         <button onClick={() => { handleLogout(); setIsOpen(false); }} className="btn btn-danger" style={{ width: '100%', justifyContent: 'center', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                                             <LogOut size={16} /> Sign Out

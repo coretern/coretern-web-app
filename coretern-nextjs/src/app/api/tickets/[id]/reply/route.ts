@@ -3,7 +3,7 @@ import Ticket from '@/models/Ticket';
 import { successResponse, errorResponse, handleApiError } from '@/lib/apiResponse';
 import { requireAuth } from '@/lib/auth';
 
-// PUT /api/tickets/[id]/reply - Reply to ticket
+// PUT /api/tickets/[id]/reply
 export async function PUT(request, { params }) {
     try {
         const authResult = await requireAuth(request);
@@ -13,19 +13,32 @@ export async function PUT(request, { params }) {
         const { id } = await params;
         const { message } = await request.json();
 
-        let ticket = await Ticket.findById(id);
+        if (!message) return errorResponse('Message is required', 400);
+
+        const ticket = await Ticket.findById(id);
         if (!ticket) return errorResponse(`No ticket with id ${id}`, 404);
 
-        if (authResult.user.role !== 'admin' && ticket.user?.toString() !== authResult.user.id) {
-            return errorResponse('Not authorized to reply to this ticket', 401);
+        if (ticket.type !== 'registered') {
+            return errorResponse('Cannot reply to guest tickets via chat', 403);
         }
 
-        const sender = authResult.user.role === 'admin' ? 'admin' : 'user';
+        const isAdmin = authResult.user.role === 'admin';
+        if (!isAdmin && ticket.user?.toString() !== authResult.user.id) {
+            return errorResponse('Not authorized to access this ticket', 401);
+        }
 
-        ticket = await Ticket.findByIdAndUpdate(id, {
-            $push: { conversation: { sender, message } },
-            status: authResult.user.role === 'admin' ? 'pending' : 'open'
-        }, { new: true, runValidators: true });
+        ticket.conversation.push({
+            sender: isAdmin ? 'admin' : 'user',
+            message,
+            createdAt: new Date()
+        });
+
+        // Auto-update status if replied by admin
+        if (isAdmin && ticket.status === 'open') {
+            ticket.status = 'pending';
+        }
+
+        await ticket.save();
 
         return successResponse({ data: ticket });
     } catch (err) {
