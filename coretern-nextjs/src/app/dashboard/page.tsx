@@ -81,8 +81,26 @@ export default function DashboardPage() {
     }, [router, searchParams]);
 
     if (loading) return (
-        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Loader2 className="animate-spin" style={{ color: 'var(--color-primary)' }} size={40} />
+        <div style={{ minHeight: '100vh', background: 'var(--background)' }}>
+            <Navbar />
+            <div className="container" style={{ maxWidth: '800px', paddingTop: '7rem', paddingBottom: '4rem' }}>
+                <style>{`
+                    @keyframes pulse-soft { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+                    .sk-box { background: var(--surface); border: 1px solid var(--border); animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+                    .sk-text { background: var(--border); border-radius: 8px; animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+                `}</style>
+                {/* Tab Bar Skeleton */}
+                <div className="sk-box" style={{ padding: '0.6rem', borderRadius: '20px', marginBottom: '2rem', display: 'flex', gap: '0.75rem' }}>
+                    <div className="sk-text" style={{ flex: 1, height: '44px', borderRadius: '14px' }} />
+                    <div className="sk-text" style={{ flex: 1, height: '44px', borderRadius: '14px' }} />
+                </div>
+                {/* Content Skeleton */}
+                <main style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    <div className="sk-text" style={{ width: '180px', height: '28px', marginBottom: '0.5rem', borderRadius: '8px' }} />
+                    {[1, 2].map(i => <div key={i} className="sk-box" style={{ height: '120px', borderRadius: '20px' }} />)}
+                    <div className="sk-box" style={{ height: '80px', borderRadius: '20px', marginTop: '1rem' }} />
+                </main>
+            </div>
         </div>
     );
 
@@ -250,7 +268,6 @@ export default function DashboardPage() {
 
     const sidebarItems = [
         { id: 'enrollments', label: 'Enrollments', value: displayEnrollments.length, icon: BookOpen, bg: 'rgba(99,102,241,0.1)', color: '#6366f1', border: 'rgba(99,102,241,0.2)', clickable: true, path: null },
-        { id: 'achievements', label: 'Achievements', value: certificates.length, icon: Award, bg: 'rgba(6,182,212,0.1)', color: '#06b6d4', border: 'rgba(6,182,212,0.2)', clickable: false, path: null },
         { id: 'tickets', label: 'Support Tickets', value: tickets.length, icon: MessageSquare, bg: 'rgba(245,158,11,0.1)', color: '#f59e0b', border: 'rgba(245,158,11,0.2)', clickable: true, path: '/dashboard/tickets' },
     ];
 
@@ -277,69 +294,20 @@ export default function DashboardPage() {
                         </button>
                     </div>
                 )}
-                {/* Header */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '0 0 2.5rem', padding: '1.5rem 2rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '20px', position: 'relative', overflow: 'hidden', flexWrap: 'wrap', gap: '1.5rem' }}>
-                    <div style={{ position: 'absolute', top: '-50%', right: '-10%', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', position: 'relative', zIndex: 1 }}>
-                        <div style={{ width: '60px', height: '60px', borderRadius: '18px', background: 'linear-gradient(135deg, var(--color-primary), var(--color-secondary))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', fontWeight: 800, color: 'white', boxShadow: '0 12px 24px rgba(99,102,241,0.3)', flexShrink: 0, overflow: 'hidden' }} className="outfit">
-                            {user?.avatar ? <img src={user.avatar} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : user?.name?.[0]}
-                        </div>
-                        <div>
-                            <h1 style={{ fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', fontWeight: 700, marginBottom: '0.2rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }} className="outfit">
-                                {user?.name?.split(' ')[0]}
-                                <button onClick={() => setShowProfileModal(true)} title="Edit Profile" style={{ background: 'var(--color-primary)', color: 'white', border: 'none', borderRadius: '50%', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: '0.2s', boxShadow: '0 4px 10px rgba(99,102,241,0.3)' }}>
-                                    <Pencil size={14} />
-                                </button>
-                            </h1>
-                            <span style={{ color: 'var(--color-primary)', fontWeight: 600, fontSize: '0.95rem' }}>{user?.email}</span>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.5rem' }}>
-                                {user?.phone && (
-                                    <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.3rem 0.75rem', borderRadius: '8px', background: 'var(--background)', border: '1px solid var(--border)', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)' }}>
-                                        <Phone size={12} style={{ color: 'var(--color-primary)' }} /> {user.phone}
-                                    </span>
-                                )}
-                                <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.3rem 0.75rem', borderRadius: '8px', background: 'var(--background)', border: '1px solid var(--border)', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)' }}>
-                                    <Calendar size={12} style={{ color: 'var(--color-secondary)' }} /> Joined {new Date(user?.createdAt).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true }).toUpperCase()}
-                                </span>
-                            </div>
+                {/* Modern Dashboard Layout */}
+                <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+                    {/* Top Tab Bar Wrapper */}
+                    <div style={{ position: 'sticky', top: '3.7rem', zIndex: 40, padding: '1rem 0', margin: '-1rem 0 1rem', background: 'var(--glass)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}>
+                        <div style={{ display: 'flex', gap: '0.75rem', background: 'var(--surface)', padding: '0.6rem', borderRadius: '20px', border: '1px solid var(--border)', boxShadow: '0 10px 30px -10px rgba(0,0,0,0.05)' }}>
+                            <button onClick={() => setActiveTab('enrollments')} style={{ flex: 1, padding: '0.85rem', borderRadius: '14px', background: activeTab === 'enrollments' ? 'var(--color-primary)' : 'transparent', color: activeTab === 'enrollments' ? 'white' : 'var(--text-muted)', fontWeight: 800, fontSize: '0.95rem', border: 'none', cursor: 'pointer', transition: 'all 0.3s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', boxShadow: activeTab === 'enrollments' ? '0 8px 20px -6px rgba(99,102,241,0.4)' : 'none' }}>
+                                <BookOpen size={18} /> Internships
+                            </button>
+                            <button onClick={() => setActiveTab('profile')} style={{ flex: 1, padding: '0.85rem', borderRadius: '14px', background: activeTab === 'profile' ? 'var(--color-primary)' : 'transparent', color: activeTab === 'profile' ? 'white' : 'var(--text-muted)', fontWeight: 800, fontSize: '0.95rem', border: 'none', cursor: 'pointer', transition: 'all 0.3s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', boxShadow: activeTab === 'profile' ? '0 8px 20px -6px rgba(99,102,241,0.4)' : 'none' }}>
+                                <User size={18} /> Profile
+                            </button>
                         </div>
                     </div>
-                    <button onClick={() => { localStorage.removeItem('token'); router.push('/login'); }}
-                        style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1.25rem', borderRadius: '12px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.15)', color: '#ef4444', fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer', transition: 'all 0.3s', position: 'relative', zIndex: 1 }}>
-                        <LogOut size={16} /> Logout
-                    </button>
-                </div>
 
-                {/* Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '2rem', alignItems: 'start' }} className="dash-grid">
-                    {/* Sidebar */}
-                    <aside style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', position: 'sticky', top: '7rem' }} className="dash-sidebar">
-                        {sidebarItems.map((item) => (
-                            <div key={item.id} onClick={() => {
-                                if (item.path) {
-                                    router.push(item.path);
-                                } else if (item.clickable) {
-                                    setActiveTab(item.id);
-                                }
-                            }}
-                                style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 1.25rem', borderRadius: '16px', border: activeTab === item.id && item.clickable ? '1px solid var(--color-primary)' : '1px solid var(--border)', background: activeTab === item.id && item.clickable ? 'linear-gradient(90deg, rgba(99,102,241,0.08) 0%, transparent 100%)' : 'var(--surface)', textAlign: 'left' as const, cursor: item.clickable ? 'pointer' : 'default', transition: 'all 0.3s', boxShadow: activeTab === item.id && item.clickable ? 'inset 3px 0 0 var(--color-primary)' : 'none', opacity: item.clickable ? 1 : 0.85 }}>
-                                <div style={{ width: '42px', height: '42px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: item.bg, color: item.color, border: `1px solid ${item.border}`, flexShrink: 0 }}>
-                                    <item.icon size={20} />
-                                </div>
-                                <div>
-                                    <h3 style={{ fontSize: '0.65rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '2px' }}>{item.label}</h3>
-                                    {item.value !== null && <p style={{ fontSize: '1.1rem', fontWeight: 800 }} className="outfit">{item.value}</p>}
-                                </div>
-                            </div>
-                        ))}
-                        <div style={{ marginTop: '0.5rem', padding: '1.25rem', borderRadius: '16px', background: 'linear-gradient(135deg, var(--color-primary), var(--color-secondary))', color: 'white', cursor: 'pointer', position: 'relative', overflow: 'hidden' }} onClick={() => router.push('/internships')}>
-                            <h4 style={{ fontSize: '1rem', fontWeight: 800 }} className="outfit">New Programs</h4>
-                            <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.8rem', fontWeight: 500, marginTop: '0.2rem' }}>Explore internships</p>
-                            <ArrowRight size={18} style={{ marginTop: '0.75rem' }} />
-                        </div>
-                    </aside>
-
-                    {/* Main */}
                     <main>
                         <AnimatePresence mode="wait">
                             <motion.div key={activeTab} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }} transition={{ duration: 0.25 }}>
@@ -348,10 +316,15 @@ export default function DashboardPage() {
                                     <div>
                                         <h2 style={{ fontSize: '1.35rem', fontWeight: 700, marginBottom: '1.5rem' }} className="outfit">My Internships</h2>
                                         {displayEnrollments.length === 0 ? (
-                                            <div style={{ padding: '4rem 2rem', textAlign: 'center', background: 'var(--surface)', borderRadius: '20px', border: '2px dashed var(--border)' }}>
-                                                <BookOpen size={48} style={{ margin: '0 auto 1.5rem', color: 'var(--text-muted)', opacity: 0.4, display: 'block' }} />
-                                                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem' }} className="outfit">No active enrollments</h3>
-                                                <Link href="/internships" style={{ color: 'var(--color-primary)', fontWeight: 700, fontSize: '1rem' }}>Start your career today →</Link>
+                                            <div style={{ textAlign: 'center', padding: '5rem 2rem', background: 'var(--surface)', borderRadius: '24px', border: '1px dashed var(--border)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                                <div style={{ width: '100px', height: '100px', borderRadius: '24px', background: 'linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(6,182,212,0.1) 100%)', color: 'var(--color-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', boxShadow: '0 10px 25px -5px rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.2)', transform: 'rotate(-5deg)' }}>
+                                                    <BookOpen size={48} strokeWidth={1.5} />
+                                                </div>
+                                                <h3 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '0.75rem', color: 'var(--text)' }} className="outfit">Your Journey Begins Here</h3>
+                                                <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', maxWidth: '400px', margin: '0 auto 2rem', lineHeight: 1.6, fontWeight: 500 }}>You haven't enrolled in any internships yet. Discover world-class programs and kickstart your tech career today.</p>
+                                                <Link href="/internships" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--color-primary)', color: 'white', padding: '0.85rem 2rem', borderRadius: '14px', fontWeight: 700, fontSize: '0.95rem', textDecoration: 'none', boxShadow: '0 8px 20px -6px rgba(99,102,241,0.5)', transition: 'all 0.2s' }}>
+                                                    Explore Programs <ArrowRight size={18} />
+                                                </Link>
                                             </div>
                                         ) : displayEnrollments.map((enrol: any) => {
                                             const isExpanded = expandedCards.includes(enrol._id);
@@ -450,6 +423,93 @@ export default function DashboardPage() {
                                                 </AnimatePresence>
                                             </div>
                                         )})}
+                                        
+                                        <div style={{ marginTop: '2rem', padding: '1.5rem', borderRadius: '20px', background: 'linear-gradient(135deg, var(--color-primary), var(--color-secondary))', color: 'white', cursor: 'pointer', position: 'relative', overflow: 'hidden', display: 'flex', justifyContent: 'space-between', alignItems: 'center', boxShadow: '0 12px 25px -10px rgba(99,102,241,0.5)' }} onClick={() => router.push('/internships')}>
+                                            <div style={{ zIndex: 1 }}>
+                                                <h4 style={{ fontSize: '1.25rem', fontWeight: 800 }} className="outfit">Discover New Programs</h4>
+                                                <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '0.9rem', fontWeight: 500, marginTop: '0.2rem' }}>Explore our latest hands-on internships</p>
+                                            </div>
+                                            <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, zIndex: 1, backdropFilter: 'blur(4px)' }}>
+                                                <ArrowRight size={24} />
+                                            </div>
+                                            <div style={{ position: 'absolute', top: '-50%', right: '-10%', width: '150px', height: '150px', background: 'radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%)', pointerEvents: 'none' }} />
+                                        </div>
+                                    </div>
+                                )}
+
+                                {activeTab === 'profile' && (
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                                        {/* Header / Profile Card */}
+                                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '2.5rem 2rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '24px', position: 'relative', overflow: 'hidden', gap: '1.25rem', boxShadow: '0 10px 30px -10px rgba(0,0,0,0.05)' }}>
+                                            <div style={{ position: 'absolute', top: '-50%', left: '-10%', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
+                                            
+                                            <div style={{ position: 'relative', zIndex: 1, width: '100%' }}>
+                                                <div style={{ width: '100px', height: '100px', borderRadius: '30px', margin: '0 auto 1.25rem', background: 'linear-gradient(135deg, var(--color-primary), var(--color-secondary))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.5rem', fontWeight: 800, color: 'white', boxShadow: '0 15px 30px rgba(99,102,241,0.3)', overflow: 'hidden' }} className="outfit">
+                                                    {user?.avatar ? <img src={user.avatar} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : user?.name?.[0]}
+                                                </div>
+                                                
+                                                <h1 style={{ fontSize: 'clamp(1.5rem, 4vw, 1.8rem)', fontWeight: 800, marginBottom: '0.4rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem' }} className="outfit">
+                                                    {user?.name}
+                                                    <button onClick={() => setShowProfileModal(true)} title="Edit Profile" style={{ background: 'var(--color-primary)', color: 'white', border: 'none', borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: '0.2s', boxShadow: '0 4px 10px rgba(99,102,241,0.3)' }}>
+                                                        <Pencil size={14} />
+                                                    </button>
+                                                </h1>
+                                                <span style={{ color: 'var(--color-primary)', fontWeight: 600, fontSize: '1rem', display: 'block', marginBottom: '1.25rem' }}>{user?.email}</span>
+                                                
+                                                {user?.role === 'admin' && (
+                                                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.75rem' }}>
+                                                        {user?.phone && (
+                                                            <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.4rem 0.85rem', borderRadius: '10px', background: 'var(--background)', border: '1px solid var(--border)', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-muted)' }}>
+                                                                <Phone size={14} style={{ color: 'var(--color-primary)' }} /> {user.phone}
+                                                            </span>
+                                                        )}
+                                                        <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.4rem 0.85rem', borderRadius: '10px', background: 'var(--background)', border: '1px solid var(--border)', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-muted)' }}>
+                                                            <Calendar size={14} style={{ color: 'var(--color-secondary)' }} /> Joined {new Date(user?.createdAt).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true }).toUpperCase()}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            <button onClick={() => { localStorage.removeItem('token'); router.push('/login'); }}
+                                                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.85rem 2.5rem', borderRadius: '14px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.15)', color: '#ef4444', fontWeight: 700, fontSize: '0.95rem', cursor: 'pointer', transition: 'all 0.3s', position: 'relative', zIndex: 1, marginTop: '0.5rem' }}>
+                                                <LogOut size={18} /> Logout
+                                            </button>
+                                        </div>
+
+                                        {/* Support Tickets Section */}
+                                        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '24px', padding: '2rem', boxShadow: '0 10px 30px -10px rgba(0,0,0,0.05)' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+                                                <h2 style={{ fontSize: '1.4rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.75rem' }} className="outfit">
+                                                    <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'rgba(245,158,11,0.1)', color: '#f59e0b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                        <MessageSquare size={20} />
+                                                    </div>
+                                                    Support Tickets
+                                                </h2>
+                                                <button onClick={() => router.push('/dashboard/tickets')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.7rem 1.25rem', borderRadius: '12px', background: 'var(--background)', border: '1px solid var(--border)', color: 'var(--text)', fontWeight: 700, fontSize: '0.9rem', cursor: 'pointer', transition: 'all 0.2s' }}>
+                                                    View All <ArrowRight size={16} />
+                                                </button>
+                                            </div>
+                                            
+                                            {tickets.length === 0 ? (
+                                                <div style={{ padding: '3rem 2rem', textAlign: 'center', background: 'var(--background)', borderRadius: '16px', border: '1px dashed var(--border)' }}>
+                                                    <MessageSquare size={40} style={{ margin: '0 auto 1.5rem', color: 'var(--text-muted)', opacity: 0.4, display: 'block' }} />
+                                                    <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.5rem' }} className="outfit">No active tickets</h3>
+                                                    <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Need help? Create a ticket in the support section.</p>
+                                                </div>
+                                            ) : (
+                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                                    {tickets.slice(0, 3).map((t: any) => (
+                                                        <div key={t._id} onClick={() => router.push(`/dashboard/tickets/${t._id}`)} style={{ background: 'var(--background)', border: '1px solid var(--border)', borderRadius: '16px', padding: '1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', transition: 'all 0.2s' }} onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--color-primary)'} onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--border)'}>
+                                                            <div>
+                                                                <h4 style={{ fontSize: '1.05rem', fontWeight: 700, marginBottom: '0.4rem' }} className="outfit">{t.subject}</h4>
+                                                                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 500 }}>Ticket #{t._id.slice(-6).toUpperCase()}</span>
+                                                            </div>
+                                                            <span style={{ padding: '0.4rem 0.85rem', borderRadius: '999px', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', background: t.status === 'open' ? 'rgba(99,102,241,0.1)' : 'rgba(34,197,94,0.1)', color: t.status === 'open' ? '#6366f1' : '#22c55e', border: `1px solid ${t.status === 'open' ? 'rgba(99,102,241,0.2)' : 'rgba(34,197,94,0.2)'}` }}>{t.status}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 )}
                             </motion.div>
