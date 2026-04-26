@@ -43,20 +43,20 @@ const InternshipSection = () => {
                 </div>
 
                 {loading ? (
-                    <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-10 mb-16 relative z-[1] max-md:grid-cols-1 max-md:gap-8 max-md:max-w-[450px] max-md:mx-auto">
+                    <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-10 relative z-[1] max-md:grid-cols-1 max-md:gap-8 max-md:max-w-[450px] max-md:mx-auto">
                         {[1, 2, 3].map((i) => (
                             <SkeletonCard key={i} />
                         ))}
                     </div>
                 ) : (
-                    <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-10 mb-16 relative z-[1] max-md:grid-cols-1 max-md:gap-8 max-md:max-w-[450px] max-md:mx-auto">
+                    <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-10 relative z-[1] max-md:grid-cols-1 max-md:gap-8 max-md:max-w-[450px] max-md:mx-auto">
                         {internships.map((item, index) => (
                             <InternshipCard key={item._id} item={item} index={index} />
                         ))}
                     </div>
                 )}
 
-                <div className="flex justify-center relative z-[1] mt-8">
+                <div className="flex justify-center relative z-[1]" style={{ marginTop: '4rem' }}>
                     <Link href="/internships" className="btn btn-outline">
                         View All Opportunities <ArrowRight size={18} />
                     </Link>

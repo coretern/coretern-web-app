@@ -42,29 +42,29 @@ export default function InternshipsPage() {
     return (
         <div>
             <Navbar />
-            <section className="min-h-screen pt-28 pb-20 bg-[var(--background)]">
+            <section className="min-h-screen pt-36 pb-20 bg-[var(--background)]">
                 <div className="container">
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
-                        <h1 className="text-[clamp(1.75rem,4vw,2.5rem)] font-extrabold mb-3 font-[family-name:var(--font-outfit)]">
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
+                        <h1 className="text-[clamp(1.75rem,4vw,2.5rem)] font-extrabold mb-4 font-[family-name:var(--font-outfit)]">
                             Summer Internship <span className="gradient-text">2026</span>
                         </h1>
-                        <p className="text-[var(--text-muted)] text-base max-w-[500px] mx-auto">
+                        <p className="text-[var(--text-muted)] text-base max-w-[500px] mx-auto leading-relaxed">
                             Choose from our premium internship programs and kickstart your career
                         </p>
                     </motion.div>
 
                     {/* Filters */}
-                    <div className="flex flex-wrap gap-3 mb-10 justify-center items-center">
-                        <div className="relative" style={{ flex: '1 1 300px', maxWidth: '380px' }}>
+                    <div className="flex flex-wrap gap-4 mb-12 justify-center items-center">
+                        <div className="relative" style={{ flex: '0 1 380px' }}>
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" size={18} />
                             <input type="text" placeholder="Search internships..." value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                className="w-full py-2.5 pl-11 pr-4 bg-[var(--surface)] border border-[var(--border)] rounded-full text-[var(--text)] text-sm focus:outline-none focus:border-[var(--color-primary)] transition-colors" />
+                                style={{ width: '100%', padding: '0.7rem 1rem 0.7rem 2.75rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '14px', color: 'var(--text)', fontSize: '0.9rem', outline: 'none', transition: 'border-color 0.2s' }} />
                         </div>
-                        <div className="flex gap-2 flex-wrap">
+                        <div className="flex gap-2 flex-wrap justify-center">
                             {domains.map((d: any) => (
                                 <button key={d} onClick={() => setDomain(d)}
-                                    className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 cursor-pointer ${domain === d ? 'bg-[var(--color-primary)] text-white border-[var(--color-primary)]' : 'bg-[var(--surface)] text-[var(--text-muted)] border-[var(--border)] hover:border-[var(--color-primary)]'}`}>
+                                    style={{ padding: '0.5rem 1rem', borderRadius: '10px', fontSize: '0.78rem', fontWeight: 700, border: '1px solid', cursor: 'pointer', transition: 'all 0.2s', background: domain === d ? 'var(--color-primary)' : 'var(--surface)', color: domain === d ? 'white' : 'var(--text-muted)', borderColor: domain === d ? 'var(--color-primary)' : 'var(--border)' }}>
                                     {d === 'all' ? 'All' : d}
                                 </button>
                             ))}
