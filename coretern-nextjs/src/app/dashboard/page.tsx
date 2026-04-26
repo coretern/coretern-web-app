@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Award, MessageSquare, User, Loader2, Clock, ArrowRight, LogOut, Phone, Calendar, Mail, UserCircle, Save, Download, ExternalLink, X } from 'lucide-react';
+import { BookOpen, Award, MessageSquare, User, Loader2, Clock, ArrowRight, LogOut, Phone, Calendar, Mail, UserCircle, Save, Download, ExternalLink, X, Shield } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { authAPI, enrollmentAPI, certificateAPI, ticketAPI } from '@/lib/api';
 import Navbar from '@/components/layout/Navbar';
@@ -21,10 +21,12 @@ export default function DashboardPage() {
     const [certPreviewUrl, setCertPreviewUrl] = useState<string | null>(null);
     const [certPreviewData, setCertPreviewData] = useState<any>(null);
     const [generatingPdf, setGeneratingPdf] = useState(false);
+    const [isAdminViewing, setIsAdminViewing] = useState(false);
     const router = useRouter();
     const searchParams = useSearchParams();
 
     useEffect(() => {
+        setIsAdminViewing(!!localStorage.getItem('admin_token'));
         const fetchData = async () => {
             const token = localStorage.getItem('token');
             if (!token) { router.push('/login'); return; }
@@ -189,6 +191,25 @@ export default function DashboardPage() {
         <div style={{ minHeight: '100vh', background: 'var(--background)' }}>
             <Navbar />
             <div className="container" style={{ maxWidth: '1200px', paddingTop: '7rem', paddingBottom: '4rem' }}>
+                {isAdminViewing && (
+                    <div style={{ background: 'var(--color-primary)', color: 'white', padding: '1rem', borderRadius: '16px', marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <Shield size={20} />
+                            <span style={{ fontWeight: 700, fontSize: '0.95rem' }}>Admin View: You are currently impersonating {user?.name}.</span>
+                        </div>
+                        <button onClick={() => {
+                            const adminToken = localStorage.getItem('admin_token');
+                            if (adminToken) {
+                                localStorage.setItem('token', adminToken);
+                                localStorage.removeItem('admin_token');
+                                router.push('/admin/users');
+                                toast.success('Returned to Admin Panel');
+                            }
+                        }} style={{ padding: '0.5rem 1rem', background: 'white', color: 'var(--color-primary)', border: 'none', borderRadius: '8px', fontWeight: 800, fontSize: '0.8rem', cursor: 'pointer', transition: 'all 0.2s' }}>
+                            Return to Admin Panel
+                        </button>
+                    </div>
+                )}
                 {/* Header */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '0 0 2.5rem', padding: '1.5rem 2rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '20px', position: 'relative', overflow: 'hidden', flexWrap: 'wrap', gap: '1.5rem' }}>
                     <div style={{ position: 'absolute', top: '-50%', right: '-10%', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
@@ -208,7 +229,7 @@ export default function DashboardPage() {
                                     </span>
                                 )}
                                 <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.3rem 0.75rem', borderRadius: '8px', background: 'var(--background)', border: '1px solid var(--border)', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)' }}>
-                                    <Calendar size={12} style={{ color: 'var(--color-secondary)' }} /> Joined {new Date(user?.createdAt).toLocaleDateString()}
+                                    <Calendar size={12} style={{ color: 'var(--color-secondary)' }} /> Joined {new Date(user?.createdAt).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true }).toUpperCase()}
                                 </span>
                             </div>
                         </div>
@@ -275,7 +296,7 @@ export default function DashboardPage() {
                                                         </div>
                                                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-muted)' }}>
                                                             <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}><Clock size={14} /> {enrol.internship?.duration}</span>
-                                                            <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}><Calendar size={14} /> Enrolled {new Date(enrol.enrolledAt).toLocaleDateString()}</span>
+                                                            <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}><Calendar size={14} /> Enrolled {new Date(enrol.enrolledAt).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true }).toUpperCase()}</span>
                                                         </div>
                                                     </div>
                                                 </div>

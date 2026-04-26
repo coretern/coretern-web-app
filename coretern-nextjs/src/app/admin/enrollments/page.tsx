@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Loader2, Search, Award, Trash2 } from 'lucide-react';
+import { Loader2, Search, Award, Trash2, Eye } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { enrollmentAPI, certificateAPI } from '@/lib/api';
+import { enrollmentAPI, certificateAPI, userAPI } from '@/lib/api';
 
 export default function AdminEnrollments() {
     const [enrollments, setEnrollments] = useState<any[]>([]);
@@ -88,13 +88,32 @@ export default function AdminEnrollments() {
                                     <td>{e.internship?.title || 'N/A'}</td>
                                     <td><span className={`badge ${e.paymentStatus === 'paid' ? 'badge-success' : 'badge-warning'}`}>{e.paymentStatus}</span></td>
                                     <td><span className={`badge ${e.status === 'completed' ? 'badge-success' : e.status === 'enrolled' ? 'badge-primary' : 'badge-warning'}`}>{e.status}</span></td>
-                                    <td className="text-[var(--text-muted)] text-sm">{new Date(e.enrolledAt).toLocaleDateString()}</td>
+                                    <td className="text-[var(--text-muted)] text-sm">{new Date(e.enrolledAt).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true }).toUpperCase()}</td>
                                     <td>
-                                        {e.paymentStatus === 'paid' && e.status !== 'completed' && (
-                                            <button onClick={() => handleIssueCert(e._id)} className="btn btn-primary btn-sm" title="Issue Certificate">
-                                                <Award size={14} /> Issue Cert
+                                        <div className="flex gap-2">
+                                            <button onClick={async () => {
+                                                try {
+                                                    const userId = e.user?._id || e.user;
+                                                    if (!userId) return toast.error('User ID not found');
+                                                    const res = await userAPI.impersonate(userId);
+                                                    const token = res.data?.token || res.token;
+                                                    if (token) {
+                                                        const adminToken = localStorage.getItem('token');
+                                                        if (adminToken) localStorage.setItem('admin_token', adminToken);
+                                                        localStorage.setItem('token', token);
+                                                        toast.success(`Viewing dashboard for ${e.fullName}`);
+                                                        window.location.href = '/dashboard';
+                                                    }
+                                                } catch (err: any) { toast.error('Failed to open user dashboard'); }
+                                            }} className="btn btn-outline btn-sm" title="View Dashboard">
+                                                <Eye size={14} />
                                             </button>
-                                        )}
+                                            {e.paymentStatus === 'paid' && e.status !== 'completed' && (
+                                                <button onClick={() => handleIssueCert(e._id)} className="btn btn-primary btn-sm" title="Issue Certificate">
+                                                    <Award size={14} /> Issue Cert
+                                                </button>
+                                            )}
+                                        </div>
                                     </td>
                                 </tr>
                             ))}

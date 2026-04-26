@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Loader2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { internshipAPI } from '@/lib/api';
 import InternshipCard from '@/components/landing/InternshipCard';
 import Navbar from '@/components/layout/Navbar';
@@ -19,8 +20,9 @@ export default function InternshipsPage() {
             try {
                 const data = await internshipAPI.getAll();
                 setInternships(data?.data || []);
-            } catch (err) {
-                console.error(err);
+            } catch (err: any) {
+                console.error('Failed to load internships:', err);
+                toast.error(err.message || 'Failed to connect to server. Please check your internet connection.');
             } finally {
                 setLoading(false);
             }

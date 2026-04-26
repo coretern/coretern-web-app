@@ -22,6 +22,7 @@ async function dbConnect() {
             bufferCommands: false,
             serverSelectionTimeoutMS: 15000,
             connectTimeoutMS: 15000,
+            family: 4 // Force IPv4 to prevent ENOTFOUND on broken dual-stack networks
         };
         cached.promise = mongoose.connect(MONGO_URI!, opts).then((mongoose) => {
             console.log('MongoDB Connected...');

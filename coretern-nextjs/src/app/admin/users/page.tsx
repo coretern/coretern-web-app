@@ -66,14 +66,29 @@ export default function AdminUsers() {
                                     <td className="text-[var(--text-muted)]">{u.email}</td>
                                     <td><span className={`badge ${u.role === 'admin' ? 'badge-primary' : 'badge-success'}`}>{u.role}</span></td>
                                     <td><span className={`badge ${u.status === 'active' ? 'badge-success' : 'badge-warning'}`}>{u.status}</span></td>
-                                    <td className="text-[var(--text-muted)] text-sm">{new Date(u.createdAt).toLocaleDateString()}</td>
+                                    <td className="text-[var(--text-muted)] text-sm">{new Date(u.createdAt).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true }).toUpperCase()}</td>
                                     <td>
                                         <div className="flex gap-2">
+                                            <button onClick={async () => {
+                                                try {
+                                                    const res = await userAPI.impersonate(u._id);
+                                                    const token = res.data?.token || res.token;
+                                                    if (token) {
+                                                        const adminToken = localStorage.getItem('token');
+                                                        if (adminToken) localStorage.setItem('admin_token', adminToken);
+                                                        localStorage.setItem('token', token);
+                                                        toast.success(`Viewing dashboard as ${u.name}`);
+                                                        window.location.href = '/dashboard';
+                                                    }
+                                                } catch (err: any) { toast.error('Failed to open user dashboard'); }
+                                            }} className="btn btn-outline btn-sm" title="View Dashboard">
+                                                <Eye size={14} />
+                                            </button>
                                             <button onClick={() => handleToggleStatus(u._id)} className="btn btn-outline btn-sm" title={u.status === 'active' ? 'Suspend' : 'Activate'}>
                                                 {u.status === 'active' ? <ShieldOff size={14} /> : <Shield size={14} />}
                                             </button>
                                             {u.role !== 'admin' && (
-                                                <button onClick={() => handleDelete(u._id)} className="btn btn-danger btn-sm"><Trash2 size={14} /></button>
+                                                <button onClick={() => handleDelete(u._id)} className="btn btn-danger btn-sm" title="Delete User"><Trash2 size={14} /></button>
                                             )}
                                         </div>
                                     </td>
