@@ -22,7 +22,8 @@ export default function RegisterPage() {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const target = e.target;
-        const value = target.type === 'checkbox' ? (target as HTMLInputElement).checked : target.value;
+        let value: any = target.type === 'checkbox' ? (target as HTMLInputElement).checked : target.value;
+        if (target.name === 'phone') value = value.replace(/\D/g, '');
         setForm({ ...form, [target.name]: value });
     };
 
@@ -177,7 +178,7 @@ export default function RegisterPage() {
                         >
                             <form onSubmit={handleSubmit}>
                                 <div style={s.formGroup}>
-                                    <label style={s.label}>Full Name</label>
+                                    <label style={s.label}>Full Name <span style={{color: '#ef4444'}}>*</span></label>
                                     <div style={s.inputWrap}>
                                         <input type="text" name="name" style={s.input} placeholder="John Doe"
                                             value={form.name} onChange={handleChange} required />
@@ -186,7 +187,7 @@ export default function RegisterPage() {
                                 </div>
 
                                 <div style={s.formGroup}>
-                                    <label style={s.label}>Gender</label>
+                                    <label style={s.label}>Gender <span style={{color: '#ef4444'}}>*</span></label>
                                     <div style={s.inputWrap}>
                                         <select name="gender" style={s.select} value={form.gender} onChange={handleChange} required>
                                             <option value="" disabled>Select Gender</option>
@@ -199,16 +200,16 @@ export default function RegisterPage() {
                                 </div>
 
                                 <div style={s.formGroup}>
-                                    <label style={s.label}>Phone Number</label>
+                                    <label style={s.label}>Phone Number <span style={{color: '#ef4444'}}>*</span></label>
                                     <div style={s.inputWrap}>
-                                        <input type="text" name="phone" style={s.input} placeholder="+91..."
-                                            value={form.phone} onChange={handleChange} required />
+                                        <input type="tel" name="phone" style={s.input} placeholder="10-digit number"
+                                            value={form.phone} onChange={handleChange} required maxLength={10} minLength={10} pattern="[0-9]{10}" title="Please enter exactly 10 digits" />
                                         <Phone style={s.inputIcon} size={18} />
                                     </div>
                                 </div>
 
                                 <div style={s.formGroup}>
-                                    <label style={s.label}>Email Address</label>
+                                    <label style={s.label}>Email Address <span style={{color: '#ef4444'}}>*</span></label>
                                     <div style={s.inputWrap}>
                                         <input type="email" name="email" style={s.input} placeholder="name@example.com"
                                             value={form.email} onChange={handleChange} required />
@@ -217,7 +218,7 @@ export default function RegisterPage() {
                                 </div>
 
                                 <div style={s.formGroup}>
-                                    <label style={s.label}>Password</label>
+                                    <label style={s.label}>Password <span style={{color: '#ef4444'}}>*</span></label>
                                     <div style={s.inputWrap}>
                                         <input type="password" name="password" style={s.input} placeholder="••••••••"
                                             value={form.password} onChange={handleChange} required minLength={6} />

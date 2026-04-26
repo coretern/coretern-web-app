@@ -371,9 +371,9 @@ section {
   background: var(--surface);
 }
 
-.auth-input::placeholder {
-  color: var(--text-subtle);
-  opacity: 0.6;
+.auth-input::placeholder, input::placeholder, textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 0.35;
 }
 
 .input-icon {
