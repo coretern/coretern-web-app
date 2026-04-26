@@ -61,7 +61,7 @@ export default function DashboardPage() {
         </div>
     );
 
-    const paidEnrollments = enrollments.filter((e: any) => e.paymentStatus === 'paid');
+    const displayEnrollments = enrollments;
 
     const downloadCertificate = async (certId: string) => {
         toast.loading('Generating certificate...', { id: 'cert-dl' });
@@ -181,7 +181,7 @@ export default function DashboardPage() {
     };
 
     const sidebarItems = [
-        { id: 'enrollments', label: 'Enrollments', value: paidEnrollments.length, icon: BookOpen, bg: 'rgba(99,102,241,0.1)', color: '#6366f1', border: 'rgba(99,102,241,0.2)', clickable: true },
+        { id: 'enrollments', label: 'Enrollments', value: displayEnrollments.length, icon: BookOpen, bg: 'rgba(99,102,241,0.1)', color: '#6366f1', border: 'rgba(99,102,241,0.2)', clickable: true },
         { id: 'achievements', label: 'Achievements', value: certificates.length, icon: Award, bg: 'rgba(6,182,212,0.1)', color: '#06b6d4', border: 'rgba(6,182,212,0.2)', clickable: false },
         { id: 'tickets', label: 'Support Tickets', value: tickets.length, icon: MessageSquare, bg: 'rgba(245,158,11,0.1)', color: '#f59e0b', border: 'rgba(245,158,11,0.2)', clickable: true },
         { id: 'profile', label: 'Profile', value: null, icon: User, bg: 'rgba(99,102,241,0.1)', color: '#6366f1', border: 'rgba(99,102,241,0.2)', clickable: true },
@@ -271,13 +271,13 @@ export default function DashboardPage() {
                                 {activeTab === 'enrollments' && (
                                     <div>
                                         <h2 style={{ fontSize: '1.35rem', fontWeight: 700, marginBottom: '1.5rem' }} className="outfit">My Internships</h2>
-                                        {paidEnrollments.length === 0 ? (
+                                        {displayEnrollments.length === 0 ? (
                                             <div style={{ padding: '4rem 2rem', textAlign: 'center', background: 'var(--surface)', borderRadius: '20px', border: '2px dashed var(--border)' }}>
                                                 <BookOpen size={48} style={{ margin: '0 auto 1.5rem', color: 'var(--text-muted)', opacity: 0.4, display: 'block' }} />
                                                 <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem' }} className="outfit">No active enrollments</h3>
                                                 <Link href="/internships" style={{ color: 'var(--color-primary)', fontWeight: 700, fontSize: '1rem' }}>Start your career today →</Link>
                                             </div>
-                                        ) : paidEnrollments.map((enrol: any) => (
+                                        ) : displayEnrollments.map((enrol: any) => (
                                             <div key={enrol._id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1.25rem', padding: '1.5rem 1.75rem', borderRadius: '20px', background: 'var(--surface)', border: '1px solid var(--border)', marginBottom: '1rem', flexWrap: 'wrap', transition: 'all 0.3s' }}>
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', flex: 1, minWidth: 0 }}>
                                                     <div style={{ width: '56px', height: '56px', borderRadius: '14px', background: 'var(--background)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
@@ -290,9 +290,15 @@ export default function DashboardPage() {
                                                     <div style={{ minWidth: 0 }}>
                                                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.3rem', flexWrap: 'wrap' }}>
                                                             <h3 style={{ fontSize: '1.05rem', fontWeight: 700 }} className="outfit">{enrol.internship?.title}</h3>
-                                                            <span style={{ padding: '0.2rem 0.6rem', borderRadius: '999px', fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', background: enrol.status === 'completed' ? 'rgba(34,197,94,0.1)' : 'rgba(99,102,241,0.1)', color: enrol.status === 'completed' ? '#22c55e' : '#6366f1', border: `1px solid ${enrol.status === 'completed' ? 'rgba(34,197,94,0.3)' : 'rgba(99,102,241,0.3)'}` }}>
-                                                                {enrol.status}
-                                                            </span>
+                                                            {enrol.paymentStatus === 'paid' ? (
+                                                                <span style={{ padding: '0.2rem 0.6rem', borderRadius: '999px', fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', background: enrol.status === 'completed' ? 'rgba(34,197,94,0.1)' : 'rgba(99,102,241,0.1)', color: enrol.status === 'completed' ? '#22c55e' : '#6366f1', border: `1px solid ${enrol.status === 'completed' ? 'rgba(34,197,94,0.3)' : 'rgba(99,102,241,0.3)'}` }}>
+                                                                    {enrol.status}
+                                                                </span>
+                                                            ) : (
+                                                                <span style={{ padding: '0.2rem 0.6rem', borderRadius: '999px', fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', background: 'rgba(245,158,11,0.1)', color: '#f59e0b', border: '1px solid rgba(245,158,11,0.3)' }}>
+                                                                    Payment Pending
+                                                                </span>
+                                                            )}
                                                         </div>
                                                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-muted)' }}>
                                                             <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}><Clock size={14} /> {enrol.internship?.duration}</span>
@@ -301,13 +307,39 @@ export default function DashboardPage() {
                                                     </div>
                                                 </div>
                                                 <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                                                    {enrol.internship?.whatsappGroup && (
-                                                        <a href={enrol.internship.whatsappGroup} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.55rem 1rem', borderRadius: '10px', background: 'rgba(37,211,102,0.1)', border: '1px solid rgba(37,211,102,0.2)', color: '#25d366', fontWeight: 700, fontSize: '0.8rem', textDecoration: 'none' }}>WhatsApp</a>
+                                                    {enrol.paymentStatus === 'paid' ? (
+                                                        <>
+                                                            {enrol.internship?.whatsappGroup && (
+                                                                <a href={enrol.internship.whatsappGroup} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.55rem 1rem', borderRadius: '10px', background: 'rgba(37,211,102,0.1)', border: '1px solid rgba(37,211,102,0.2)', color: '#25d366', fontWeight: 700, fontSize: '0.8rem', textDecoration: 'none' }}>WhatsApp</a>
+                                                            )}
+                                                            <button onClick={() => router.push(`/lectures/${enrol.internship?._id}`)} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.55rem 1.25rem', borderRadius: '10px', background: 'var(--color-primary)', color: 'white', fontWeight: 700, fontSize: '0.8rem', border: 'none', cursor: 'pointer' }}>View Lectures</button>
+                                                            {(() => { const cert = getCertForEnrollment(enrol); return cert ? (
+                                                                <button onClick={() => downloadCertificate(cert.certificateId)} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.55rem 1.25rem', borderRadius: '10px', background: 'var(--color-secondary)', color: 'white', fontWeight: 700, fontSize: '0.8rem', border: 'none', cursor: 'pointer' }}><Download size={14} /> Certificate</button>
+                                                            ) : null; })()}
+                                                        </>
+                                                    ) : (
+                                                        <button onClick={async () => {
+                                                            toast.loading('Loading payment gateway...', { id: 'retry-pay' });
+                                                            try {
+                                                                const token = localStorage.getItem('token');
+                                                                const res = await fetch(`/api/enrollments/${enrol._id}/retry`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
+                                                                const data = await res.json();
+                                                                if (!data.success) throw new Error(data.error);
+                                                                
+                                                                const cashfree = (window as any).Cashfree?.({ mode: process.env.NEXT_PUBLIC_CASHFREE_ENV === 'production' ? 'production' : 'sandbox' });
+                                                                if (cashfree) {
+                                                                    toast.dismiss('retry-pay');
+                                                                    cashfree.checkout({ paymentSessionId: data.data?.payment_session_id || data.payment_session_id, redirectTarget: '_self' });
+                                                                } else {
+                                                                    throw new Error('Payment gateway not loaded');
+                                                                }
+                                                            } catch (err: any) {
+                                                                toast.error(err.message || 'Failed to initialize payment', { id: 'retry-pay' });
+                                                            }
+                                                        }} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.55rem 1.25rem', borderRadius: '10px', background: '#f59e0b', color: 'white', fontWeight: 700, fontSize: '0.8rem', border: 'none', cursor: 'pointer' }}>
+                                                            Pay Now (₹{enrol.internship?.fee})
+                                                        </button>
                                                     )}
-                                                    <button onClick={() => router.push(`/lectures/${enrol.internship?._id}`)} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.55rem 1.25rem', borderRadius: '10px', background: 'var(--color-primary)', color: 'white', fontWeight: 700, fontSize: '0.8rem', border: 'none', cursor: 'pointer' }}>View Lectures</button>
-                                                    {(() => { const cert = getCertForEnrollment(enrol); return cert ? (
-                                                        <button onClick={() => downloadCertificate(cert.certificateId)} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.55rem 1.25rem', borderRadius: '10px', background: 'var(--color-secondary)', color: 'white', fontWeight: 700, fontSize: '0.8rem', border: 'none', cursor: 'pointer' }}><Download size={14} /> Certificate</button>
-                                                    ) : null; })()}
                                                 </div>
                                             </div>
                                         ))}
@@ -421,6 +453,9 @@ export default function DashboardPage() {
                     </div>
                 )}
             </AnimatePresence>
+
+            {/* Cashfree SDK Script */}
+            <script src="https://sdk.cashfree.com/js/v3/cashfree.js" async />
         </div>
     );
 }
