@@ -154,20 +154,28 @@ export default function InternshipDetailPage({ params }: { params: Promise<{ id:
                                 {[
                                     { key: 'fullName', placeholder: 'Full Name', type: 'text', required: true },
                                     { key: 'email', placeholder: 'Email', type: 'email', required: true },
-                                    { key: 'whatsappNumber', placeholder: 'WhatsApp Number', type: 'tel', required: true },
+                                    { key: 'whatsappNumber', placeholder: 'WhatsApp Number', type: 'tel', required: true, pattern: '[0-9]{10}', title: 'Please enter exactly 10 digits', maxLength: 10, minLength: 10 },
                                     { key: 'collegeName', placeholder: 'College Name', type: 'text' },
                                     { key: 'collegeRegNumber', placeholder: 'Reg/Roll Number', type: 'text' },
                                     { key: 'course', placeholder: 'Course (e.g. B.Tech)', type: 'text' },
                                     { key: 'branch', placeholder: 'Branch (e.g. CSE)', type: 'text' },
                                     { key: 'startDate', placeholder: 'Start Date', type: 'date', required: true },
                                     { key: 'endDate', placeholder: 'End Date', type: 'date', required: true },
-                                ].map(({ key, placeholder, type, required }) => (
+                                ].map(({ key, placeholder, type, required, pattern, title, maxLength, minLength }: any) => (
                                     <div key={key}>
                                         <label className="text-sm font-medium text-[var(--text-muted)] mb-1 block">{placeholder}</label>
-                                        <input type={type} placeholder={placeholder} required={required}
+                                        <input type={type} placeholder={placeholder} required={required} pattern={pattern} title={title} maxLength={maxLength} minLength={minLength}
                                             className="admin-input !mb-0"
                                             value={(form as any)[key]}
-                                            onChange={(e) => setForm({ ...form, [key]: e.target.value })} />
+                                            onChange={(e) => {
+                                                // If it's the phone number, only allow numbers
+                                                if (key === 'whatsappNumber') {
+                                                    const val = e.target.value.replace(/\D/g, '');
+                                                    setForm({ ...form, [key]: val });
+                                                } else {
+                                                    setForm({ ...form, [key]: e.target.value });
+                                                }
+                                            }} />
                                     </div>
                                 ))}
                                 <div>

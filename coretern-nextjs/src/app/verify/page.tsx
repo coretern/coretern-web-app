@@ -156,12 +156,19 @@ export default function VerifyPage() {
                                         </div>
                                     )}
 
-                                    {certificate.isManual && certificate.description && (
-                                        <div className="info-item description-item">
-                                            <div className="label"><AlertCircle size={14} /> Program Details</div>
-                                            <div className="value description-text" dangerouslySetInnerHTML={{ __html: certificate.description }}></div>
+                                    {/* Program Details Section */}
+                                    <div className="info-item description-item" style={{ gridColumn: '1 / -1', marginTop: '0.5rem', background: 'var(--surface-1)', padding: '1.25rem', borderRadius: '12px', border: '1px solid var(--border)' }}>
+                                        <div className="label" style={{ marginBottom: '0.75rem', color: 'var(--color-primary)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', fontSize: '0.75rem' }}><AlertCircle size={14} /> Program Details</div>
+                                        <div className="value description-text" style={{ fontSize: '0.95rem', lineHeight: '1.6', color: 'var(--text-muted)' }}>
+                                            {certificate.isManual && certificate.description ? (
+                                                <div dangerouslySetInnerHTML={{ __html: certificate.description }}></div>
+                                            ) : (
+                                                <>
+                                                    This document certifies the successful participation in the <strong style={{ color: 'var(--text)', fontWeight: 800 }}>{certificate.internship?.title || 'Program'}</strong> hosted by Coretern on <strong style={{ color: 'var(--text)', fontWeight: 800 }}>{new Date(certificate.issueDate).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })}</strong>. We appreciate their active engagement and commitment to learning modern web technologies and industry best practices.
+                                                </>
+                                            )}
                                         </div>
-                                    )}
+                                    </div>
 
                                     {!certificate.isManual && certificate.enrollment?.collegeName && (
                                         <div className="info-item">

@@ -102,6 +102,13 @@ export async function POST(request) {
             enrollment = await Enrollment.create(enrollmentData);
         }
 
+        // Clean and validate phone number for Cashfree
+        const cleanPhone = whatsappNumber ? whatsappNumber.replace(/\D/g, '') : '';
+        const finalPhone = cleanPhone.slice(-10);
+        if (finalPhone.length < 10) {
+            return errorResponse('Please enter a valid 10-digit WhatsApp number', 400);
+        }
+
         // Cashfree order creation
         const cfUrl = process.env.CASHFREE_ENV === 'production'
             ? 'https://api.cashfree.com/pg/orders'
@@ -121,7 +128,7 @@ export async function POST(request) {
                     customer_id: authResult.user.id.toString(),
                     customer_name: fullName || authResult.user.name,
                     customer_email: email || authResult.user.email,
-                    customer_phone: whatsappNumber ? whatsappNumber.replace(/\D/g, '').slice(-10) : '9999999999'
+                    customer_phone: finalPhone
                 },
                 order_meta: { return_url: returnUrl }
             })
